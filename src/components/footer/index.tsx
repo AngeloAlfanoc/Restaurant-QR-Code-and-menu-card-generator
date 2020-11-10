@@ -86,7 +86,7 @@ export default function Footer() {
         </Grid>
       </Container>
       <Box className="d-flex justify-content-center">
-        <img width="25%" src={mollie}></img>
+        <img width="25%" alt="banner payment options mollie" src={mollie}></img>
       </Box>
       <Copyright className="my-2" />
     </div>

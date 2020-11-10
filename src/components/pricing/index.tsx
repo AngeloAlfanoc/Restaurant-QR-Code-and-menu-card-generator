@@ -46,7 +46,7 @@ const tiers = [
     description: [
       "35 kaart-menu gerechten of dranken",
       "Email Hulp",
-      "1 template",
+      "Een enkele template om uit te kiezen",
     ],
     buttonVariant: "outlined",
   },
@@ -57,7 +57,6 @@ const tiers = [
     description: [
       "Ongelimiteerd aantal kaart-menu rechten of dranken",
       "Keuze uit een reeks van menu templates",
-      "Help center access",
       "Priority email support",
     ],
     buttonText: "Nu starten",
@@ -87,7 +86,7 @@ export default function Pricing() {
           color="textSecondary"
           component="p"
         >
-          Om gebruik te maken van alle functies moet u een abonnement aankopen.
+          Klik op <strong>Nu starten</strong> om een abonnement aan te kopen
         </Typography>
       </Container>
       {/* End hero unit */}

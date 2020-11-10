@@ -1,32 +1,49 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useContext,
+} from "react";
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+} from "@material-ui/core";
+
 import {
   useDialogState,
   useDialogDispatch,
 } from "../../contexts/dialogcontext/";
 import { Alert } from "@material-ui/lab";
-import { IconButton } from "@material-ui/core";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import QRCode from "qrcode.react";
-
+import { uid } from "uid";
+import PrintIcon from "@material-ui/icons/Print";
+import { addToStore } from "../../services/crud";
+import { UserContext } from "../../contexts/usercontext";
 export default function AddDialog() {
+  const { user } = useContext(UserContext);
   const dialog = useDialogState();
   const dispatch = useDialogDispatch();
   const [formName, setFormName] = useState<string>();
+  const [createUid, setCreateUid] = useState<any>();
   const [stepOne, setStepOne] = useState<boolean>(false);
   const [stepTwo, setStepTwo] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
   const qrRef = useRef<SVGPolygonElement | SVGEllipseElement | SVGRectElement>(
     null
   );
+
   const handleFormName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCreateUid(uid());
     setFormName(e.target.value);
   };
 
@@ -42,20 +59,6 @@ export default function AddDialog() {
     } else {
       setError("Gelieve een naam in te vullen.");
     }
-    switch (counter) {
-      case 1: {
-        setStepOne(true);
-        break;
-      }
-      case 2: {
-        setStepTwo(true);
-        break;
-      }
-      default: {
-        setStepOne(false);
-        setStepTwo(false);
-      }
-    }
   };
 
   const handleBack = () => {
@@ -69,10 +72,21 @@ export default function AddDialog() {
     setError("");
   };
 
-  const handleDownload = () => {
-    const qrCode = document.getElementById("qrcode");
-  };
+  async function formHandleSave() {
+    try {
+      setError("");
+      setLoading(true);
+      await addToStore(createUid, formName, user.uid);
+    } catch (e) {
+      setError(e.message);
+    }
+    dispatch({ type: "add" });
+    setLoading(false);
+  }
 
+  const handleDownload = () => {}; // TODO Handle Download OF SVG
+
+  const handlePrint = () => {};
   return (
     <>
       <Dialog
@@ -111,34 +125,49 @@ export default function AddDialog() {
             <DialogContent>
               <QRCode
                 ref={qrRef}
-                value={formName}
+                value={createUid}
                 id="qrcode"
                 renderAs="svg"
                 fgColor="#000000"
                 bgColor="#ffffff"
                 size={100 + "%"}
               />
-              <IconButton color="primary" onClick={handleDownload}>
-                <CloudDownloadIcon />
-              </IconButton>
+              <>
+                <DialogContentText className="my-2">
+                  Print of download je QR code door op de aangegeven knopjes te
+                  klikken.
+                </DialogContentText>
+                <IconButton color="primary" onClick={handleDownload}>
+                  <CloudDownloadIcon />
+                </IconButton>
+                <IconButton color="primary" onClick={handlePrint}>
+                  <PrintIcon />
+                </IconButton>
+              </>
             </DialogContent>
           </>
         )}
 
         <DialogActions>
-          <Button onClick={() => handleCancel()} color="primary">
+          <Button onClick={handleCancel} color="primary">
             Afbreken
           </Button>
 
           {counter > 0 && (
-            <Button onClick={() => handleBack()} color="primary">
+            <Button onClick={handleBack} color="primary">
               Vorige
             </Button>
           )}
-
-          <Button onClick={() => formHandler()} color="primary">
-            Volgende
-          </Button>
+          {counter === 0 && (
+            <Button onClick={formHandler} color="primary">
+              Volgende
+            </Button>
+          )}
+          {counter === 1 && (
+            <Button onClick={formHandleSave} color="primary">
+              Opslaan
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </>

@@ -26,7 +26,6 @@ export default function LoginForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(emailRef.current.value, passwordRef.current.value);
     try {
       setError("");
       setLoading(true);
