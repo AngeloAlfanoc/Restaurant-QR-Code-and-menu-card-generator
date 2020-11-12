@@ -3,7 +3,7 @@ import { UserContext } from "../../contexts/usercontext";
 import React, { useContext, useEffect } from "react";
 import Drawer from "../drawer";
 import { Container } from "@material-ui/core";
-import { DialogProvider } from "../../contexts/dialogcontext";
+import { DialogProvider } from "../../contexts/addDialogcontext";
 
 const PrivateRoute = ({ component: Component, ...otherProps }) => {
   const { user } = useContext(UserContext);

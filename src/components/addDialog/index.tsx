@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useLayoutEffect,
-  useContext,
-} from "react";
+import React, { useState, useRef, useLayoutEffect, useContext } from "react";
 import {
   Button,
   TextField,
@@ -19,14 +13,16 @@ import {
 import {
   useDialogState,
   useDialogDispatch,
-} from "../../contexts/dialogcontext/";
+} from "../../contexts/addDialogcontext";
 import { Alert } from "@material-ui/lab";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import QRCode from "qrcode.react";
 import { uid } from "uid";
 import PrintIcon from "@material-ui/icons/Print";
-import { addToStore } from "../../services/crud";
+import { addDataStore } from "../../services/crud";
 import { UserContext } from "../../contexts/usercontext";
+import { CARDS } from "../../constants/routes/index";
+import { useHistory } from "react-router-dom";
 export default function AddDialog() {
   const { user } = useContext(UserContext);
   const dialog = useDialogState();
@@ -41,7 +37,7 @@ export default function AddDialog() {
   const qrRef = useRef<SVGPolygonElement | SVGEllipseElement | SVGRectElement>(
     null
   );
-
+  const history = useHistory();
   const handleFormName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCreateUid(uid());
     setFormName(e.target.value);
@@ -76,12 +72,14 @@ export default function AddDialog() {
     try {
       setError("");
       setLoading(true);
-      await addToStore(createUid, formName, user.uid);
+      await addDataStore(createUid, formName, user.uid);
     } catch (e) {
       setError(e.message);
+    } finally {
+      dispatch({ type: "add" });
+      setLoading(false);
+      setCounter(0);
     }
-    dispatch({ type: "add" });
-    setLoading(false);
   }
 
   const handleDownload = () => {}; // TODO Handle Download OF SVG

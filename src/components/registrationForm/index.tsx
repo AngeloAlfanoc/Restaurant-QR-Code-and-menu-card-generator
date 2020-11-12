@@ -16,7 +16,6 @@ import { useHistory } from "react-router-dom";
 import { signup } from "../../services/auth";
 import { DASHBOARD } from "../../constants/routes";
 import { LOGIN } from "../../constants/routes";
-import { addToStore } from "../../services/crud";
 
 const RegistrationForm = () => {
   const emailRef = useRef<HTMLInputElement>();

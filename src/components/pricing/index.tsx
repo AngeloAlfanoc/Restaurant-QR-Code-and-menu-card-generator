@@ -42,22 +42,28 @@ const useStyles = makeStyles((theme) => ({
 const tiers = [
   {
     title: "Gratis",
+    subheader: "Bij aanmaken van account reeds actief",
     price: "0",
     description: [
-      "35 kaart-menu gerechten of dranken",
-      "Email Hulp",
-      "Een enkele template om uit te kiezen",
+      "Beschikbaar op tablet of smartphone",
+      "Volledige interactive menu",
+      "Foto's van gerechten",
+      "Overzicht van consumenten die ingecheckt hebben",
     ],
+    buttonText: "Maak een account",
     buttonVariant: "outlined",
   },
   {
     title: "Pro",
     subheader: "Populair",
-    price: "9,99",
+    price: "29,99",
     description: [
-      "Ongelimiteerd aantal kaart-menu rechten of dranken",
-      "Keuze uit een reeks van menu templates",
-      "Priority email support",
+      "Beschikbaar op tablet of smartphone",
+      "Volledige interactive menu",
+      "Overzicht van consumenten die ingecheckt hebben",
+      "Stuur nieuwsbrieven naar alle ingeschreven consumenten",
+      "keuze uit verschillende menu layouts",
+      "Foto's in 3D weergave vooor een realistische weergave!",
     ],
     buttonText: "Nu starten",
     buttonVariant: "contained",
@@ -86,14 +92,12 @@ export default function Pricing() {
           color="textSecondary"
           component="p"
         >
-          Klik op <strong>Nu starten</strong> om een abonnement aan te kopen
+          Klik op <strong>Nu starten</strong> om te beginnen.
         </Typography>
       </Container>
-      {/* End hero unit */}
       <Container maxWidth="md" component="main">
-        <Grid container spacing={5} alignItems="flex-end">
+        <Grid container spacing={5} alignItems="flex-start">
           {tiers.map((tier) => (
-            // Enterprise card is full width at sm breakpoint
             <Grid item key={tier.title} xs={12} md={6}>
               <Card>
                 <CardHeader

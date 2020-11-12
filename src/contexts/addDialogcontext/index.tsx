@@ -1,6 +1,5 @@
 import React, { createContext, useReducer, useContext } from "react";
-import { UserContext } from "../../contexts/usercontext";
-import { addToStore } from "../../services/crud";
+import { UserContext } from "../usercontext";
 
 type Action = { type: "add" };
 type Dispatch = (action: Action) => void;

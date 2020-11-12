@@ -5,7 +5,7 @@ import { db } from "./firebase";
 @uid is param
 */
 
-export async function addToStore(uid: string, name: string, userid: string) {
+export async function addDataStore(uid: string, name: string, userid: string) {
   return db.collection("menuCards").add({
     menuOwner: userid,
     menuCardName: name,
@@ -21,9 +21,24 @@ export async function addToStore(uid: string, name: string, userid: string) {
 @uid is param
 */
 
-export async function listDataStore(userid: string) {
+export async function getDataStore(userid: string) {
+  return await db.collection("menuCards").where("menuOwner", "==", userid);
+}
+
+/*
+@Get delete card with given card id
+@card uid is param
+*/
+
+export async function remDataStore(document: string) {
   return await db
     .collection("menuCards")
-    .where("menuOwner", "==", userid)
-    .get();
+    .doc(document)
+    .delete()
+    .then(function () {
+      console.log("Document successfully deleted!");
+    })
+    .catch(function (error) {
+      console.error("Error removing document: ", error);
+    });
 }
