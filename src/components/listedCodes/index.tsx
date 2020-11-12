@@ -21,8 +21,9 @@ import { db } from "../../services/firebase";
 import PublishIcon from "@material-ui/icons/Publish";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import Tooltip from "@material-ui/core/Tooltip";
-import _ from "lodash";
 import Button from "@material-ui/core/Button";
+import Skeleton from '@material-ui/lab/Skeleton';
+
 const useStyles = makeStyles({
   table: {
     minWidth: 100 + "%",
@@ -126,7 +127,7 @@ export default function BasicTable() {
           <TableBody className="my-0"></TableBody>
 
           <TableBody>
-            {rows &&
+            {rows ?
               rows.map((row, i: number) => {
                 return (
                   <TableRow style={{ margin: 0 }} key={row.id}>
@@ -170,13 +171,26 @@ export default function BasicTable() {
                     </TableCell>
                   </TableRow>
                 );
-              })}
+              }) : <TableRow>
+                <TableCell align="left">
+                { loading && <Skeleton animation="wave" />}
+                </TableCell>
+                <TableCell align="center">
+                { loading && <Skeleton animation="wave" />}
+                </TableCell>
+                <TableCell align="center">
+                { loading && <Skeleton animation="wave" />}
+                </TableCell>
+                <TableCell align="right">
+                { loading && <Skeleton animation="wave" />}
+                </TableCell>
+              </TableRow>}
           </TableBody>
         </Table>
       </TableContainer>
       {loading && (
         <div className="d-flex justify-content-center mt-5">
-          <CircularProgress color="secondary" />
+          <CircularProgress color="primary" />
         </div>
       )}
     </>

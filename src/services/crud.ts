@@ -35,9 +35,6 @@ export async function remDataStore(document: string) {
     .collection("menuCards")
     .doc(document)
     .delete()
-    .then(function () {
-      console.log("Document successfully deleted!");
-    })
     .catch(function (error) {
       console.error("Error removing document: ", error);
     });
