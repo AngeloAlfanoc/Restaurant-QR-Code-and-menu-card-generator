@@ -6,13 +6,14 @@ import { db } from "./firebase";
 */
 
 export async function addDataStore(uid: string, name: string, userid: string) {
-  return db.collection("menuCards").add({
+  return db.collection("menus").add({
     menuOwner: userid,
     menuCardName: name,
     menuCardId: uid,
     menuCardItems: {},
     createdAt: Date.now(),
     editedAt: Date.now(),
+    published: false,
   });
 }
 
@@ -22,7 +23,7 @@ export async function addDataStore(uid: string, name: string, userid: string) {
 */
 
 export async function getDataStore(userid: string) {
-  return await db.collection("menuCards").where("menuOwner", "==", userid);
+  return await db.collection("menus").where("menuOwner", "==", userid);
 }
 
 /*
@@ -32,10 +33,19 @@ export async function getDataStore(userid: string) {
 
 export async function remDataStore(document: string) {
   return await db
-    .collection("menuCards")
+    .collection("menus")
     .doc(document)
     .delete()
     .catch(function (error) {
       console.error("Error removing document: ", error);
     });
+}
+
+/*
+@Edit Field name in firestore docs
+@Using params provided by components
+*/
+
+export async function editFieldInStoreObject(id: string) {
+  return db.collection("menuCards").doc(id);
 }

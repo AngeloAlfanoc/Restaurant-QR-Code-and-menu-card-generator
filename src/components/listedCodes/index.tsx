@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import EditIcon from "@material-ui/icons/Edit";
-import { IconButton } from "@material-ui/core";
+import { Dialog, IconButton } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { UserContext } from "../../contexts/usercontext";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -18,12 +18,13 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { useDialogDispatch } from "../../contexts/addDialogcontext/index";
 import { remDataStore } from "../../services/crud";
 import { db } from "../../services/firebase";
-import PublishIcon from "@material-ui/icons/Publish";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
-import Skeleton from '@material-ui/lab/Skeleton';
-
+import Skeleton from "@material-ui/lab/Skeleton";
+import QrDialog from "../qrDialog";
+import DialogActions from "@material-ui/core/DialogActions/DialogActions";
+import SetPublish from "../setPublish";
 const useStyles = makeStyles({
   table: {
     minWidth: 100 + "%",
@@ -34,18 +35,18 @@ const useStyles = makeStyles({
 });
 
 export default function BasicTable() {
-  const [open, setOpen] = React.useState(false);
+  const [qrCode, setQrCode] = React.useState(false);
   const { user } = useContext(UserContext);
   const classes = useStyles();
   const [loading, setLoading] = React.useState<boolean>(false);
   const dispatch = useDialogDispatch();
   const [error, setError] = React.useState<string>(null);
   const [rows, setRows] = React.useState<any>(null);
-
+  const [qrCodeUid, setQrCodeUid] = React.useState<string>();
   useEffect(() => {
     setLoading(true);
     const unsubscribe = db
-      .collection("menuCards")
+      .collection("menus")
       .where("menuOwner", "==", user.uid)
       .onSnapshot((snapshot) => {
         const tempLoad = [];
@@ -69,8 +70,9 @@ export default function BasicTable() {
     };
   }, [setRows, user.uid]);
 
-  const showQrView = () => {
-    setOpen(true);
+  const toggleQrDialog = (qrCodeUid: string) => {
+    setQrCode(!qrCode);
+    setQrCodeUid(qrCodeUid);
   };
 
   const editMenuItems = () => {};
@@ -127,8 +129,8 @@ export default function BasicTable() {
           <TableBody className="my-0"></TableBody>
 
           <TableBody>
-            {rows ?
-              rows.map((row, i: number) => {
+            {rows ? (
+              rows.map((row: any, i: number) => {
                 return (
                   <TableRow style={{ margin: 0 }} key={row.id}>
                     <TableCell component="th" scope="row">
@@ -136,7 +138,9 @@ export default function BasicTable() {
                     </TableCell>
                     <TableCell align="center">
                       <Tooltip title="QR code bekijken">
-                        <IconButton onClick={showQrView}>
+                        <IconButton
+                          onClick={() => toggleQrDialog(row.menuCardId)}
+                        >
                           <CameraAlt />
                         </IconButton>
                       </Tooltip>
@@ -163,28 +167,27 @@ export default function BasicTable() {
                           <DeleteForeverIcon />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Publiceren">
-                        <Button onClick={() => handleEdit(row.id)}>
-                          Publiceren
-                        </Button>
-                      </Tooltip>
+                      <SetPublish published={row.published} docUid={row.id} />
                     </TableCell>
                   </TableRow>
                 );
-              }) : <TableRow>
+              })
+            ) : (
+              <TableRow>
                 <TableCell align="left">
-                { loading && <Skeleton animation="wave" />}
+                  <Skeleton animation="wave" />
                 </TableCell>
                 <TableCell align="center">
-                { loading && <Skeleton animation="wave" />}
+                  <Skeleton animation="wave" />
                 </TableCell>
                 <TableCell align="center">
-                { loading && <Skeleton animation="wave" />}
+                  <Skeleton animation="wave" />
                 </TableCell>
                 <TableCell align="right">
-                { loading && <Skeleton animation="wave" />}
+                  <Skeleton animation="wave" />
                 </TableCell>
-              </TableRow>}
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -192,6 +195,16 @@ export default function BasicTable() {
         <div className="d-flex justify-content-center mt-5">
           <CircularProgress color="primary" />
         </div>
+      )}
+      {qrCodeUid && (
+        <Dialog open={qrCode} onClose={() => toggleQrDialog(qrCodeUid)}>
+          <QrDialog uid={`http://localhost:3000/menu/${qrCodeUid}`} />
+          <DialogActions>
+            <Button onClick={() => toggleQrDialog(qrCodeUid)} color="primary">
+              Sluiten
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
     </>
   );

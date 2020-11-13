@@ -23,6 +23,7 @@ import { addDataStore } from "../../services/crud";
 import { UserContext } from "../../contexts/usercontext";
 import { CARDS } from "../../constants/routes/index";
 import { useHistory } from "react-router-dom";
+import QrDialog from "../qrDialog/index";
 export default function AddDialog() {
   const { user } = useContext(UserContext);
   const dialog = useDialogState();
@@ -34,9 +35,7 @@ export default function AddDialog() {
   const [counter, setCounter] = useState<number>(0);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const qrRef = useRef<SVGPolygonElement | SVGEllipseElement | SVGRectElement>(
-    null
-  );
+
   const history = useHistory();
   const handleFormName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCreateUid(uid());
@@ -82,9 +81,6 @@ export default function AddDialog() {
     }
   }
 
-  const handleDownload = () => {}; // TODO Handle Download OF SVG
-
-  const handlePrint = () => {};
   return (
     <>
       <Dialog
@@ -117,34 +113,7 @@ export default function AddDialog() {
           </>
         )}
 
-        {counter === 1 && (
-          <>
-            <DialogTitle id="form-dialog-title">Uw QR Code</DialogTitle>
-            <DialogContent>
-              <QRCode
-                ref={qrRef}
-                value={createUid}
-                id="qrcode"
-                renderAs="svg"
-                fgColor="#000000"
-                bgColor="#ffffff"
-                size={100 + "%"}
-              />
-              <>
-                <DialogContentText className="my-2">
-                  Print of download je QR code door op de aangegeven knopjes te
-                  klikken.
-                </DialogContentText>
-                <IconButton color="primary" onClick={handleDownload}>
-                  <CloudDownloadIcon />
-                </IconButton>
-                <IconButton color="primary" onClick={handlePrint}>
-                  <PrintIcon />
-                </IconButton>
-              </>
-            </DialogContent>
-          </>
-        )}
+        {counter === 1 && <QrDialog uid={createUid} />}
 
         <DialogActions>
           <Button onClick={handleCancel} color="primary">

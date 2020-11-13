@@ -13,6 +13,7 @@ import Checkout from "../pages/checkout";
 import CheckIn from "../pages/checkin";
 import Footer from "../components/footer";
 import { Container } from "@material-ui/core";
+import CheckIns from "../pages/checkins";
 import {
   HOME,
   DASHBOARD,
@@ -25,6 +26,7 @@ import {
   RESTAURANT,
   SCANNER,
   CHECKOUT,
+  CHECKINS,
 } from "../constants/routes";
 
 const Router = () => {
@@ -41,7 +43,7 @@ const Router = () => {
               path={CHECK_IN}
               render={({ match }) => <CheckIn match={match} />}
             />
-
+            <PrivateRoute path={CHECKINS} component={CheckIns} />
             <PrivateRoute path={DASHBOARD} component={Dashboard} />
             <PrivateRoute path={CARDS} component={Codes} />
             <PrivateRoute path={SUBSCRIPTION} component={Subscription} />

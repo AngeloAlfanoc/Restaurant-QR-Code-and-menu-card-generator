@@ -47,10 +47,12 @@ const tiers = [
     description: [
       "Beschikbaar op tablet of smartphone",
       "Volledige interactive menu",
+      "Veelzijdige administration tool",
       "Foto's van gerechten",
       "Overzicht van consumenten die ingecheckt hebben",
     ],
     buttonText: "Maak een account",
+    buttonDemo: "Bekijk Demo",
     buttonVariant: "outlined",
   },
   {
@@ -61,11 +63,13 @@ const tiers = [
       "Beschikbaar op tablet of smartphone",
       "Volledige interactive menu",
       "Overzicht van consumenten die ingecheckt hebben",
-      "Stuur nieuwsbrieven naar alle ingeschreven consumenten",
       "keuze uit verschillende menu layouts",
-      "Foto's in 3D weergave vooor een realistische weergave!",
+      "Veelzijdige administration tool",
+      "Foto's in 3D weergave voor een realistische weergave!",
+      "Overzicht van consumenten die ingecheckt hebben",
     ],
     buttonText: "Nu starten",
+    buttonDemo: "Bekijk Demo",
     buttonVariant: "contained",
   },
 ];
@@ -133,6 +137,9 @@ export default function Pricing() {
                 <CardActions>
                   <Button fullWidth color="primary">
                     {tier.buttonText}
+                  </Button>
+                  <Button fullWidth color="primary">
+                    {tier.buttonDemo}
                   </Button>
                 </CardActions>
               </Card>

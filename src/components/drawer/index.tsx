@@ -1,4 +1,9 @@
-import { DASHBOARD, SUBSCRIPTION, CARDS } from "../../constants/routes";
+import {
+  DASHBOARD,
+  SUBSCRIPTION,
+  CARDS,
+  CHECKINS,
+} from "../../constants/routes";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -22,6 +27,7 @@ import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
 import LogOut from "../../components/logoutButton";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => ({
@@ -153,16 +159,17 @@ export default function Sidebar() {
         </div>
         <Divider />
         <List>
-          {["Dashboard", "QR-Codes"].map((text, index) => (
+          {["Dashboard", "Aanwezigheden", "Menu Kaarten"].map((text, index) => (
             <ListItem
               button
               key={text}
               component={Link}
-              to={index === 0 ? DASHBOARD : CARDS}
+              to={index === 0 ? DASHBOARD : index === 1 ? CHECKINS : CARDS}
             >
               <ListItemIcon>
                 {index === 0 && <DashboardIcon />}
-                {index === 1 && <MenuBookIcon />}
+                {index === 2 && <MenuBookIcon />}
+                {index === 1 && <AssignmentTurnedInIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
