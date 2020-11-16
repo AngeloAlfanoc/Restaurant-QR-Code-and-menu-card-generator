@@ -1,5 +1,4 @@
 import React from "react";
-import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -10,10 +9,8 @@ import Grid from "@material-ui/core/Grid";
 import StarIcon from "@material-ui/icons/StarBorder";
 
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -48,7 +45,7 @@ const tiers = [
       "Beschikbaar op tablet of smartphone",
       "Volledige interactive menu",
       "Veelzijdige administration tool",
-      "Foto's van gerechten",
+      "Foto's van gerechten / andere nuttigingen",
       "Overzicht van consumenten die ingecheckt hebben",
     ],
     buttonText: "Maak een account",

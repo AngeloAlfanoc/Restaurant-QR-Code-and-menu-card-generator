@@ -16,7 +16,7 @@ import { useHistory } from "react-router-dom";
 import { signup } from "../../services/auth";
 import { DASHBOARD } from "../../constants/routes";
 import { LOGIN } from "../../constants/routes";
-
+import { addAccountInfoToStore } from "../../services/crud";
 const RegistrationForm = () => {
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
@@ -35,8 +35,11 @@ const RegistrationForm = () => {
       setLoading(true);
 
       // Get user payload
-      await signup(emailRef.current.value, passwordRef.current.value);
-
+      const payload = await signup(
+        emailRef.current.value,
+        passwordRef.current.value
+      );
+      await addAccountInfoToStore(payload.user.uid, payload.user.email);
       // Refer user to dashboard landing screen
       history.push(DASHBOARD);
     } catch (e) {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,7 +10,10 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { FormatItalic } from "@material-ui/icons";
+import { VerifyAccountInfoInStore } from "../../services/crud";
+import InputAdornment from "@material-ui/core/InputAdornment";
+
+type ClientRegistrationProps = { id: string };
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,8 +35,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function VerifyUser(props: ClientRegistrationProps) {
   const classes = useStyles();
+  const companyRef = useRef(null);
+  const vatRef = useRef(null);
+  const locationRef = useRef(null);
+  const phoneRef = useRef(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await VerifyAccountInfoInStore(
+      companyRef.current.value,
+      vatRef.current.value,
+      locationRef.current.value,
+      phoneRef.current.value,
+      props.id
+    );
+  };
 
   return (
     <Container component="main" maxWidth="lg">
@@ -45,52 +63,69 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Vul aan om verder te gaan.
         </Typography>
-        <form className={classes.form}>
+        <form onSubmit={handleSubmit} className={classes.form}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
-                autoComplete="fname"
-                name="name"
+                ref={companyRef}
+                autoComplete="companyName"
+                name="companyName"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="Naam zaak / bedrijf (bv het frietkot)"
+                id="companyName"
+                label="Naam bedrijf"
                 autoFocus
+                type="text"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                ref={vatRef}
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
+                id="VAT"
                 label="BTW Nummer"
-                name="lastName"
-                autoComplete="lname"
+                name="VATNumber"
+                autoComplete="VATNumber"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">BE</InputAdornment>
+                  ),
+                }}
+                type="number"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                ref={phoneRef}
                 variant="outlined"
                 required
                 fullWidth
-                id="email"
-                label="Plaats van je zaak/bedrijf"
-                name="email"
-                autoComplete="email"
+                id="phone"
+                label="Telefoon Nummer"
+                name="phone"
+                autoComplete="phone"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">+32</InputAdornment>
+                  ),
+                }}
+                type="number"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                ref={locationRef}
                 variant="outlined"
                 required
                 fullWidth
-                name="password"
-                label="Bevestigen met je wachtwoord"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+                id="location"
+                label="Locatie"
+                name="location"
+                autoComplete="location"
+                type="text"
               />
             </Grid>
             <Grid item xs={12}>
@@ -106,11 +141,8 @@ export default function SignUp() {
                 color="primary"
                 className={classes.submit}
               >
-                Activeer Account en ga verder
+                Activeer mijn gratis account en ga verder
               </Button>
-              <Typography variant={"subtitle2"}>
-                *Deze oplossing is enkel beschikbaar in de benelux.
-              </Typography>
             </Grid>
           </Grid>
         </form>

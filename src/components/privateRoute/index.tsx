@@ -1,6 +1,6 @@
 import { Redirect, Route } from "react-router-dom";
 import { UserContext } from "../../contexts/usercontext";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import Drawer from "../drawer";
 import { Container } from "@material-ui/core";
 import { DialogProvider } from "../../contexts/addDialogcontext";

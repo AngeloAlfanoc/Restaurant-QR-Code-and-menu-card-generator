@@ -1,26 +1,60 @@
-import React, { createContext, useEffect, useState } from 'react'
-import { auth } from '../../services/firebase'
+import React, { createContext, useEffect, useState } from "react";
+import { auth, db } from "../../services/firebase";
 
-export const UserContext = createContext({ user: null })
+type State = { user: any };
 
+type UserProviderProps = { children: React.ReactNode };
 
-const UserProvider = ({ children }) => {
+export const UserContext = createContext<State | null>({ user: null });
+export const UserInfoContext = createContext({ userInfo: null });
+const UserProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userInfo, setUserInfo] = useState(null);
+  const [error, setError] = useState<string>(null);
+
+  const fetchUserData = async () => {
+    db.collection("users")
+      .where("id", "==", user.uid)
+      .onSnapshot((snapshot) => {
+        const tempLoad = [];
+        if (snapshot.size) {
+          try {
+            snapshot.forEach((doc) => {
+              tempLoad.push({ ...doc.data(), docid: doc.id });
+            });
+            setUserInfo(tempLoad[0]);
+          } catch {
+            setError("Probleem bij het opvragen van gebruikers info");
+            Error(error);
+          } finally {
+            setLoading(false);
+          }
+        }
+
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-        setUser(user)
-        setLoading(false)
-    })
-    return unsubscribe
-  }, [])
+      setUser(user);
+      setLoading(false);
+    });
+    user && fetchUserData();
+    setLoading(true);
 
+    return () => {
+      unsubscribe();
+    };
+  }, [user && user, user && user.uid]);
 
   return (
-    <UserContext.Provider value={{user}}>
-       {!loading && children}
+    <UserContext.Provider value={{ user }}>
+      <UserInfoContext.Provider value={{ userInfo }}>
+        {!loading && children}
+      </UserInfoContext.Provider>
     </UserContext.Provider>
-  )
-}
-export default UserProvider
+  );
+};
+export default UserProvider;

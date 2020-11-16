@@ -1,18 +1,36 @@
 import "./index.scss";
 
-import React from "react";
 import ListedCodes from "../../components/listedCodes";
 import { Typography } from "@material-ui/core";
 
 import AddDialog from "../../components/addDialog";
+import React, { useContext, useEffect, useState } from "react";
+import ClientRegistrationDialog from "../../components/clientRegistrationDialog";
+import { UserInfoContext } from "../../contexts/usercontext";
 export default function MenuCards() {
+  const { userInfo } = useContext(UserInfoContext);
+  const [verifiedUser, setVerified] = useState<boolean>(false);
+  useEffect(() => {
+    try {
+      userInfo && setVerified(userInfo.verified);
+    } catch {
+      throw new Error("Probleem bij het ophalen van gebruikers info");
+    }
+  }, [userInfo]);
+
   return (
     <main className="admin">
-      <Typography className="my-3" variant="h5">
-        Menu kaarten
-      </Typography>
-      <ListedCodes />
-      <AddDialog />
+      {verifiedUser ? (
+        <>
+          <Typography className="my-3" variant="h5">
+            Menu kaarten
+          </Typography>
+          <ListedCodes />
+          <AddDialog />
+        </>
+      ) : (
+        userInfo && <ClientRegistrationDialog id={userInfo.docid} />
+      )}
     </main>
   );
 }

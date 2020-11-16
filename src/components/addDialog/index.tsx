@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect, useContext } from "react";
+import React, { useState, useLayoutEffect, useContext } from "react";
 import {
   Button,
   TextField,
@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
 } from "@material-ui/core";
 
 import {
@@ -15,13 +14,9 @@ import {
   useDialogDispatch,
 } from "../../contexts/addDialogcontext";
 import { Alert } from "@material-ui/lab";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import QRCode from "qrcode.react";
 import { uid } from "uid";
-import PrintIcon from "@material-ui/icons/Print";
-import { addDataStore } from "../../services/crud";
+import { addMenuCardToStore } from "../../services/crud";
 import { UserContext } from "../../contexts/usercontext";
-import { CARDS } from "../../constants/routes/index";
 import { useHistory } from "react-router-dom";
 import QrDialog from "../qrDialog/index";
 export default function AddDialog() {
@@ -71,7 +66,7 @@ export default function AddDialog() {
     try {
       setError("");
       setLoading(true);
-      await addDataStore(createUid, formName, user.uid);
+      await addMenuCardToStore(createUid, formName, user.uid);
     } catch (e) {
       setError(e.message);
     } finally {
