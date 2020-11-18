@@ -1,0 +1,21 @@
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05rem;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.primary__button {
+  border: 0;
+  background: #bf3030;
+  border-color: #bf3030;
+  color: white;
+  &:active {
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+  }
+}

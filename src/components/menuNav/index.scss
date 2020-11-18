@@ -1,0 +1,23 @@
+nav {
+  display: flex;
+  justify-content: space-evenly;
+  position: absolute;
+  width: 100%;
+  z-index: 99;
+  margin-top: 2rem;
+  max-height: 75px;
+  ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    min-width: 650px;
+    li {
+      a {
+        height: 100%;
+        color: rgba(255, 255, 255, 1);
+        text-decoration: none;
+      }
+    }
+  }
+}

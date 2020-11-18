@@ -17,6 +17,7 @@ import { signup } from "../../services/auth";
 import { DASHBOARD } from "../../constants/routes";
 import { LOGIN } from "../../constants/routes";
 import { addAccountInfoToStore } from "../../services/crud";
+import Logo from "../logo";
 const RegistrationForm = () => {
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
@@ -80,8 +81,15 @@ const RegistrationForm = () => {
   const classes = useStyles();
   return (
     <Container component="main" className={classes.container} maxWidth="xs">
+      <Box className="mb-5 text-center">
+        <Logo width="150" height="150" />
+        <Typography component="h2" variant="h4">
+          Checkinify.be
+        </Typography>
+      </Box>
+
       <CssBaseline />
-      <Typography component="h2" variant="h3">
+      <Typography component="h2" variant="h4">
         Registreer
       </Typography>
       {error && (

@@ -77,7 +77,12 @@ export default function Pricing() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container maxWidth="sm" component="main" className={classes.heroContent}>
+      <Container
+        maxWidth="sm"
+        component="main"
+        className={classes.heroContent}
+        id="solutions"
+      >
         <Typography
           component="h1"
           variant="h2"
@@ -85,7 +90,7 @@ export default function Pricing() {
           color="textPrimary"
           gutterBottom
         >
-          Prijslijst
+          Oplossingen
         </Typography>
         <Typography
           variant="h5"
@@ -93,7 +98,8 @@ export default function Pricing() {
           color="textSecondary"
           component="p"
         >
-          Klik op <strong>Nu starten</strong> om te beginnen.
+          Een oplossing op maat, een complete overzicht van uw consumenten, uw
+          menu digitaal!
         </Typography>
       </Container>
       <Container maxWidth="md" component="main">

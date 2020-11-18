@@ -4,6 +4,7 @@ const CARDS: string = "/account/cards";
 const CHECKINS: string = "/account/checkins";
 const SUBSCRIPTION: string = "/account/subscription";
 const CHECKOUT: string = "account/checkout";
+const SETTINGS: string = "/account/settings";
 const LOGIN: string = "/login";
 const REGISTER: string = "/register";
 const RESTAURANT: string = "/restaurant";
@@ -17,6 +18,7 @@ const PRICES: string = "/prices";
 const POLICY: string = "/privacy-policy";
 const TOS: string = "/terms-of-service";
 const GDPR: string = "/gdpr";
+
 export {
   HOME,
   DASHBOARD,
@@ -37,4 +39,5 @@ export {
   POLICY,
   TOS,
   GDPR,
+  SETTINGS,
 };

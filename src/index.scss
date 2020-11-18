@@ -1,3 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400&display=swap");
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Playfair Display", serif;
+}
+p,
+span,
+li,
+a {
+  font-family: "Nunito", sans-serif;
+}
+* {
+  &:focus {
+    outline: 0;
+  }
+}
+body {
+  overflow-x: hidden;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

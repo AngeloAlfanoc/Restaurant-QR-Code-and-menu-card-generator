@@ -3,6 +3,7 @@ import {
   SUBSCRIPTION,
   CARDS,
   CHECKINS,
+  SETTINGS,
 } from "../../constants/routes";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
@@ -28,6 +29,7 @@ import clsx from "clsx";
 import LogOut from "../../components/logoutButton";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import SettingsIcon from "@material-ui/icons/Settings";
 const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => ({
@@ -177,9 +179,17 @@ export default function Sidebar() {
         </List>
         <Divider />
         <List>
-          {["Abonnement"].map((text, index) => (
-            <ListItem button key={text} component={Link} to={SUBSCRIPTION}>
-              <ListItemIcon>{index === 0 && <PaymentIcon />}</ListItemIcon>
+          {["Abonnement", "Instellingen"].map((text, index) => (
+            <ListItem
+              button
+              key={text}
+              component={Link}
+              to={index === 0 ? SUBSCRIPTION : SETTINGS}
+            >
+              <ListItemIcon>
+                {index === 0 && <PaymentIcon />}
+                {index === 1 && <SettingsIcon />}
+              </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}

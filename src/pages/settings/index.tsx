@@ -1,31 +1,30 @@
-import { Typography } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 import ClientRegistrationDialog from "../../components/clientRegistration";
-import ListedConsumers from "../../components/listedConsumers";
 import { UserInfoContext } from "../../contexts/usercontext";
-export default function CheckIns() {
+import ClientSettings from "../../components/clientSettings";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
+export default function Settings() {
   const { userInfo } = useContext(UserInfoContext);
   const [verifiedUser, setVerified] = useState<boolean>(false);
-
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
+    setLoading(true);
     if (userInfo) {
       try {
         setVerified(userInfo.verified);
       } catch {
-        throw new Error("Probleem bij het ophalen van gegevens");
+        throw new Error("Could Fetch UserInfo");
       }
+      setLoading(false);
     }
   }, [userInfo]);
 
   return (
     <main className="admin">
+      {loading && <CircularProgress />}
       {verifiedUser ? (
-        <>
-          <Typography className="my-3" variant="h5">
-            Check-ins
-          </Typography>
-          <ListedConsumers />
-        </>
+        <ClientSettings data={userInfo} />
       ) : (
         userInfo && <ClientRegistrationDialog id={userInfo.docid} />
       )}

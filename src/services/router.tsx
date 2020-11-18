@@ -14,25 +14,34 @@ import CheckIn from "../pages/checkin";
 import Footer from "../components/footer";
 import { Container } from "@material-ui/core";
 import CheckIns from "../pages/checkins";
+import Settings from "../pages/settings";
+import ScrollRestoration from "react-scroll-restoration";
 import {
   HOME,
   DASHBOARD,
   CHECK_IN,
-  MENU_CARD,
   LOGIN,
   REGISTER,
   CARDS,
   SUBSCRIPTION,
-  RESTAURANT,
   SCANNER,
   CHECKOUT,
   CHECKINS,
+  SETTINGS,
+  TEAM,
+  CONTACT,
+  INFO,
+  PRICES,
+  POLICY,
+  TOS,
+  GDPR,
 } from "../constants/routes";
 
 const Router = () => {
   return (
-    <Container>
+    <>
       <BrowserRouter>
+        <ScrollRestoration />
         <Suspense fallback={<div>Loading ...</div>}>
           <Switch>
             <Route exact path={HOME} render={() => <Home />} />
@@ -43,6 +52,7 @@ const Router = () => {
               path={CHECK_IN}
               render={({ match }) => <CheckIn match={match} />}
             />
+            <PrivateRoute path={SETTINGS} component={Settings} />
             <PrivateRoute path={CHECKINS} component={CheckIns} />
             <PrivateRoute path={DASHBOARD} component={Dashboard} />
             <PrivateRoute path={CARDS} component={Codes} />
@@ -51,8 +61,10 @@ const Router = () => {
           </Switch>
         </Suspense>
       </BrowserRouter>
-      <Footer />
-    </Container>
+      <Container>
+        <Footer />
+      </Container>
+    </>
   );
 };
 

@@ -5,7 +5,7 @@ import { Typography } from "@material-ui/core";
 
 import AddDialog from "../../components/addDialog";
 import React, { useContext, useEffect, useState } from "react";
-import ClientRegistrationDialog from "../../components/clientRegistrationDialog";
+import ClientRegistrationDialog from "../../components/clientRegistration";
 import { UserInfoContext } from "../../contexts/usercontext";
 export default function MenuCards() {
   const { userInfo } = useContext(UserInfoContext);

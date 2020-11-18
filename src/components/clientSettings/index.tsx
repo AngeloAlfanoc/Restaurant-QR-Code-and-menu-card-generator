@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,14 +13,12 @@ import Container from "@material-ui/core/Container";
 import { VerifyAccountInfoInStore } from "../../services/crud";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
-type ClientRegistrationProps = { id: string };
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "start",
   },
   avatar: {
     margin: theme.spacing(1),
@@ -35,20 +33,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function VerifyUser(props: ClientRegistrationProps) {
+export default function ClientSettings(props) {
   const classes = useStyles();
-  const companyRef = useRef(null);
-  const vatRef = useRef(null);
-  const locationRef = useRef(null);
-  const phoneRef = useRef(null);
 
+  const [input, setInput] = useState<any>({});
+
+  const handleInputChange = (e) =>
+    setInput({
+      ...input,
+      [e.currentTarget.name]: e.currentTarget.value,
+    });
+  const handleInputClick = (e) => console.log((input.company = ""));
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await VerifyAccountInfoInStore(
-      companyRef.current.value,
-      vatRef.current.value,
-      locationRef.current.value,
-      phoneRef.current.value,
+      input.companyName,
+      input.VATNumber,
+      input.phone,
+      input.location,
       props.id
     );
   };
@@ -57,32 +59,32 @@ export default function VerifyUser(props: ClientRegistrationProps) {
     <Container component="main" maxWidth="lg">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Vul aan om verder te gaan.
+        <Typography className="mt-5" component="h1" variant="h4">
+          Instellingen
+        </Typography>
+        <Typography className="mt-5" component="h1" variant="h5">
+          Algemeen
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
-                ref={companyRef}
+                onChange={handleInputChange}
                 autoComplete="companyName"
                 name="companyName"
-                variant="outlined"
                 required
                 fullWidth
                 id="companyName"
                 label="Naam bedrijf"
                 autoFocus
                 type="text"
+                value={props.data.company}
+                onClick={handleInputClick}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                ref={vatRef}
-                variant="outlined"
+                onChange={handleInputChange}
                 required
                 fullWidth
                 id="VAT"
@@ -94,13 +96,13 @@ export default function VerifyUser(props: ClientRegistrationProps) {
                     <InputAdornment position="start">BE</InputAdornment>
                   ),
                 }}
+                value={props.data.vat}
                 type="number"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                ref={phoneRef}
-                variant="outlined"
+                onChange={handleInputChange}
                 required
                 fullWidth
                 id="phone"
@@ -113,25 +115,19 @@ export default function VerifyUser(props: ClientRegistrationProps) {
                   ),
                 }}
                 type="number"
+                value={props.data.phone}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                ref={locationRef}
-                variant="outlined"
-                required
+                onChange={handleInputChange}
                 fullWidth
                 id="location"
                 label="Locatie"
                 name="location"
                 autoComplete="location"
                 type="text"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="acceptTOS" color="secondary" />}
-                label="Door dit aan te vinken ga je akkoord met onze algemene voorwaarden"
+                value={props.data.location}
               />
             </Grid>
             <Grid item xs={12}>
@@ -141,7 +137,7 @@ export default function VerifyUser(props: ClientRegistrationProps) {
                 color="primary"
                 className={classes.submit}
               >
-                Activeer mijn gratis account en ga verder
+                Opslaan
               </Button>
             </Grid>
           </Grid>

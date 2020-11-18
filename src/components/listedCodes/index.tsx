@@ -173,20 +173,93 @@ export default function BasicTable() {
                 );
               })
             ) : (
-              <TableRow>
-                <TableCell align="left">
-                  <Skeleton animation="wave" />
-                </TableCell>
-                <TableCell align="center">
-                  <Skeleton animation="wave" />
-                </TableCell>
-                <TableCell align="center">
-                  <Skeleton animation="wave" />
-                </TableCell>
-                <TableCell align="right">
-                  <Skeleton animation="wave" />
-                </TableCell>
-              </TableRow>
+              <>
+                <TableRow>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                </TableRow>
+              </>
             )}
           </TableBody>
         </Table>
@@ -198,7 +271,10 @@ export default function BasicTable() {
       )}
       {qrCodeUid && (
         <Dialog open={qrCode} onClose={() => toggleQrDialog(qrCodeUid)}>
-          <QrDialog uid={`http://localhost:3000/menu/${qrCodeUid}`} />
+          <QrDialog
+            uid={`http://localhost:3000/menu/${qrCodeUid}`}
+            id={qrCodeUid}
+          />
           <DialogActions>
             <Button onClick={() => toggleQrDialog(qrCodeUid)} color="primary">
               Sluiten

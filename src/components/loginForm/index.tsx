@@ -17,6 +17,7 @@ import { login } from "../../services/auth";
 import { DASHBOARD } from "../../constants/routes";
 import { Box } from "@material-ui/core";
 import { REGISTER } from "../../constants/routes";
+import Logo from "../logo";
 export default function LoginForm() {
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
@@ -73,8 +74,15 @@ export default function LoginForm() {
   return (
     <>
       <Container component="main" className={classes.container} maxWidth="xs">
+        <Box className="mb-5 text-center">
+          <Logo width="150" height="150" />
+          <Typography component="h2" variant="h4">
+            Checkinify.be
+          </Typography>
+        </Box>
+
         <CssBaseline />
-        <Typography component="h2" variant="h3">
+        <Typography component="h2" variant="h4">
           Login
         </Typography>
         {error && (
@@ -82,7 +90,11 @@ export default function LoginForm() {
             {error}
           </Alert>
         )}
-        <form onSubmit={handleSubmit} className={classes.form}>
+        <form
+          onSubmit={handleSubmit}
+          className={classes.form}
+          autoComplete="on"
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
               <FormGroup id="email">

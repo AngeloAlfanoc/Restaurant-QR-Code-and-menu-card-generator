@@ -86,5 +86,5 @@ export async function remDataStore(document: string) {
 */
 
 export async function editFieldInStoreObject(id: string) {
-  return db.collection("menuCards").doc(id);
+  return db.collection("menus").doc(id);
 }
