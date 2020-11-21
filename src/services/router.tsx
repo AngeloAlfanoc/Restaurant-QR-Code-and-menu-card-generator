@@ -36,6 +36,7 @@ import {
   TOS,
   GDPR,
 } from "../constants/routes";
+import PageNotFound from "../pages/404Error";
 
 const Router = () => {
   return (
@@ -52,6 +53,7 @@ const Router = () => {
               path={CHECK_IN}
               render={({ match }) => <CheckIn match={match} />}
             />
+
             <PrivateRoute path={SETTINGS} component={Settings} />
             <PrivateRoute path={CHECKINS} component={CheckIns} />
             <PrivateRoute path={DASHBOARD} component={Dashboard} />

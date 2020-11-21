@@ -9,6 +9,8 @@ import {
   DialogTitle,
   FormControlLabel,
   FormGroup,
+  FormControl,
+  Switch,
 } from "@material-ui/core";
 
 import {
@@ -19,8 +21,9 @@ import { Alert } from "@material-ui/lab";
 import { uid } from "uid";
 import { addMenuCardToStore } from "../../services/crud";
 import { UserContext } from "../../contexts/usercontext";
-import { Switch, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import QrDialog from "../qrDialog/index";
+
 export default function AddDialog() {
   const { user } = useContext(UserContext);
   const dialog = useDialogState();
@@ -32,7 +35,8 @@ export default function AddDialog() {
   const [counter, setCounter] = useState<number>(0);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
-
+  const [checkSelfRef, setCheckSelfRef] = useState(false);
+  const [checkGenQR, setCheckGenQR] = useState(false);
   const history = useHistory();
   const handleFormName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCreateUid(uid());
@@ -62,6 +66,12 @@ export default function AddDialog() {
     dispatch({ type: "add" });
     setCounter(0);
     setError("");
+  };
+  const handleChangeSwitchRef = (event: React.FormEvent<HTMLInputElement>) => {
+    setCheckSelfRef(!checkSelfRef);
+  };
+  const handleChangeSwitchQr = (event: React.FormEvent<HTMLInputElement>) => {
+    setCheckGenQR(!checkGenQR);
   };
 
   async function formHandleSave() {
@@ -99,6 +109,7 @@ export default function AddDialog() {
               </DialogContentText>
               <FormGroup>
                 <TextField
+                  className="mb-5"
                   autoFocus
                   margin="dense"
                   id="name"
@@ -107,12 +118,61 @@ export default function AddDialog() {
                   fullWidth
                   onChange={handleFormName}
                 />
+                <FormControlLabel
+                  control={
+                    <>
+                      <Switch
+                        checked={checkSelfRef}
+                        onChange={handleChangeSwitchRef}
+                        name="check"
+                        color="primary"
+                      />
+                    </>
+                  }
+                  label="Eigen menu link voorzien?"
+                />
+                <DialogContentText>
+                  Hiermee kan je het knopje "menu" bij het inchecken door
+                  verwijzen naar je eigen webpagina
+                </DialogContentText>
+                {checkSelfRef && (
+                  <TextField
+                    className="mb-5"
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Link naar je menu kaart bv. www.mijnfriet.be/menukaart"
+                    type="name"
+                    fullWidth
+                    onChange={handleFormName}
+                  />
+                )}
+                <FormControlLabel
+                  control={
+                    <>
+                      <Switch
+                        checked={checkGenQR}
+                        onChange={handleChangeSwitchQr}
+                        name="check"
+                        color="primary"
+                      />
+                    </>
+                  }
+                  label="QR code genereren?"
+                />
+                <DialogContentText>
+                  Een apparte QR code voor je menu aanmaken?
+                </DialogContentText>
               </FormGroup>
             </DialogContent>
           </>
         )}
 
-        {counter === 1 && <QrDialog id={createUid} uid={createUid} />}
+        {counter === 1 && checkGenQR ? (
+          <QrDialog id={createUid} href={createUid} />
+        ) : (
+          <TextField></TextField>
+        )}
 
         <DialogActions>
           <Button onClick={handleCancel} color="primary">

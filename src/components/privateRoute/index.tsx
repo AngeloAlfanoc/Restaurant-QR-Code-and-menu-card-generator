@@ -13,6 +13,7 @@ const PrivateRoute = ({ component: Component, ...otherProps }) => {
       <Container>
         <Drawer />
         <Route
+          exact
           {...otherProps}
           render={(props) =>
             user ? (

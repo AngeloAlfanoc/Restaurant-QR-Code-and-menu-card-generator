@@ -7,6 +7,7 @@ import AddDialog from "../../components/addDialog";
 import React, { useContext, useEffect, useState } from "react";
 import ClientRegistrationDialog from "../../components/clientRegistration";
 import { UserInfoContext } from "../../contexts/usercontext";
+import ClientStatus from "../../components/clientStatus";
 export default function MenuCards() {
   const { userInfo } = useContext(UserInfoContext);
   const [verifiedUser, setVerified] = useState<boolean>(false);
@@ -22,6 +23,7 @@ export default function MenuCards() {
     <main className="admin">
       {verifiedUser ? (
         <>
+          <ClientStatus id={userInfo.id} plan={userInfo.plan} />
           <Typography className="my-3" variant="h5">
             Menu kaarten
           </Typography>

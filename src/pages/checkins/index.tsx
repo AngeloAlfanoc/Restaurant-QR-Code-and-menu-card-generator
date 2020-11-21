@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import ClientRegistrationDialog from "../../components/clientRegistration";
 import ListedConsumers from "../../components/listedConsumers";
 import { UserInfoContext } from "../../contexts/usercontext";
+import ClientStatus from "../../components/clientStatus";
 export default function CheckIns() {
   const { userInfo } = useContext(UserInfoContext);
   const [verifiedUser, setVerified] = useState<boolean>(false);
@@ -21,6 +22,7 @@ export default function CheckIns() {
     <main className="admin">
       {verifiedUser ? (
         <>
+          <ClientStatus id={userInfo.id} plan={userInfo.plan} />
           <Typography className="my-3" variant="h5">
             Check-ins
           </Typography>

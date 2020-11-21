@@ -11,13 +11,14 @@ import DateRangeIcon from "@material-ui/icons/DateRange";
 import { UserContext } from "../../contexts/usercontext";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Alert } from "@material-ui/lab";
-
+import SkeletonComponent from "../skeletonLoader";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-
+import Loader from "../../components/loader";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import Skeleton from "@material-ui/lab/Skeleton";
 import { IconButton } from "@material-ui/core";
+import { db } from "../../services/firebase";
 
 const useStyles = makeStyles({
   table: {
@@ -34,12 +35,39 @@ export default function BasicTable() {
   const [error, setError] = React.useState<string>(null);
   const [rows, setRows] = React.useState<any>(null);
 
+  useEffect(() => {
+    setLoading(true);
+    const unsubscribe = db
+      .collection("checkins")
+      .where("owner", "==", user.uid)
+      .onSnapshot((snapshot) => {
+        const tempLoad = [];
+        if (snapshot.size) {
+          try {
+            snapshot.forEach((doc) => {
+              tempLoad.push({ ...doc.data().items });
+            });
+          } catch {
+            setError("Probleem bij het opvragen van menu kaarten");
+          } finally {
+            setLoading(false);
+          }
+        }
+        setRows(tempLoad);
+        setLoading(false);
+      });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [setRows, user.uid]);
+
   return (
     <>
       <TableContainer component={Paper}>
         <Alert className="d-flex align-items-center" severity="info">
-          Klik op het <DateRangeIcon className="m-auto" /> icoontje om te
-          beginnen om een tijd spanne te selecteren.
+          Klik op het <DateRangeIcon className="m-auto" /> icoontje om een tijd
+          spanne te selecteren.
         </Alert>
         <Tooltip title="Selectie">
           <IconButton>
@@ -63,9 +91,6 @@ export default function BasicTable() {
               <Tooltip title="Mogelijke acties">
                 <TableCell align="left">Telefoon</TableCell>
               </Tooltip>
-              <Tooltip title="Mogelijke acties">
-                <TableCell align="left">Tafel</TableCell>
-              </Tooltip>
             </TableRow>
           </TableHead>
           <TableBody className="my-0"></TableBody>
@@ -73,105 +98,36 @@ export default function BasicTable() {
           <TableBody>
             {rows ? (
               rows.map((row: any, i: number) => {
-                return <></>;
+                return (
+                  <TableRow key={i} className="my-0">
+                    <Tooltip title="Naam Menu Kaart">
+                      <TableCell>{row.firstName + row.lastName}</TableCell>
+                    </Tooltip>
+                    <Tooltip title="Qr code weergeven">
+                      <TableCell align="left">{row.createdAt}</TableCell>
+                    </Tooltip>
+                    <Tooltip title="Menu kaart weergeven">
+                      <TableCell align="left">{row.email}</TableCell>
+                    </Tooltip>
+                    <Tooltip title="Mogelijke acties">
+                      <TableCell align="left">{row.phone}</TableCell>
+                    </Tooltip>
+                  </TableRow>
+                );
               })
             ) : (
               <>
-                <TableRow>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                </TableRow>
+                <SkeletonComponent />
+                <SkeletonComponent />
+                <SkeletonComponent />
+                <SkeletonComponent />
+                <SkeletonComponent />
               </>
             )}
           </TableBody>
         </Table>
       </TableContainer>
-      {loading && (
-        <div className="d-flex justify-content-center mt-5">
-          <CircularProgress color="primary" />
-        </div>
-      )}
+      {loading && <Loader />}
     </>
   );
 }

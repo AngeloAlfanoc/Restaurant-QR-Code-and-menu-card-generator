@@ -25,6 +25,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import QrDialog from "../qrDialog";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import SetPublish from "../setPublish";
+import SkeletonComponent from "../skeletonLoader";
 const useStyles = makeStyles({
   table: {
     minWidth: 100 + "%",
@@ -35,14 +36,13 @@ const useStyles = makeStyles({
 });
 
 export default function BasicTable() {
-  const [qrCode, setQrCode] = React.useState(false);
   const { user } = useContext(UserContext);
   const classes = useStyles();
   const [loading, setLoading] = React.useState<boolean>(false);
   const dispatch = useDialogDispatch();
   const [error, setError] = React.useState<string>(null);
   const [rows, setRows] = React.useState<any>(null);
-  const [qrCodeUid, setQrCodeUid] = React.useState<string>();
+
   useEffect(() => {
     setLoading(true);
     const unsubscribe = db
@@ -69,11 +69,6 @@ export default function BasicTable() {
       unsubscribe();
     };
   }, [setRows, user.uid]);
-
-  const toggleQrDialog = (qrCodeUid: string) => {
-    setQrCode(!qrCode);
-    setQrCodeUid(qrCodeUid);
-  };
 
   const editMenuItems = () => {};
 
@@ -115,11 +110,11 @@ export default function BasicTable() {
               <Tooltip title="Naam Menu Kaart">
                 <TableCell>Menu Naam</TableCell>
               </Tooltip>
-              <Tooltip title="Qr code weergeven">
+              {/* <Tooltip title="Qr code weergeven">
                 <TableCell align="center">QR Code</TableCell>
-              </Tooltip>
+              </Tooltip> */}
               <Tooltip title="Menu kaart weergeven">
-                <TableCell align="center">Menu kaart</TableCell>
+                <TableCell align="left">Menu kaart</TableCell>
               </Tooltip>
               <Tooltip title="Mogelijke acties">
                 <TableCell align="right">Acties</TableCell>
@@ -136,7 +131,7 @@ export default function BasicTable() {
                     <TableCell component="th" scope="row">
                       {row.menuCardName}
                     </TableCell>
-                    <TableCell align="center">
+                    {/* <TableCell align="center">
                       <Tooltip title="QR code bekijken">
                         <IconButton
                           onClick={() => toggleQrDialog(row.menuCardId)}
@@ -144,8 +139,8 @@ export default function BasicTable() {
                           <CameraAlt />
                         </IconButton>
                       </Tooltip>
-                    </TableCell>
-                    <TableCell align="center">
+                    </TableCell> */}
+                    <TableCell align="left">
                       <Tooltip title="Menu Kaart bekijken">
                         <IconButton onClick={editMenuItems}>
                           <MenuBookIcon />
@@ -167,98 +162,23 @@ export default function BasicTable() {
                           <DeleteForeverIcon />
                         </IconButton>
                       </Tooltip>
-                      <SetPublish published={row.published} docUid={row.id} />
+                      <SetPublish
+                        parentLoad={loading}
+                        collection="menus"
+                        published={row.published}
+                        docid={row.id}
+                      />
                     </TableCell>
                   </TableRow>
                 );
               })
             ) : (
               <>
-                <TableRow>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                  <TableCell align="left">
-                    <Skeleton animation="wave" />
-                  </TableCell>
-                </TableRow>
+                <SkeletonComponent />
+                <SkeletonComponent />
+                <SkeletonComponent />
+                <SkeletonComponent />
+                <SkeletonComponent />
               </>
             )}
           </TableBody>
@@ -268,19 +188,6 @@ export default function BasicTable() {
         <div className="d-flex justify-content-center mt-5">
           <CircularProgress color="primary" />
         </div>
-      )}
-      {qrCodeUid && (
-        <Dialog open={qrCode} onClose={() => toggleQrDialog(qrCodeUid)}>
-          <QrDialog
-            uid={`http://localhost:3000/menu/${qrCodeUid}`}
-            id={qrCodeUid}
-          />
-          <DialogActions>
-            <Button onClick={() => toggleQrDialog(qrCodeUid)} color="primary">
-              Sluiten
-            </Button>
-          </DialogActions>
-        </Dialog>
       )}
     </>
   );

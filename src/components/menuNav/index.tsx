@@ -12,7 +12,7 @@ export default function Nav() {
   }
 
   return (
-    <nav className="text-center">
+    <nav className="desktop_nav nav__props">
       <div className="d-flex flex-column align-items-center text-white">
         <Logo width="100" height="100" />
         <span className="mt-1">Checkinify.be</span>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,8 +10,16 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { VerifyAccountInfoInStore } from "../../services/crud";
+import {
+  addPublicBusinessData,
+  VerifyAccountInfoInStore,
+} from "../../services/crud";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import csc from "country-state-city";
+
+import { Autocomplete } from "@material-ui/lab";
+import { uid } from "uid";
+import { UserContext } from "../../contexts/usercontext";
 
 type ClientRegistrationProps = { id: string };
 
@@ -36,15 +44,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function VerifyUser(props: ClientRegistrationProps) {
+  const { user } = useContext(UserContext);
+  const states = csc.getStatesOfCountry("21");
   const classes = useStyles();
-
   const [input, setInput] = useState<any>({});
-
-  const handleInputChange = (e) =>
+  const [chosenCity, setChosenCity] = useState(null);
+  const [cities, setCities] = useState([]);
+  const inputRef = useRef<HTMLInputElement>();
+  const handleInputChange = (e) => {
     setInput({
       ...input,
       [e.currentTarget.name]: e.currentTarget.value,
     });
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,9 +65,21 @@ export default function VerifyUser(props: ClientRegistrationProps) {
       input.VATNumber,
       input.phone,
       input.location,
+      input.checkTOS,
       props.id
     );
+    await addPublicBusinessData(uid(), user.uid);
   };
+  useEffect(() => {
+    const tempArr = [];
+    states.forEach((item) => {
+      csc.getCitiesOfState(item.id).forEach((item) => {
+        tempArr.push(item);
+      });
+    });
+    setCities(tempArr);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container component="main" maxWidth="lg">
@@ -121,21 +145,44 @@ export default function VerifyUser(props: ClientRegistrationProps) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                onChange={handleInputChange}
-                variant="outlined"
-                required
-                fullWidth
-                id="location"
-                label="Locatie"
-                name="location"
-                autoComplete="location"
-                type="text"
+              <Autocomplete
+                options={cities}
+                onChange={(event, option) => {
+                  setChosenCity(option.name);
+                  setInput({
+                    ...input,
+                    location: option.name,
+                  });
+                }}
+                getOptionLabel={(option) => option.name}
+                renderOption={(option) => <>{option.name}</>}
+                renderInput={(params) => (
+                  <TextField
+                    inputRef={inputRef}
+                    onChange={handleInputChange}
+                    name="location"
+                    {...params}
+                    label="Locatie*"
+                    variant="outlined"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: "new-password",
+                    }}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox value="acceptTOS" color="secondary" />}
+                control={
+                  <Checkbox
+                    onChange={handleInputChange}
+                    required
+                    name="checkTOS"
+                    value="acceptedTOS"
+                    color="secondary"
+                  />
+                }
                 label="Door dit aan te vinken ga je akkoord met onze algemene voorwaarden"
               />
             </Grid>

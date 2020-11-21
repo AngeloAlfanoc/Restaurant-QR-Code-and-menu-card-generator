@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { VerifyAccountInfoInStore } from "../../services/crud";
+import { UpdateAccountInfoInStore } from "../../services/crud";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,20 +35,29 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ClientSettings(props) {
   const classes = useStyles();
-
   const [input, setInput] = useState<any>({});
 
-  const handleInputChange = (e) =>
+  const handleInputChange = (e) => {
     setInput({
       ...input,
       [e.currentTarget.name]: e.currentTarget.value,
     });
-  const handleInputClick = (e) => console.log((input.company = ""));
+  };
+
+  useLayoutEffect(() => {
+    setInput({
+      company: props.data.company,
+      vat: props.data.vat,
+      phone: props.data.phone,
+      location: props.data.location,
+    });
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await VerifyAccountInfoInStore(
-      input.companyName,
-      input.VATNumber,
+    await UpdateAccountInfoInStore(
+      input.company,
+      input.vat,
       input.phone,
       input.location,
       props.id
@@ -71,15 +80,14 @@ export default function ClientSettings(props) {
               <TextField
                 onChange={handleInputChange}
                 autoComplete="companyName"
-                name="companyName"
+                name="company"
                 required
                 fullWidth
                 id="companyName"
                 label="Naam bedrijf"
                 autoFocus
                 type="text"
-                value={props.data.company}
-                onClick={handleInputClick}
+                value={input.company}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -87,17 +95,17 @@ export default function ClientSettings(props) {
                 onChange={handleInputChange}
                 required
                 fullWidth
-                id="VAT"
+                id="VATNumber"
                 label="BTW Nummer"
-                name="VATNumber"
+                name="vat"
                 autoComplete="VATNumber"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">BE</InputAdornment>
                   ),
                 }}
-                value={props.data.vat}
                 type="number"
+                value={input.vat}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -115,7 +123,7 @@ export default function ClientSettings(props) {
                   ),
                 }}
                 type="number"
-                value={props.data.phone}
+                value={input.phone}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -127,7 +135,7 @@ export default function ClientSettings(props) {
                 name="location"
                 autoComplete="location"
                 type="text"
-                value={props.data.location}
+                value={input.location}
               />
             </Grid>
             <Grid item xs={12}>

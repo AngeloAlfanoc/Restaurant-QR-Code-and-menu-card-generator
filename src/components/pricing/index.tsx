@@ -59,11 +59,10 @@ const tiers = [
     description: [
       "Beschikbaar op tablet of smartphone",
       "Volledige interactive menu",
-      "Overzicht van consumenten die ingecheckt hebben",
-      "keuze uit verschillende menu layouts",
       "Veelzijdige administration tool",
-      "Foto's in 3D weergave voor een realistische weergave!",
+      "Foto's van gerechten / andere nuttigingen",
       "Overzicht van consumenten die ingecheckt hebben",
+      "Foto's in 3D weergave voor een realistische weergave!",
     ],
     buttonText: "Nu starten",
     buttonDemo: "Bekijk Demo",

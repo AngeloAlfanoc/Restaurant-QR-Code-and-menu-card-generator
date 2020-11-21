@@ -13,9 +13,12 @@
 .primary__button {
   border: 0;
   background: #bf3030;
-  border-color: #bf3030;
   color: white;
   &:active {
     box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+  }
+  &:hover {
+    transition: ease-in-out 0.5s;
+    background: #da3939;
   }
 }

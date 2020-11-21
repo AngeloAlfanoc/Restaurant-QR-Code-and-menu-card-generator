@@ -8,6 +8,7 @@ export default function Settings() {
   const { userInfo } = useContext(UserInfoContext);
   const [verifiedUser, setVerified] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(() => {
     setLoading(true);
     if (userInfo) {

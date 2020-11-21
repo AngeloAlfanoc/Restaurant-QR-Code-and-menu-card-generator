@@ -8,7 +8,7 @@ import item_2 from "../../assets/slick/item_2.jpg";
 import Nav from "../../components/menuNav";
 import { useHistory } from "react-router-dom";
 import Slide from "./slide";
-
+import Burger from "../menuBurger/index";
 export default function HeroSlider() {
   const history = useHistory();
   const handleLink = (link) => {
@@ -24,6 +24,7 @@ export default function HeroSlider() {
     <div className="position-relative">
       <div className="container-fluid">
         <Nav />
+        <Burger />
       </div>
       <Slider {...settings}>
         <Slide
