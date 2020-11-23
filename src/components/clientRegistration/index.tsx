@@ -12,7 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import {
   addPublicBusinessData,
-  VerifyAccountInfoInStore,
+  verifyAccountInfoInStore,
 } from "../../services/crud";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import csc from "country-state-city";
@@ -60,7 +60,7 @@ export default function VerifyUser(props: ClientRegistrationProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await VerifyAccountInfoInStore(
+    await verifyAccountInfoInStore(
       input.companyName,
       input.VATNumber,
       input.phone,

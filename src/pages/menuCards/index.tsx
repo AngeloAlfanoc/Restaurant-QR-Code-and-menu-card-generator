@@ -23,7 +23,7 @@ export default function MenuCards() {
     <main className="admin">
       {verifiedUser ? (
         <>
-          <ClientStatus id={userInfo.id} plan={userInfo.plan} />
+          <ClientStatus id={userInfo.id} plan={userInfo.plan}  company={userInfo.company} />
           <Typography className="my-3" variant="h5">
             Menu kaarten
           </Typography>

@@ -25,7 +25,7 @@ const Dashboard = () => {
         <>
           {verifiedUser ? (
             <>
-              <ClientStatus id={userInfo.id} plan={userInfo.plan} />
+              <ClientStatus id={userInfo.id} plan={userInfo.plan} company={userInfo.company} />
               <Typography className="my-2" component={"h1"} variant="h5">
                 Overzicht Check-ins
               </Typography>

@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { UpdateAccountInfoInStore } from "../../services/crud";
+import { updateAccountInfoInStore } from "../../services/crud";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 const useStyles = makeStyles((theme) => ({
@@ -55,7 +55,7 @@ export default function ClientSettings(props) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await UpdateAccountInfoInStore(
+    await updateAccountInfoInStore(
       input.company,
       input.vat,
       input.phone,

@@ -22,7 +22,7 @@ export default function CheckIns() {
     <main className="admin">
       {verifiedUser ? (
         <>
-          <ClientStatus id={userInfo.id} plan={userInfo.plan} />
+          <ClientStatus id={userInfo.id} plan={userInfo.plan}  company={userInfo.company} />
           <Typography className="my-3" variant="h5">
             Check-ins
           </Typography>

@@ -8,8 +8,10 @@ import RestaurantIcon from "@material-ui/icons/Restaurant";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { editFieldInStoreObject } from "../../services/crud";
 import { uid } from "uid";
+import {addCheckinData} from "../../services/crud"
+import { InputAdornment } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 const useStyles = makeStyles((theme) => ({
   container: {
     marginBottom: "5rem",
@@ -35,7 +37,11 @@ const useStyles = makeStyles((theme) => ({
 export default function ConsumerCheckIn(props: any) {
   const classes = useStyles();
   const [input, setInput] = useState<any>({});
-
+  const [loading, setLoading] = useState<boolean>(false)
+  const [succes, setSucces] = useState<boolean>(false)
+  const [alert, setAlert] = useState<string>()
+  const [error, setError] = useState<string>()
+ 
   const handleInputChange = (e) => {
     setInput({
       ...input,
@@ -45,21 +51,19 @@ export default function ConsumerCheckIn(props: any) {
 
   const handleSetConsumer = async (e) => {
     e.preventDefault();
-    setInput({
-      ...input,
-      createdAt: Date.now(),
-    });
-    const doc = await editFieldInStoreObject(props.docid, props.collection);
-    if (input.createdAt) {
-      doc.set(
-        {
-          items: {
-            [uid()]: input,
-          },
-        },
-        { merge: true }
-      );
+    try {
+      setLoading(true)
+      await addCheckinData(props.docid, input.firstName, input.lastName, input.email, input.phone,  Date.now())
     }
+    catch (e) {
+      setError(e)
+    }
+    finally {
+      setAlert("Uw checkin werd verstuurd!")
+      setSucces(true)
+    }
+    setLoading(false)
+    
   };
 
   return (
@@ -69,7 +73,9 @@ export default function ConsumerCheckIn(props: any) {
         <Avatar className={classes.avatar}>
           <RestaurantIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        {alert && <Alert severity="success">{alert}</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
+{   !succes &&    <><Typography component="h1" variant="h5">
           Checkin Formulier
         </Typography>
         <form onSubmit={handleSetConsumer} className={classes.form}>
@@ -85,6 +91,7 @@ export default function ConsumerCheckIn(props: any) {
                 id="firstName"
                 label="Naam"
                 autoFocus
+                type="text"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -97,6 +104,7 @@ export default function ConsumerCheckIn(props: any) {
                 label="Familienaam"
                 name="lastName"
                 autoComplete="lname"
+                type="text"
               />
             </Grid>
             <Grid item xs={12}>
@@ -106,9 +114,10 @@ export default function ConsumerCheckIn(props: any) {
                 required
                 fullWidth
                 id="email"
-                label="Email adres"
+                label="Email"
                 name="email"
                 autoComplete="email"
+                type="email"
               />
             </Grid>
             <Grid item xs={12}>
@@ -118,9 +127,15 @@ export default function ConsumerCheckIn(props: any) {
                 required
                 fullWidth
                 id="phone"
-                label="Gsm-nummer"
+                label="gsm/telefoon"
                 name="phone"
                 autoComplete="phone"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">+32</InputAdornment>
+                  ),
+                }}
+                type="phone"
               />
             </Grid>
           </Grid>
@@ -129,11 +144,12 @@ export default function ConsumerCheckIn(props: any) {
             fullWidth
             variant="contained"
             color="primary"
+            disabled={loading}
             className={classes.submit}
           >
             Indienen
           </Button>
-        </form>
+        </form></>}
       </div>
     </Container>
   );

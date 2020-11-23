@@ -19,10 +19,8 @@ import { UserContext } from "../../contexts/usercontext";
 import { db } from "../../services/firebase";
 import QrDialog from "../qrDialog";
 import SetPublish from "../setPublish";
-interface IUser {
-  id: string;
-  plan: string;
-}
+import LinkIcon from '@material-ui/icons/Link';
+
 
 export default function ClientStatus(props: IUser) {
   const { user } = useContext(UserContext);
@@ -70,28 +68,30 @@ export default function ClientStatus(props: IUser) {
         <Table aria-label="simple table">
           <TableHead className="my-0">
             <TableRow className="my-0">
-              <Tooltip title="Naam Menu Kaart">
+              <Tooltip title="Checkin Pagina">
                 <TableCell>Pagina</TableCell>
               </Tooltip>
               <Tooltip title="Qr code weergeven">
                 <TableCell align="center">QR Code</TableCell>
               </Tooltip>
-              <Tooltip title="Menu kaart weergeven">
+              <Tooltip title="Actieve plan">
                 <TableCell align="right">Plan</TableCell>
               </Tooltip>
-              <Tooltip title="Acties">
+              <Tooltip title="Publicatie">
                 <TableCell align="right">Publiceer</TableCell>
               </Tooltip>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow style={{ margin: 0 }}>
-              <TableCell align="left">
+              <TableCell align="left"  style={{height:"100px"}}>
                 <a
+                 
                   href={`http://${location}:3000/checkin/${props.id}`}
                   target="_blank"
                   rel="noreferrer"
-                >{`http://${location}:3000/checkin/${props.id}`}</a>
+                  className="d-flex align-items-center border-0"
+                ><LinkIcon /><strong className="ml-1">{props.company}'s Checkin pagina </strong></a>
               </TableCell>
               <TableCell align="center">
                 <Tooltip title="QR code bekijken">
@@ -130,4 +130,11 @@ export default function ClientStatus(props: IUser) {
       )}
     </>
   );
+}
+
+
+interface IUser {
+  id: string;
+  plan: string;
+  company: string;
 }

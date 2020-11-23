@@ -34,31 +34,40 @@ export default function BasicTable() {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>(null);
   const [rows, setRows] = React.useState<any>(null);
-
+  const [documentId, setDocumentId] = React.useState<string>()
   useEffect(() => {
     setLoading(true);
-    const unsubscribe = db
-      .collection("checkins")
-      .where("owner", "==", user.uid)
-      .onSnapshot((snapshot) => {
-        const tempLoad = [];
-        if (snapshot.size) {
-          try {
-            snapshot.forEach((doc) => {
-              tempLoad.push({ ...doc.data().items });
-            });
-          } catch {
-            setError("Probleem bij het opvragen van menu kaarten");
-          } finally {
-            setLoading(false);
-          }
-        }
-        setRows(tempLoad);
-        setLoading(false);
-      });
+    db.collection("checkins").where("owner", "==", user.uid).get().then(function(doc) {
+      doc.forEach((doc) => {
+        console.log(doc.id)
+      })
+  }).catch(function(error) {
+      setError(error)
+  });
+    // const unsubscribe = db
+    //   .collection("checkins")
+    //   .where("owner", "==", user.uid)
+      
+    //   // .collection("items")
+    //   // .onSnapshot((snapshot) => {
+    //   //   const tempLoad = [];
+    //   //   if (snapshot.size) {
+    //   //     try {
+    //   //       snapshot.forEach((doc) => {
+    //   //         tempLoad.push({ ...doc.data().items });
+    //   //       });
+    //   //     } catch {
+    //   //       setError("Probleem bij het opvragen van consumenten");
+    //   //     } finally {
+    //   //       setLoading(false);
+    //   //     }
+    //   //   }
+    //   //   setRows(tempLoad);
+    //   //   setLoading(false);
+    //   // });
 
     return () => {
-      unsubscribe();
+      // unsubscribe();
     };
   }, [setRows, user.uid]);
 
@@ -98,20 +107,10 @@ export default function BasicTable() {
           <TableBody>
             {rows ? (
               rows.map((row: any, i: number) => {
+               
                 return (
                   <TableRow key={i} className="my-0">
-                    <Tooltip title="Naam Menu Kaart">
-                      <TableCell>{row.firstName + row.lastName}</TableCell>
-                    </Tooltip>
-                    <Tooltip title="Qr code weergeven">
-                      <TableCell align="left">{row.createdAt}</TableCell>
-                    </Tooltip>
-                    <Tooltip title="Menu kaart weergeven">
-                      <TableCell align="left">{row.email}</TableCell>
-                    </Tooltip>
-                    <Tooltip title="Mogelijke acties">
-                      <TableCell align="left">{row.phone}</TableCell>
-                    </Tooltip>
+                    <TableCell></TableCell>
                   </TableRow>
                 );
               })

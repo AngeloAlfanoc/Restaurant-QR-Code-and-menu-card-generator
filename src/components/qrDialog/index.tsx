@@ -60,16 +60,17 @@ export default function QrDialog(props: QRProps) {
   return (
     <>
       <DialogTitle id="form-dialog-title">Uw QR Code</DialogTitle>
-      <DialogContent>
-        {alert && <Alert severity="info">{alert}</Alert>}
-        <QRCode
-          value={props.href}
-          id="qrcode"
-          renderAs="svg"
-          fgColor="#000000"
-          bgColor="#ffffff"
-          size={100 + "%"}
-        />
+      <DialogContent >
+        {alert && <Alert severity="info" className="mb-3">{alert}</Alert>}
+
+          <QRCode
+            value={props.href}
+            id="qrcode"
+            renderAs="svg"
+            fgColor="#000000"
+            bgColor="#ffffff"
+            size={350}
+          />
 
         <Box>
           <DialogContentText className="my-2">

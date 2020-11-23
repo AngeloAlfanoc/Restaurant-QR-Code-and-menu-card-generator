@@ -22,7 +22,7 @@ export async function addAccountInfoToStore(uid: string, email: string) {
 @uid is param
 */
 
-export async function VerifyAccountInfoInStore(
+export async function verifyAccountInfoInStore(
   company: string,
   vat: string,
   phone: string,
@@ -51,7 +51,7 @@ export async function VerifyAccountInfoInStore(
 @uid is param
 */
 
-export async function UpdateAccountInfoInStore(
+export async function updateAccountInfoInStore(
   company: string,
   vat: string,
   phone: string,
@@ -121,7 +121,7 @@ export async function editFieldInStoreObject(id: string, collection: string) {
 @uid is param
 */
 
-export async function GetRestaurantInfo(id: string) {
+export async function getRestaurantInfo(id: string) {
   return db.collection("users").where("id", "==", id);
 }
 
@@ -137,4 +137,20 @@ export async function addPublicBusinessData(id: string, ownerId: string) {
     published: false,
     createdAt: Date.now(),
   });
+}
+
+
+/*
+@Adds checkin data to checkin object
+@id is document id, rest of object in userdata.
+*/
+
+export async function addCheckinData(id:string, firstname: string, lastname: string, email: string, phone:number, datetime:number) {
+  return db.collection("checkins").doc(id).collection("items").add({
+    firstname: firstname, 
+    lastname: lastname,
+    email: email,
+    phone: phone,
+    created: datetime
+  })
 }
