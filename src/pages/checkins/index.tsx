@@ -2,19 +2,40 @@ import { Typography } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 import ClientRegistrationDialog from "../../components/clientRegistration";
 import ListedConsumers from "../../components/listedConsumers";
-import { UserInfoContext } from "../../contexts/usercontext";
+import { UserInfoContext } from "../../contexts/userContext";
 import ClientStatus from "../../components/clientStatus";
+import { db } from "../../services/firebase";
+
 export default function CheckIns() {
   const { userInfo } = useContext(UserInfoContext);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [publicInfo, setPublicInfo] = React.useState<any>(null);
   const [verifiedUser, setVerified] = useState<boolean>(false);
 
   useEffect(() => {
     if (userInfo) {
-      try {
-        setVerified(userInfo.verified);
-      } catch {
-        throw new Error("Probleem bij het ophalen van gegevens");
-      }
+      setVerified(userInfo.verified);
+      db.collection("checkins")
+        .where("owner", "==", userInfo.id)
+        .onSnapshot((snapshot) => {
+          const tempLoad = [];
+          if (snapshot.size) {
+            try {
+              snapshot.forEach((doc) => {
+                tempLoad.push({ ...doc.data(), docid: doc.id });
+              });
+            } catch {
+              setError(
+                "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
+              );
+            } finally {
+              setLoading(false);
+            }
+          }
+          setPublicInfo(tempLoad[0]);
+          setLoading(false);
+        });
     }
   }, [userInfo]);
 
@@ -22,11 +43,17 @@ export default function CheckIns() {
     <main className="admin">
       {verifiedUser ? (
         <>
-          <ClientStatus id={userInfo.id} plan={userInfo.plan}  company={userInfo.company} />
+          <ClientStatus
+            id={userInfo.id}
+            plan={userInfo.plan}
+            company={userInfo.company}
+          />
           <Typography className="my-3" variant="h5">
             Check-ins
           </Typography>
-          <ListedConsumers />
+          {publicInfo && (
+            <ListedConsumers docid={publicInfo.docid} range={25} />
+          )}
         </>
       ) : (
         userInfo && <ClientRegistrationDialog id={userInfo.docid} />

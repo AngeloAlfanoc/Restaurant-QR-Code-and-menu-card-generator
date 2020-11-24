@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import ClientRegistrationDialog from "../../components/clientRegistration";
-import { UserInfoContext } from "../../contexts/usercontext";
+import { UserInfoContext } from "../../contexts/userContext";
 import ClientSettings from "../../components/clientSettings";
 import CircularProgress from "@material-ui/core/CircularProgress";
 

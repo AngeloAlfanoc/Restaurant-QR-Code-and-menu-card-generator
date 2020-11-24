@@ -2,7 +2,7 @@ import { TableCell, TableRow } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import React from "react";
 
-export default function SkeletonComponent() {
+export default function SkeletonComponentCards() {
   return (
     <TableRow>
       <TableCell align="left">

@@ -60,17 +60,21 @@ export default function QrDialog(props: QRProps) {
   return (
     <>
       <DialogTitle id="form-dialog-title">Uw QR Code</DialogTitle>
-      <DialogContent >
-        {alert && <Alert severity="info" className="mb-3">{alert}</Alert>}
+      <DialogContent>
+        {alert && (
+          <Alert severity="info" className="mb-3">
+            {alert}
+          </Alert>
+        )}
 
-          <QRCode
-            value={props.href}
-            id="qrcode"
-            renderAs="svg"
-            fgColor="#000000"
-            bgColor="#ffffff"
-            size={350}
-          />
+        <QRCode
+          value={props.href}
+          id="qrcode"
+          renderAs="svg"
+          fgColor="#000000"
+          bgColor="#ffffff"
+          size={350}
+        />
 
         <Box>
           <DialogContentText className="my-2">
@@ -94,7 +98,9 @@ export default function QrDialog(props: QRProps) {
         </Box>
         <Tooltip title="Kopieer link naar clipboard" className="hover_curse">
           <Box onClick={handleClickCopy} className="d-flex align-items-center">
-            <DialogContentText className="my-2">{props.href}</DialogContentText>
+            <DialogContentText className="my-2">
+              <small>{props.href}</small>
+            </DialogContentText>
             <IconButton className="ml-1">
               <FileCopyOutlined />
             </IconButton>

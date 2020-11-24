@@ -6,7 +6,7 @@ import { Typography } from "@material-ui/core";
 import AddDialog from "../../components/addDialog";
 import React, { useContext, useEffect, useState } from "react";
 import ClientRegistrationDialog from "../../components/clientRegistration";
-import { UserInfoContext } from "../../contexts/usercontext";
+import { UserInfoContext } from "../../contexts/userContext";
 import ClientStatus from "../../components/clientStatus";
 export default function MenuCards() {
   const { userInfo } = useContext(UserInfoContext);
@@ -23,7 +23,6 @@ export default function MenuCards() {
     <main className="admin">
       {verifiedUser ? (
         <>
-          <ClientStatus id={userInfo.id} plan={userInfo.plan}  company={userInfo.company} />
           <Typography className="my-3" variant="h5">
             Menu kaarten
           </Typography>

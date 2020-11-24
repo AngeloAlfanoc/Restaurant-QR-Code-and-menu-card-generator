@@ -55,7 +55,9 @@ const Router = () => {
             />
 
             <PrivateRoute path={SETTINGS} component={Settings} />
+
             <PrivateRoute path={CHECKINS} component={CheckIns} />
+
             <PrivateRoute path={DASHBOARD} component={Dashboard} />
             <PrivateRoute path={CARDS} component={Codes} />
             <PrivateRoute path={SUBSCRIPTION} component={Subscription} />

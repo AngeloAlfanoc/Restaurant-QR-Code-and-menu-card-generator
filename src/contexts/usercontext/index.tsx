@@ -7,10 +7,11 @@ type UserProviderProps = { children: React.ReactNode };
 
 export const UserContext = createContext<State | null>({ user: null });
 export const UserInfoContext = createContext({ userInfo: null });
+
 const UserProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [userInfo, setUserInfo] = useState<boolean>(null);
   const [error, setError] = useState<string>(null);
 
   const fetchUserData = async () => {

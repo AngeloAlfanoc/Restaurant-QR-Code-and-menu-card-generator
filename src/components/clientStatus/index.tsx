@@ -15,12 +15,11 @@ import {
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import { CameraAlt } from "@material-ui/icons";
 import React, { useContext, useEffect } from "react";
-import { UserContext } from "../../contexts/usercontext";
+import { UserContext } from "../../contexts/userContext";
 import { db } from "../../services/firebase";
 import QrDialog from "../qrDialog";
 import SetPublish from "../setPublish";
-import LinkIcon from '@material-ui/icons/Link';
-
+import LinkIcon from "@material-ui/icons/Link";
 
 export default function ClientStatus(props: IUser) {
   const { user } = useContext(UserContext);
@@ -29,7 +28,7 @@ export default function ClientStatus(props: IUser) {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [publicInfo, setPublicInfo] = React.useState<any>(null);
   const location = window.location.hostname;
-  const toggleQrDialog = (qrCodeId: string) => {
+  const toggleQrDialog = () => {
     setQrCode(!qrCode);
   };
   useEffect(() => {
@@ -61,7 +60,7 @@ export default function ClientStatus(props: IUser) {
 
   return (
     <>
-      <Typography className="mb-3" component="h2" variant="h5">
+      <Typography className="mt-5 mb-1" component="h2" variant="h5">
         Status gebruiker
       </Typography>
       <TableContainer component={Paper}>
@@ -84,18 +83,22 @@ export default function ClientStatus(props: IUser) {
           </TableHead>
           <TableBody>
             <TableRow style={{ margin: 0 }}>
-              <TableCell align="left"  style={{height:"100px"}}>
+              <TableCell align="left" style={{ height: "100px" }}>
                 <a
-                 
                   href={`http://${location}:3000/checkin/${props.id}`}
                   target="_blank"
                   rel="noreferrer"
                   className="d-flex align-items-center border-0"
-                ><LinkIcon /><strong className="ml-1">{props.company}'s Checkin pagina </strong></a>
+                >
+                  <LinkIcon />
+                  <strong className="ml-1">
+                    {props.company}'s Checkin pagina
+                  </strong>
+                </a>
               </TableCell>
               <TableCell align="center">
                 <Tooltip title="QR code bekijken">
-                  <IconButton onClick={() => toggleQrDialog(props.id)}>
+                  <IconButton onClick={() => toggleQrDialog()}>
                     <CameraAlt />
                   </IconButton>
                 </Tooltip>
@@ -109,20 +112,19 @@ export default function ClientStatus(props: IUser) {
                     collection="checkins"
                   />
                 )}
-                {console.log(publicInfo)}
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
       {props.id && (
-        <Dialog open={qrCode} onClose={() => toggleQrDialog(props.id)}>
+        <Dialog open={qrCode} onClose={() => toggleQrDialog()}>
           <QrDialog
             href={`http://${location}:3000/checkin/${props.id}`}
             id={props.id}
           />
           <DialogActions>
-            <Button onClick={() => toggleQrDialog(props.id)} color="primary">
+            <Button onClick={() => toggleQrDialog()} color="primary">
               Sluiten
             </Button>
           </DialogActions>
@@ -131,7 +133,6 @@ export default function ClientStatus(props: IUser) {
     </>
   );
 }
-
 
 interface IUser {
   id: string;

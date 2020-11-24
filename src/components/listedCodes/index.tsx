@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,14 +8,14 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import EditIcon from "@material-ui/icons/Edit";
-import { Dialog, IconButton } from "@material-ui/core";
+import { Box, Dialog, IconButton } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { UserContext } from "../../contexts/usercontext";
+import { UserContext } from "../../contexts/userContext";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Alert } from "@material-ui/lab";
 import { CameraAlt } from "@material-ui/icons";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { useDialogDispatch } from "../../contexts/addDialogcontext/index";
+import { useDialogDispatch } from "../../contexts/addDialogContext/index";
 import { remDataStore } from "../../services/crud";
 import { db } from "../../services/firebase";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
@@ -26,9 +26,14 @@ import QrDialog from "../qrDialog";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import SetPublish from "../setPublish";
 import SkeletonComponent from "../skeletonLoader";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+
 const useStyles = makeStyles({
   table: {
     minWidth: 100 + "%",
+  },
+  menuButton: {
+    width: 250 + "px",
   },
   button: {
     padding: 0,
@@ -37,11 +42,18 @@ const useStyles = makeStyles({
 
 export default function BasicTable() {
   const { user } = useContext(UserContext);
+  const [qrCode, setQrCode] = useState(false);
+  const [qrCodeId, setQrCodeId] = useState<string>(null);
   const classes = useStyles();
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDialogDispatch();
-  const [error, setError] = React.useState<string>(null);
-  const [rows, setRows] = React.useState<any>(null);
+  const [error, setError] = useState<string>(null);
+  const [rows, setRows] = useState<any>(null);
+  const location = window.location.hostname;
+  const toggleQrDialog = (qrId: string) => {
+    setQrCode(!qrCode);
+    setQrCodeId(qrId);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -57,9 +69,12 @@ export default function BasicTable() {
             });
           } catch {
             setError("Probleem bij het opvragen van menu kaarten");
-          } finally {
-            setLoading(false);
           }
+        }
+        if (snapshot.size === 0) {
+          tempLoad.push({
+            menuCardName: "U heeft nog geen menu kaarten toegevoegd...",
+          });
         }
         setRows(tempLoad);
         setLoading(false);
@@ -88,21 +103,23 @@ export default function BasicTable() {
   return (
     <>
       <TableContainer component={Paper}>
-        <Alert className="d-flex align-items-center" severity="info">
-          Klik op het <AddCircleIcon className="m-auto" /> icoontje om te
-          beginnen
-        </Alert>
-
-        <Tooltip title="Toevoegen">
-          <IconButton
-            onClick={() => dispatch({ type: "add" })}
-            className="m-2"
-            color="primary"
-            size="medium"
+        <Box className="w-100 d-flex align-items-center justify-content-between">
+          <Tooltip title="Toevoegen">
+            <IconButton
+              onClick={() => dispatch({ type: "add" })}
+              className="m-2"
+              color="primary"
+            >
+              <AddCircleIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip
+            title={`  Klik op het cirkel icoontje om te
+          beginnen`}
           >
-            <AddCircleIcon />
-          </IconButton>
-        </Tooltip>
+            <HelpOutlineIcon className="m-2" color="disabled" />
+          </Tooltip>
+        </Box>
         {error && <Alert severity="warning">{error}</Alert>}
         <Table className={classes.table} aria-label="simple table">
           <TableHead className="my-0">
@@ -110,11 +127,11 @@ export default function BasicTable() {
               <Tooltip title="Naam Menu Kaart">
                 <TableCell>Menu Naam</TableCell>
               </Tooltip>
-              {/* <Tooltip title="Qr code weergeven">
+              <Tooltip title="Qr code weergeven">
                 <TableCell align="center">QR Code</TableCell>
-              </Tooltip> */}
+              </Tooltip>
               <Tooltip title="Menu kaart weergeven">
-                <TableCell align="left">Menu kaart</TableCell>
+                <TableCell align="right">Menu kaart</TableCell>
               </Tooltip>
               <Tooltip title="Mogelijke acties">
                 <TableCell align="right">Acties</TableCell>
@@ -131,7 +148,7 @@ export default function BasicTable() {
                     <TableCell component="th" scope="row">
                       {row.menuCardName}
                     </TableCell>
-                    {/* <TableCell align="center">
+                    <TableCell align="center">
                       <Tooltip title="QR code bekijken">
                         <IconButton
                           onClick={() => toggleQrDialog(row.menuCardId)}
@@ -139,46 +156,56 @@ export default function BasicTable() {
                           <CameraAlt />
                         </IconButton>
                       </Tooltip>
-                    </TableCell> */}
-                    <TableCell align="left">
-                      <Tooltip title="Menu Kaart bekijken">
-                        <IconButton onClick={editMenuItems}>
-                          <MenuBookIcon />
-                        </IconButton>
-                      </Tooltip>
                     </TableCell>
-                    <TableCell align="right">
-                      <Tooltip title="Bewerken">
-                        <IconButton onClick={() => handleEdit(row.id)}>
-                          <EditIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Verwijderen">
-                        <IconButton
-                          onClick={() => handleDelete(row.id, i)}
-                          color="secondary"
-                          size="medium"
-                        >
-                          <DeleteForeverIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <SetPublish
-                        parentLoad={loading}
-                        collection="menus"
-                        published={row.published}
-                        docid={row.id}
-                      />
-                    </TableCell>
+                    {row.id && (
+                      <>
+                        <TableCell align="right">
+                          <Tooltip title="Menu Kaart bekijken">
+                            <IconButton onClick={editMenuItems}>
+                              <MenuBookIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Tooltip title="Bewerken">
+                            <IconButton onClick={() => handleEdit(row.id)}>
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Verwijderen">
+                            <IconButton
+                              onClick={() => handleDelete(row.id, i)}
+                              color="secondary"
+                              size="medium"
+                            >
+                              <DeleteForeverIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <SetPublish
+                            parentLoad={loading}
+                            collection="menus"
+                            published={row.published}
+                            docid={row.id}
+                          />
+                        </TableCell>
+                      </>
+                    )}
                   </TableRow>
                 );
               })
             ) : (
               <>
-                <SkeletonComponent />
-                <SkeletonComponent />
-                <SkeletonComponent />
-                <SkeletonComponent />
-                <SkeletonComponent />
+                <TableRow>
+                  <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell className={classes.menuButton} align="right">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                </TableRow>
               </>
             )}
           </TableBody>
@@ -188,6 +215,19 @@ export default function BasicTable() {
         <div className="d-flex justify-content-center mt-5">
           <CircularProgress color="primary" />
         </div>
+      )}
+      {qrCodeId && (
+        <Dialog open={qrCode} onClose={() => toggleQrDialog(qrCodeId)}>
+          <QrDialog
+            href={`http://${location}:3000/${user.uid}/menu/${qrCodeId}`}
+            id={qrCodeId}
+          />
+          <DialogActions>
+            <Button onClick={() => toggleQrDialog(qrCodeId)} color="primary">
+              Sluiten
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
     </>
   );

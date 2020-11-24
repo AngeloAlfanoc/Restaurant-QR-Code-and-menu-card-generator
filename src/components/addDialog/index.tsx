@@ -16,45 +16,45 @@ import {
 import {
   useDialogState,
   useDialogDispatch,
-} from "../../contexts/addDialogcontext";
+} from "../../contexts/addDialogContext";
 import { Alert } from "@material-ui/lab";
 import { uid } from "uid";
 import { addMenuCardToStore } from "../../services/crud";
-import { UserContext } from "../../contexts/usercontext";
+import { UserContext } from "../../contexts/userContext";
 import { useHistory } from "react-router-dom";
 import QrDialog from "../qrDialog/index";
+
+interface IMenuObject {
+  menuName: string;
+  href: string | undefined;
+}
 
 export default function AddDialog() {
   const { user } = useContext(UserContext);
   const dialog = useDialogState();
   const dispatch = useDialogDispatch();
-  const [formName, setFormName] = useState<string>();
+
   const [createUid, setCreateUid] = useState<string>();
-  const [stepOne, setStepOne] = useState<boolean>(false);
-  const [stepTwo, setStepTwo] = useState<boolean>(false);
+
   const [counter, setCounter] = useState<number>(0);
   const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const [checkSelfRef, setCheckSelfRef] = useState(false);
-  const [checkGenQR, setCheckGenQR] = useState(false);
-  const history = useHistory();
-  const handleFormName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCreateUid(uid());
-    setFormName(e.target.value);
-  };
-
-  useLayoutEffect(() => {
-    dialog && setStepOne(true);
-    console.log("Currently Tracking step :" + counter);
-  }, [dialog, counter]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [supplyOwnLinkCheck, setSupplyOwnLinkCheck] = useState<boolean>(false);
+  const [checkGenQR, setCheckGenQR] = useState<boolean>(false);
+  const [input, setInput] = useState<IMenuObject>();
+  const [alert, setAlert] = useState<string>();
 
   const formHandler = () => {
-    setError("");
-    if (formName) {
-      setCounter((prevCount) => prevCount + 1);
-    } else {
-      setError("Gelieve een naam in te vullen.");
-    }
+    setCounter((prevCount) => prevCount + 1);
+  };
+
+  const handleInputChange = (e) => {
+    console.log(input);
+    setCreateUid(uid());
+    setInput({
+      ...input,
+      [e.currentTarget.name]: e.currentTarget.value,
+    });
   };
 
   const handleBack = () => {
@@ -67,18 +67,12 @@ export default function AddDialog() {
     setCounter(0);
     setError("");
   };
-  const handleChangeSwitchRef = (event: React.FormEvent<HTMLInputElement>) => {
-    setCheckSelfRef(!checkSelfRef);
-  };
-  const handleChangeSwitchQr = (event: React.FormEvent<HTMLInputElement>) => {
-    setCheckGenQR(!checkGenQR);
-  };
 
-  async function formHandleSave() {
+  async function handleSave() {
     try {
       setError("");
       setLoading(true);
-      await addMenuCardToStore(createUid, formName, user.uid);
+      await addMenuCardToStore(createUid, input.menuName, user.uid);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -88,6 +82,79 @@ export default function AddDialog() {
     }
   }
 
+  const ActionButtons = () => {
+    if (counter === 0) {
+      return (
+        <>
+          {!checkGenQR ? (
+            <Button onClick={handleSave} color="primary">
+              Opslaan
+            </Button>
+          ) : (
+            <Button onClick={formHandler} color="primary">
+              Volgende
+            </Button>
+          )}
+        </>
+      );
+    }
+    if (counter > 0) {
+      return (
+        <>
+          <Button onClick={handleBack} color="primary">
+            Vorige
+          </Button>
+          <Button onClick={handleSave} color="primary">
+            Opslaan
+          </Button>
+        </>
+      );
+    }
+  };
+
+  const SupplyOwnLink = () => {
+    return (
+      <>
+        <FormControlLabel
+          control={
+            <>
+              <Switch
+                checked={supplyOwnLinkCheck}
+                onChange={handleHrefSwitch}
+                name="check"
+                color="primary"
+              />
+            </>
+          }
+          label="Eigen menu link voorzien?"
+        />
+        <DialogContentText>
+          <small>
+            Hiermee kan je de knop "menu" bij het inchecken door verwijzen naar
+            je eigen webpagina
+          </small>
+        </DialogContentText>
+        {supplyOwnLinkCheck && (
+          <TextField
+            className="mb-5"
+            margin="dense"
+            id="menulink"
+            label="Link naar je menu kaart bv. www.mijnfriet.be/menukaart"
+            type="name"
+            name="menulink"
+            fullWidth
+            onChange={handleInputChange}
+          />
+        )}
+      </>
+    );
+  };
+  const handleHrefSwitch = () => {
+    setSupplyOwnLinkCheck(!supplyOwnLinkCheck);
+  };
+  const handleQrSwitch = () => {
+    setCheckGenQR(!checkGenQR);
+  };
   return (
     <>
       <Dialog
@@ -95,8 +162,13 @@ export default function AddDialog() {
         onClose={() => dispatch({ type: "add" })}
         aria-labelledby="form-dialog-title"
       >
+        {alert && (
+          <Alert severity="warning" variant="filled">
+            {alert}
+          </Alert>
+        )}
         {error && (
-          <Alert severity="info" variant="filled">
+          <Alert severity="error" variant="filled">
             {error}
           </Alert>
         )}
@@ -115,44 +187,18 @@ export default function AddDialog() {
                   id="name"
                   label="Naam van menu kaart"
                   type="name"
+                  name="menuName"
                   fullWidth
-                  onChange={handleFormName}
+                  required
+                  onChange={handleInputChange}
                 />
-                <FormControlLabel
-                  control={
-                    <>
-                      <Switch
-                        checked={checkSelfRef}
-                        onChange={handleChangeSwitchRef}
-                        name="check"
-                        color="primary"
-                      />
-                    </>
-                  }
-                  label="Eigen menu link voorzien?"
-                />
-                <DialogContentText>
-                  Hiermee kan je het knopje "menu" bij het inchecken door
-                  verwijzen naar je eigen webpagina
-                </DialogContentText>
-                {checkSelfRef && (
-                  <TextField
-                    className="mb-5"
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    label="Link naar je menu kaart bv. www.mijnfriet.be/menukaart"
-                    type="name"
-                    fullWidth
-                    onChange={handleFormName}
-                  />
-                )}
+                <SupplyOwnLink />
                 <FormControlLabel
                   control={
                     <>
                       <Switch
                         checked={checkGenQR}
-                        onChange={handleChangeSwitchQr}
+                        onChange={handleQrSwitch}
                         name="check"
                         color="primary"
                       />
@@ -161,39 +207,22 @@ export default function AddDialog() {
                   label="QR code genereren?"
                 />
                 <DialogContentText>
-                  Een apparte QR code voor je menu aanmaken?
+                  <small>Een QR code voor je menu aanmaken?</small>
                 </DialogContentText>
               </FormGroup>
             </DialogContent>
           </>
         )}
 
-        {counter === 1 && checkGenQR ? (
+        {counter === 1 && checkGenQR && (
           <QrDialog id={createUid} href={createUid} />
-        ) : (
-          <TextField></TextField>
         )}
 
         <DialogActions>
           <Button onClick={handleCancel} color="primary">
             Afbreken
           </Button>
-
-          {counter > 0 && (
-            <Button onClick={handleBack} color="primary">
-              Vorige
-            </Button>
-          )}
-          {counter === 0 && (
-            <Button onClick={formHandler} color="primary">
-              Volgende
-            </Button>
-          )}
-          {counter === 1 && (
-            <Button onClick={formHandleSave} color="primary">
-              Opslaan
-            </Button>
-          )}
+          <ActionButtons />
         </DialogActions>
       </Dialog>
     </>

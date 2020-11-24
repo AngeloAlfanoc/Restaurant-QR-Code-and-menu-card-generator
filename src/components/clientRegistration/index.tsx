@@ -11,7 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import {
-  addPublicBusinessData,
+  addPublicCompanyData,
   verifyAccountInfoInStore,
 } from "../../services/crud";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -19,7 +19,7 @@ import csc from "country-state-city";
 
 import { Autocomplete } from "@material-ui/lab";
 import { uid } from "uid";
-import { UserContext } from "../../contexts/usercontext";
+import { UserContext } from "../../contexts/userContext";
 
 type ClientRegistrationProps = { id: string };
 
@@ -68,7 +68,7 @@ export default function VerifyUser(props: ClientRegistrationProps) {
       input.checkTOS,
       props.id
     );
-    await addPublicBusinessData(uid(), user.uid);
+    await addPublicCompanyData(uid(), user.uid);
   };
   useEffect(() => {
     const tempArr = [];

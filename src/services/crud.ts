@@ -20,6 +20,7 @@ export async function addAccountInfoToStore(uid: string, email: string) {
 /*
 @Adds new users object to store
 @uid is param
+The purpose of this function is to add additional client information extended docid.
 */
 
 export async function verifyAccountInfoInStore(
@@ -117,20 +118,11 @@ export async function editFieldInStoreObject(id: string, collection: string) {
 }
 
 /*
-@Get restaurant client checkin
-@uid is param
-*/
-
-export async function getRestaurantInfo(id: string) {
-  return db.collection("users").where("id", "==", id);
-}
-
-/*
 @Adds new public users object to store
 @uid is param
 */
 
-export async function addPublicBusinessData(id: string, ownerId: string) {
+export async function addPublicCompanyData(id: string, ownerId: string) {
   return db.collection("checkins").add({
     id: id,
     owner: ownerId,
@@ -139,18 +131,25 @@ export async function addPublicBusinessData(id: string, ownerId: string) {
   });
 }
 
-
 /*
 @Adds checkin data to checkin object
 @id is document id, rest of object in userdata.
 */
 
-export async function addCheckinData(id:string, firstname: string, lastname: string, email: string, phone:number, datetime:number) {
+export async function addCheckinData(
+  id: string,
+  firstname: string,
+  lastname: string,
+  email: string,
+  phone: number,
+  datetime: number
+) {
   return db.collection("checkins").doc(id).collection("items").add({
-    firstname: firstname, 
+    firstname: firstname,
     lastname: lastname,
     email: email,
     phone: phone,
-    created: datetime
-  })
+    created: datetime,
+  });
 }
+

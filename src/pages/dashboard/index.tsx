@@ -1,39 +1,75 @@
-import { UserContext, UserInfoContext } from "../../contexts/usercontext";
+import { UserContext, UserInfoContext } from "../../contexts/userContext";
 import React, { useContext, useEffect, useState } from "react";
 import "./index.scss";
-import { Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import ClientStatus from "../../components/clientStatus";
 import ListedConsumers from "../../components/listedConsumers";
 import ListedCodes from "../../components/listedCodes";
 import ClientRegistrationDialog from "../../components/clientRegistration";
+import { db } from "../../services/firebase";
+import Loader from "../../components/loader";
+import { Alert } from "@material-ui/lab";
 const Dashboard = () => {
   const { userInfo } = useContext(UserInfoContext);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [publicInfo, setPublicInfo] = React.useState<any>(null);
   const [verifiedUser, setVerified] = useState<boolean>(false);
 
   useEffect(() => {
+    setLoading(true);
     if (userInfo) {
-      try {
-        setVerified(userInfo.verified);
-      } catch {
-        throw new Error("Probleem bij het ophalen van gegevens");
-      }
+      setVerified(userInfo.verified);
+      db.collection("checkins")
+        .where("owner", "==", userInfo.id)
+        .onSnapshot((snapshot) => {
+          const tempLoad = [];
+          if (snapshot.size) {
+            try {
+              snapshot.forEach((doc) => {
+                tempLoad.push({ ...doc.data(), docid: doc.id });
+              });
+            } catch {
+              setError(
+                "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
+              );
+            }
+          }
+          setPublicInfo(tempLoad[0]);
+          setLoading(false);
+        });
     }
   }, [userInfo]);
   return (
     <main className="admin">
+      {loading && <Loader />}
+      {error && <Alert severity={"warning"}>{error}</Alert>}
       {userInfo && (
         <>
           {verifiedUser ? (
             <>
-              <ClientStatus id={userInfo.id} plan={userInfo.plan} company={userInfo.company} />
-              <Typography className="my-2" component={"h1"} variant="h5">
+              <ClientStatus
+                id={userInfo.id}
+                plan={userInfo.plan}
+                company={userInfo.company}
+              />
+
+              <Typography className="mt-5 mb-1" component={"h1"} variant="h5">
                 Overzicht Check-ins
               </Typography>
-              <ListedConsumers />
-              <Typography className="my-2" component={"h1"} variant="h5">
+
+              {publicInfo && (
+                <>
+                  <ListedConsumers docid={publicInfo.docid} range={5} />
+                  <Button className="mt-3">Meer weergeven</Button>
+                </>
+              )}
+
+              <Typography className="mt-5 mb-1" component={"h1"} variant="h5">
                 Overzicht Menu Kaarten
               </Typography>
               <ListedCodes />
+              <Button className="mt-3">Kaarten Pagina</Button>
             </>
           ) : (
             <ClientRegistrationDialog id={userInfo.docid} />

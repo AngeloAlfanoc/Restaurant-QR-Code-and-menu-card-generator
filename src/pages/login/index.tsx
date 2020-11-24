@@ -1,5 +1,5 @@
 import { Redirect } from "react-router-dom";
-import { UserContext } from "../../contexts/usercontext";
+import { UserContext } from "../../contexts/userContext";
 import { DASHBOARD } from "../../constants/routes";
 import React, { useContext } from "react";
 import LoginForm from "../../components/loginForm";
