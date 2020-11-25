@@ -97,11 +97,33 @@ export async function addMenuCardToStore(
 @Get delete card with given card id
 @card uid is param
 */
-// todo change name
-export async function remDataStore(document: string) {
+
+export async function rmDataStore(collection: string, document: string) {
   return await db
-    .collection("menus")
+    .collection(collection)
     .doc(document)
+    .delete()
+    .catch(function (error) {
+      console.error("Error removing document: ", error);
+    });
+}
+
+/*
+@Get delete card with given card id
+@card uid is param
+*/
+// todo change name
+export async function rmDataStoreSub(
+  collection: string,
+  document: string,
+  subCollection: string,
+  subDocument: string
+) {
+  return await db
+    .collection(collection)
+    .doc(document)
+    .collection(subCollection)
+    .doc(subDocument)
     .delete()
     .catch(function (error) {
       console.error("Error removing document: ", error);
@@ -152,4 +174,3 @@ export async function addCheckinData(
     created: datetime,
   });
 }
-

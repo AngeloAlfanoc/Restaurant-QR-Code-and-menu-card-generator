@@ -4,18 +4,20 @@ import "./index.scss";
 import { Button, Typography } from "@material-ui/core";
 import ClientStatus from "../../components/clientStatus";
 import ListedConsumers from "../../components/listedConsumers";
-import ListedCodes from "../../components/listedCodes";
+import ListedCodes from "../../components/listedMenus";
 import ClientRegistrationDialog from "../../components/clientRegistration";
 import { db } from "../../services/firebase";
 import Loader from "../../components/loader";
 import { Alert } from "@material-ui/lab";
+import { useHistory } from "react-router-dom";
+import { CHECKINS } from "../../constants/routes";
 const Dashboard = () => {
   const { userInfo } = useContext(UserInfoContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [publicInfo, setPublicInfo] = React.useState<any>(null);
   const [verifiedUser, setVerified] = useState<boolean>(false);
-
+  const history = useHistory();
   useEffect(() => {
     setLoading(true);
     if (userInfo) {
@@ -60,16 +62,24 @@ const Dashboard = () => {
 
               {publicInfo && (
                 <>
-                  <ListedConsumers docid={publicInfo.docid} range={5} />
-                  <Button className="mt-3">Meer weergeven</Button>
+                  <ListedConsumers
+                    tools={false}
+                    docid={publicInfo.docid}
+                    range={5}
+                  />
+                  <Button
+                    onClick={() => history.push(CHECKINS)}
+                    className="mt-3"
+                  >
+                    Meer weergeven
+                  </Button>
                 </>
               )}
 
               <Typography className="mt-5 mb-1" component={"h1"} variant="h5">
                 Overzicht Menu Kaarten
               </Typography>
-              <ListedCodes />
-              <Button className="mt-3">Kaarten Pagina</Button>
+              <ListedCodes tools={false} />
             </>
           ) : (
             <ClientRegistrationDialog id={userInfo.docid} />

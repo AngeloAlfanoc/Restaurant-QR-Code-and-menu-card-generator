@@ -1,6 +1,6 @@
 import "./index.scss";
 
-import ListedCodes from "../../components/listedCodes";
+import ListedCodes from "../../components/listedMenus";
 import { Typography } from "@material-ui/core";
 
 import AddDialog from "../../components/addDialog";
@@ -26,7 +26,7 @@ export default function MenuCards() {
           <Typography className="my-3" variant="h5">
             Menu kaarten
           </Typography>
-          <ListedCodes />
+          <ListedCodes tools={true} />
           <AddDialog />
         </>
       ) : (

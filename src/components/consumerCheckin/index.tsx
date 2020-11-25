@@ -49,7 +49,9 @@ export default function ConsumerCheckIn(props: any) {
     });
   };
 
-  const handleSetConsumer = async () => {
+  const handleSetConsumer = async (e) => {
+    e.preventDefault();
+
     try {
       setLoading(true);
 

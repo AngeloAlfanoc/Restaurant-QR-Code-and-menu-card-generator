@@ -52,7 +52,7 @@ export default function CheckIns() {
             Check-ins
           </Typography>
           {publicInfo && (
-            <ListedConsumers docid={publicInfo.docid} range={25} />
+            <ListedConsumers tools={true} docid={publicInfo.docid} range={25} />
           )}
         </>
       ) : (

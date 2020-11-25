@@ -49,7 +49,6 @@ export default function AddDialog() {
   };
 
   const handleInputChange = (e) => {
-    console.log(input);
     setCreateUid(uid());
     setInput({
       ...input,

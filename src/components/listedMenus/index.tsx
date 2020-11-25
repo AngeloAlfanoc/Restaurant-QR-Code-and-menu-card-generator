@@ -16,7 +16,7 @@ import { Alert } from "@material-ui/lab";
 import { CameraAlt } from "@material-ui/icons";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { useDialogDispatch } from "../../contexts/addDialogContext/index";
-import { remDataStore } from "../../services/crud";
+import { rmDataStore } from "../../services/crud";
 import { db } from "../../services/firebase";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -25,7 +25,6 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import QrDialog from "../qrDialog";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import SetPublish from "../setPublish";
-import SkeletonComponent from "../skeletonLoader";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 
 const useStyles = makeStyles({
@@ -40,16 +39,17 @@ const useStyles = makeStyles({
   },
 });
 
-export default function BasicTable() {
+export default function ListedMenus(props: any) {
+  const classes = useStyles();
+  const dispatch = useDialogDispatch();
   const { user } = useContext(UserContext);
   const [qrCode, setQrCode] = useState(false);
   const [qrCodeId, setQrCodeId] = useState<string>(null);
-  const classes = useStyles();
   const [loading, setLoading] = useState<boolean>(false);
-  const dispatch = useDialogDispatch();
   const [error, setError] = useState<string>(null);
   const [rows, setRows] = useState<any>(null);
-  const location = window.location.hostname;
+  const [location] = useState(window.location.hostname);
+
   const toggleQrDialog = (qrId: string) => {
     setQrCode(!qrCode);
     setQrCodeId(qrId);
@@ -93,8 +93,7 @@ export default function BasicTable() {
 
   const handleDelete = (document: string, index: number) => {
     try {
-      remDataStore(document);
-      setRows(rows.splice(index, 1));
+      rmDataStore("menus", document);
     } catch (e) {
       setError(e);
     }
@@ -103,23 +102,25 @@ export default function BasicTable() {
   return (
     <>
       <TableContainer component={Paper}>
-        <Box className="w-100 d-flex align-items-center justify-content-between">
-          <Tooltip title="Toevoegen">
-            <IconButton
-              onClick={() => dispatch({ type: "add" })}
-              className="m-2"
-              color="primary"
-            >
-              <AddCircleIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip
-            title={`  Klik op het cirkel icoontje om te
+        {props.tools && (
+          <Box className="w-100 d-flex align-items-center justify-content-between">
+            <Tooltip title="Toevoegen">
+              <IconButton
+                onClick={() => dispatch({ type: "add" })}
+                className="m-2"
+                color="primary"
+              >
+                <AddCircleIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip
+              title={`  Klik op het cirkel icoontje om te
           beginnen`}
-          >
-            <HelpOutlineIcon className="m-2" color="disabled" />
-          </Tooltip>
-        </Box>
+            >
+              <HelpOutlineIcon className="m-2" color="disabled" />
+            </Tooltip>
+          </Box>
+        )}
         {error && <Alert severity="warning">{error}</Alert>}
         <Table className={classes.table} aria-label="simple table">
           <TableHead className="my-0">

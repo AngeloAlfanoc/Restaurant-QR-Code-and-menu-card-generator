@@ -9,7 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import { UserContext } from "../../contexts/userContext";
-
+import { Animated } from "react-animated-css";
 import { Alert, Skeleton } from "@material-ui/lab";
 import SkeletonComponent from "../skeletonLoader";
 
@@ -20,8 +20,15 @@ import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import { IconButton, TextField } from "@material-ui/core";
 import { db } from "../../services/firebase";
 import Box from "@material-ui/core/Box/Box";
-
+import Moment from "react-moment";
 import moment from "moment";
+import "moment-timezone";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import { rmDataStoreSub } from "../../services/crud";
+interface IDateRange {
+  rangeStart: number;
+  rangeEnd: number;
+}
 
 export default function ListedConsumers(props: any) {
   const { user } = useContext(UserContext);
@@ -32,67 +39,119 @@ export default function ListedConsumers(props: any) {
   const [todayPlusOne] = useState(
     moment(new Date()).add(1, "day").format("YYYY-MM-DD")
   );
+  const [dateRange, setDateRange] = useState<IDateRange>({
+    rangeStart: moment(today).valueOf(),
+    rangeEnd: moment(todayPlusOne).valueOf(),
+  });
+  const [boot, setBoot] = useState<boolean>(false);
+  const handleOnChange = (e) => {
+    const conv = moment(e.currentTarget.value).valueOf();
+    setDateRange({
+      ...dateRange,
+      [e.currentTarget.name]: conv,
+    });
+  };
+
+  const handleDelete = (document: string, index: number) => {
+    try {
+      setLoading(true);
+      console.log(props.docid, document, index);
+      rmDataStoreSub("checkins", props.docid, "items", document);
+    } catch (e) {
+      setError(e);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     setLoading(true);
-    db.collection("checkins")
-      .doc(props.docid)
-      .collection("items")
-      .orderBy("created", "desc")
-      .limit(props.range)
-      .onSnapshot((snapshot) => {
-        const tempLoad = [];
-        if (snapshot.size) {
-          try {
-            snapshot.forEach((doc) => {
-              tempLoad.push({ ...doc.data(), docid: doc.id });
-            });
-          } catch {
-            setError(
-              "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
-            );
-          }
-        }
-        if (snapshot.size === 0) {
-          tempLoad.push({
-            firstname: "Er hebben nog geen consumenten ingecheckt...",
-          });
-        }
-        setRows(tempLoad);
-        setLoading(false);
+
+    if (!boot) {
+      setDateRange({
+        rangeStart: moment(today).valueOf(),
+        rangeEnd: moment(todayPlusOne).valueOf(),
       });
+      setBoot(true);
+    }
+    if (boot) {
+      db.collection("checkins")
+        .doc(props.docid)
+        .collection("items")
+        .orderBy("created", "desc")
+        .limit(props.range)
+        .where("created", ">=", dateRange.rangeStart)
+        .where("created", "<=", dateRange.rangeEnd)
+        .onSnapshot((snapshot) => {
+          const tempLoad = [];
+          if (snapshot.size) {
+            try {
+              snapshot.forEach((doc) => {
+                tempLoad.push({ ...doc.data(), docid: doc.id });
+              });
+            } catch {
+              setError(
+                "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
+              );
+            }
+          }
+          if (snapshot.size === 0) {
+            tempLoad.push({
+              firstname: "Er hebben nog geen consumenten ingecheckt...",
+            });
+          }
+          setRows(tempLoad);
+          setLoading(false);
+        });
+    }
 
     setLoading(false);
-  }, [setRows, user.uid, props.docid, props.range]);
+  }, [
+    setRows,
+    user.uid,
+    props.docid,
+    props.range,
+    today,
+    todayPlusOne,
+    dateRange.rangeStart,
+    dateRange.rangeEnd,
+    boot,
+  ]);
 
   return (
     <>
       <TableContainer component={Paper}>
-        <Box className="w-100 d-flex align-items-between justify-items-between my-3">
-          <Tooltip title="Selectie start">
-            <TextField
-              className="mx-3"
-              id="datetime-local"
-              label="Zoek tussen"
-              type="datetime-local"
-              defaultValue={today + "T00:00"}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </Tooltip>
-          <Tooltip title="Selectie einde">
-            <TextField
-              className="mx-3"
-              id="datetime-local"
-              label="en"
-              type="datetime-local"
-              defaultValue={todayPlusOne + "T00:00"}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </Tooltip>
-        </Box>
+        {props.tools && (
+          <Box className="w-100 d-flex align-items-between justify-items-between my-3">
+            <Tooltip title="Selectie start">
+              <TextField
+                className="mx-3"
+                id="datetime-local"
+                label="Zoek tussen"
+                type="datetime-local"
+                name="rangeStart"
+                defaultValue={today + "T00:00"}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={handleOnChange}
+              />
+            </Tooltip>
+            <Tooltip title="Selectie einde">
+              <TextField
+                className="mx-3"
+                id="datetime-local"
+                label="en"
+                type="datetime-local"
+                name="rangeEnd"
+                defaultValue={todayPlusOne + "T00:00"}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={handleOnChange}
+              />
+            </Tooltip>
+          </Box>
+        )}
 
         {error && <Alert severity="warning">{error}</Alert>}
 
@@ -112,18 +171,29 @@ export default function ListedConsumers(props: any) {
               <Tooltip title="Telefoon / Gsm nummer van consument">
                 <TableCell align="right">Telefoon</TableCell>
               </Tooltip>
+              <Tooltip title="Acties">
+                <TableCell align="right">Acties</TableCell>
+              </Tooltip>
             </TableRow>
           </TableHead>
           <TableBody>
             {rows ? (
               rows.map((row: any, i: number) => {
-                console.log(row);
+                const stamp = moment(row.created).unix();
                 return (
                   <TableRow key={i}>
-                    <TableCell>
-                      {row.created &&
-                        new Date(row.created).toLocaleTimeString("be-NL")}
-                    </TableCell>
+                    {row.created && (
+                      <TableCell>
+                        <Moment
+                          format="DD/MM - HH:mm"
+                          local
+                          unix
+                          tz="Europe/Brussels"
+                        >
+                          {stamp}
+                        </Moment>
+                      </TableCell>
+                    )}
                     <TableCell>
                       {row.firstname} {row.lastname}
                     </TableCell>
@@ -132,6 +202,19 @@ export default function ListedConsumers(props: any) {
                     <TableCell align="right">
                       {row.phone && "+32" + row.phone}
                     </TableCell>
+                    {row.docid && (
+                      <TableCell align="right">
+                        <Tooltip title="Verwijderen">
+                          <IconButton
+                            onClick={() => handleDelete(row.docid, i)}
+                            color="secondary"
+                            size="medium"
+                          >
+                            <DeleteForeverIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    )}
                   </TableRow>
                 );
               })
