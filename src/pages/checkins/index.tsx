@@ -5,11 +5,13 @@ import ListedConsumers from "../../components/listedConsumers";
 import { UserInfoContext } from "../../contexts/userContext";
 import ClientStatus from "../../components/clientStatus";
 import { db } from "../../services/firebase";
+import { Alert } from "@material-ui/lab";
+import Loader from "../../components/loader";
 
 export default function CheckIns() {
   const { userInfo } = useContext(UserInfoContext);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>(null);
   const [publicInfo, setPublicInfo] = React.useState<any>(null);
   const [verifiedUser, setVerified] = useState<boolean>(false);
 
@@ -29,8 +31,6 @@ export default function CheckIns() {
               setError(
                 "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
               );
-            } finally {
-              setLoading(false);
             }
           }
           setPublicInfo(tempLoad[0]);
@@ -41,6 +41,7 @@ export default function CheckIns() {
 
   return (
     <main className="admin">
+      {error && <Alert severity="error">{error}</Alert>}
       {verifiedUser ? (
         <>
           <ClientStatus
@@ -58,6 +59,7 @@ export default function CheckIns() {
       ) : (
         userInfo && <ClientRegistrationDialog id={userInfo.docid} />
       )}
+      {loading && <Loader />}
     </main>
   );
 }

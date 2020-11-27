@@ -7,9 +7,8 @@ const CHECKOUT: string = "account/checkout";
 const SETTINGS: string = "/account/settings";
 const LOGIN: string = "/login";
 const REGISTER: string = "/register";
-const RESTAURANT: string = "/restaurant";
-const CHECK_IN: string = `/checkin/:id`;
-const MENU_CARD: string = `${RESTAURANT}/:id/menu/:id`;
+const CHECKIN: string = "/checkin/:id";
+const MENUCARD: string = "/menu/:id";
 const SCANNER: string = "/scanner";
 const TEAM: string = "/team";
 const CONTACT: string = "/contact";
@@ -22,13 +21,12 @@ const GDPR: string = "/gdpr";
 export {
   HOME,
   DASHBOARD,
-  CHECK_IN,
-  MENU_CARD,
+  CHECKIN,
+  MENUCARD,
   LOGIN,
   REGISTER,
   CARDS,
   SUBSCRIPTION,
-  RESTAURANT,
   SCANNER,
   CHECKOUT,
   CHECKINS,

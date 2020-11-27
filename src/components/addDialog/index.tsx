@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   Button,
   TextField,
@@ -9,7 +9,6 @@ import {
   DialogTitle,
   FormControlLabel,
   FormGroup,
-  FormControl,
   Switch,
 } from "@material-ui/core";
 
@@ -21,35 +20,32 @@ import { Alert } from "@material-ui/lab";
 import { uid } from "uid";
 import { addMenuCardToStore } from "../../services/crud";
 import { UserContext } from "../../contexts/userContext";
-import { useHistory } from "react-router-dom";
 import QrDialog from "../qrDialog/index";
-
-interface IMenuObject {
-  menuName: string;
-  href: string | undefined;
-}
+import { IMenuObject } from "../../types";
 
 export default function AddDialog() {
   const { user } = useContext(UserContext);
   const dialog = useDialogState();
   const dispatch = useDialogDispatch();
 
-  const [createUid, setCreateUid] = useState<string>();
+  const [menuId, setMenuId] = useState<string>(uid());
 
   const [counter, setCounter] = useState<number>(0);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [supplyOwnLinkCheck, setSupplyOwnLinkCheck] = useState<boolean>(false);
   const [checkGenQR, setCheckGenQR] = useState<boolean>(false);
-  const [input, setInput] = useState<IMenuObject>();
+  const [input, setInput] = useState<IMenuObject | null>(null);
   const [alert, setAlert] = useState<string>();
+  const [location] = useState(window.location.hostname);
 
   const formHandler = () => {
     setCounter((prevCount) => prevCount + 1);
+    setAlert("");
+    console.log(input);
   };
 
   const handleInputChange = (e) => {
-    setCreateUid(uid());
     setInput({
       ...input,
       [e.currentTarget.name]: e.currentTarget.value,
@@ -59,26 +55,45 @@ export default function AddDialog() {
   const handleBack = () => {
     setCounter((prevCounter) => prevCounter - 1);
     setError("");
+    setInput(null);
   };
 
   const handleCancel = () => {
     dispatch({ type: "add" });
     setCounter(0);
     setError("");
+    setInput(null);
   };
 
   async function handleSave() {
+    setLoading(true);
     try {
       setError("");
-      setLoading(true);
-      await addMenuCardToStore(createUid, input.menuName, user.uid);
+      await addMenuCardToStore(
+        menuId,
+        input.menuName,
+        user.uid,
+        input.menuLink,
+        supplyOwnLinkCheck,
+        checkGenQR
+      );
     } catch (e) {
       setError(e.message);
     } finally {
       dispatch({ type: "add" });
       setLoading(false);
       setCounter(0);
+      setInput(null);
+      setMenuId(uid());
     }
+    console.log(
+      menuId,
+      input.menuName,
+      user.uid,
+      input.menuLink,
+      supplyOwnLinkCheck,
+      checkGenQR
+    );
   }
 
   const ActionButtons = () => {
@@ -86,11 +101,25 @@ export default function AddDialog() {
       return (
         <>
           {!checkGenQR ? (
-            <Button onClick={handleSave} color="primary">
-              Opslaan
+            <Button
+              onClick={
+                input
+                  ? handleSave
+                  : () => setAlert("Gelieve alle velden juist in te vullen.")
+              }
+              color="primary"
+            >
+              {loading ? "Bezig met laden.." : "Opslaan"}
             </Button>
           ) : (
-            <Button onClick={formHandler} color="primary">
+            <Button
+              onClick={
+                input
+                  ? formHandler
+                  : () => setAlert("Gelieve alle velden juist in te vullen.")
+              }
+              color="primary"
+            >
               Volgende
             </Button>
           )}
@@ -119,7 +148,7 @@ export default function AddDialog() {
             <>
               <Switch
                 checked={supplyOwnLinkCheck}
-                onChange={handleHrefSwitch}
+                onChange={() => setSupplyOwnLinkCheck(!supplyOwnLinkCheck)}
                 name="check"
                 color="primary"
               />
@@ -140,7 +169,7 @@ export default function AddDialog() {
             id="menulink"
             label="Link naar je menu kaart bv. www.mijnfriet.be/menukaart"
             type="name"
-            name="menulink"
+            name="menuLink"
             fullWidth
             onChange={handleInputChange}
           />
@@ -148,12 +177,7 @@ export default function AddDialog() {
       </>
     );
   };
-  const handleHrefSwitch = () => {
-    setSupplyOwnLinkCheck(!supplyOwnLinkCheck);
-  };
-  const handleQrSwitch = () => {
-    setCheckGenQR(!checkGenQR);
-  };
+
   return (
     <>
       <Dialog
@@ -197,7 +221,7 @@ export default function AddDialog() {
                     <>
                       <Switch
                         checked={checkGenQR}
-                        onChange={handleQrSwitch}
+                        onChange={() => setCheckGenQR(!checkGenQR)}
                         name="check"
                         color="primary"
                       />
@@ -214,7 +238,7 @@ export default function AddDialog() {
         )}
 
         {counter === 1 && checkGenQR && (
-          <QrDialog id={createUid} href={createUid} />
+          <QrDialog id={menuId} href={location + "/menu/" + menuId} />
         )}
 
         <DialogActions>

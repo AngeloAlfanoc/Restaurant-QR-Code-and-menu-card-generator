@@ -7,15 +7,13 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import DateRangeIcon from "@material-ui/icons/DateRange";
+
 import { UserContext } from "../../contexts/userContext";
-import { Animated } from "react-animated-css";
+
 import { Alert, Skeleton } from "@material-ui/lab";
-import SkeletonComponent from "../skeletonLoader";
 
 import Loader from "../../components/loader";
 import Tooltip from "@material-ui/core/Tooltip";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 
 import { IconButton, TextField } from "@material-ui/core";
 import { db } from "../../services/firebase";
@@ -25,10 +23,7 @@ import moment from "moment";
 import "moment-timezone";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { rmDataStoreSub } from "../../services/crud";
-interface IDateRange {
-  rangeStart: number;
-  rangeEnd: number;
-}
+import { IDateRange } from "../../types";
 
 export default function ListedConsumers(props: any) {
   const { user } = useContext(UserContext);
@@ -55,7 +50,6 @@ export default function ListedConsumers(props: any) {
   const handleDelete = (document: string, index: number) => {
     try {
       setLoading(true);
-      console.log(props.docid, document, index);
       rmDataStoreSub("checkins", props.docid, "items", document);
     } catch (e) {
       setError(e);
@@ -100,7 +94,6 @@ export default function ListedConsumers(props: any) {
             });
           }
           setRows(tempLoad);
-          setLoading(false);
         });
     }
 

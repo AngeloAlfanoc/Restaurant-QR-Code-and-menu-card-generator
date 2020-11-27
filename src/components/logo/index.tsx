@@ -1,11 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as WebsiteLogo } from "../../assets/svg/logo.svg";
-
-interface ILogo {
-  width: string;
-  height: string;
-}
+import { ILogo } from "../../types";
 
 export default function Logo(props: ILogo) {
   const history = useHistory();

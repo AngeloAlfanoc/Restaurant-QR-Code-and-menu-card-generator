@@ -81,16 +81,35 @@ export async function updateAccountInfoInStore(
 export async function addMenuCardToStore(
   uid: string,
   name: string,
-  userid: string
+  userid: string,
+  selfRefLink: string | undefined,
+  selfRef: boolean,
+  qrcode: boolean
 ) {
-  return db.collection("menus").add({
-    menuOwner: userid,
-    menuCardName: name,
-    menuCardId: uid,
-    createdAt: Date.now(),
-    editedAt: Date.now(),
-    published: false,
-  });
+  if (selfRef) {
+    return db.collection("menus").add({
+      menuOwner: userid,
+      menuCardName: name,
+      menuCardId: uid,
+      qrcode: qrcode,
+      link: selfRefLink,
+      ref: selfRef,
+      createdAt: Date.now(),
+      editedAt: Date.now(),
+      published: false,
+    });
+  } else {
+    return db.collection("menus").add({
+      menuOwner: userid,
+      menuCardName: name,
+      menuCardId: uid,
+      qrcode: qrcode,
+      ref: selfRef,
+      createdAt: Date.now(),
+      editedAt: Date.now(),
+      published: false,
+    });
+  }
 }
 
 /*

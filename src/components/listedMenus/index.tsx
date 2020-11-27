@@ -18,7 +18,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { useDialogDispatch } from "../../contexts/addDialogContext/index";
 import { rmDataStore } from "../../services/crud";
 import { db } from "../../services/firebase";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
+
 import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -26,7 +26,7 @@ import QrDialog from "../qrDialog";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import SetPublish from "../setPublish";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-
+import ListIcon from "@material-ui/icons/List";
 const useStyles = makeStyles({
   table: {
     minWidth: 100 + "%",
@@ -131,8 +131,8 @@ export default function ListedMenus(props: any) {
               <Tooltip title="Qr code weergeven">
                 <TableCell align="center">QR Code</TableCell>
               </Tooltip>
-              <Tooltip title="Menu kaart weergeven">
-                <TableCell align="right">Menu kaart</TableCell>
+              <Tooltip title="Menu kaart aanpassen">
+                <TableCell align="center">Menu kaart onderdelen</TableCell>
               </Tooltip>
               <Tooltip title="Mogelijke acties">
                 <TableCell align="right">Acties</TableCell>
@@ -149,21 +149,25 @@ export default function ListedMenus(props: any) {
                     <TableCell component="th" scope="row">
                       {row.menuCardName}
                     </TableCell>
-                    <TableCell align="center">
-                      <Tooltip title="QR code bekijken">
-                        <IconButton
-                          onClick={() => toggleQrDialog(row.menuCardId)}
-                        >
-                          <CameraAlt />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
                     {row.id && (
                       <>
-                        <TableCell align="right">
-                          <Tooltip title="Menu Kaart bekijken">
+                        <TableCell align="center" key={row.id}>
+                          <Tooltip title="QR code bekijken">
+                            <IconButton
+                              onClick={() =>
+                                row.qrcode && toggleQrDialog(row.menuCardId)
+                              }
+                            >
+                              <CameraAlt
+                                color={row.qrcode ? "action" : "disabled"}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Tooltip title="Menu Kaart aanpassen">
                             <IconButton onClick={editMenuItems}>
-                              <MenuBookIcon />
+                              <ListIcon />
                             </IconButton>
                           </Tooltip>
                         </TableCell>
@@ -200,7 +204,7 @@ export default function ListedMenus(props: any) {
                   <TableCell align="left">
                     <Skeleton animation="wave" />
                   </TableCell>
-                  <TableCell className={classes.menuButton} align="right">
+                  <TableCell align="right">
                     <Skeleton animation="wave" />
                   </TableCell>
                   <TableCell align="right">
@@ -220,7 +224,7 @@ export default function ListedMenus(props: any) {
       {qrCodeId && (
         <Dialog open={qrCode} onClose={() => toggleQrDialog(qrCodeId)}>
           <QrDialog
-            href={`http://${location}:3000/${user.uid}/menu/${qrCodeId}`}
+            href={`http://${location}:3000/menu/${qrCodeId}`}
             id={qrCodeId}
           />
           <DialogActions>

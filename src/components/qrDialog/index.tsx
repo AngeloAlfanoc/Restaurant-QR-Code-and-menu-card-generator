@@ -16,10 +16,7 @@ import { FileCopyOutlined } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 import "./index.scss";
 import { Alert } from "@material-ui/lab";
-interface QRProps {
-  id: string | null;
-  href: string | null;
-}
+import { QRProps } from "../../types";
 
 export default function QrDialog(props: QRProps) {
   const history = useHistory();

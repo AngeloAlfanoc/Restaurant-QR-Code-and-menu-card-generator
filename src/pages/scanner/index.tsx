@@ -2,7 +2,6 @@ import CodeScanner from "react-camera-qr";
 import { useHistory } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./index.scss";
-import { RESTAURANT } from "../../constants/routes";
 import { Typography, Container } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
@@ -20,7 +19,7 @@ export default function Home() {
     setError(err);
   };
   useEffect(() => {
-    scan && history.push(RESTAURANT + scan);
+    scan && history.push(scan);
   }, [scan, history]);
 
   return (

@@ -4,6 +4,7 @@ import { db } from "../../services/firebase";
 import ConsumerCheckIn from "../../components/consumerCheckin";
 import ConsumerCheckinDisabled from "../../components/consumerCheckinDisabled";
 import Loader from "../../components/loader";
+import { Alert } from "@material-ui/lab";
 export default function CheckInPage(props: any) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -22,7 +23,7 @@ export default function CheckInPage(props: any) {
             });
           } catch {
             setError(
-              "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
+              "Probleem bij het ophalen van restaurant gegevens gelieve je systeem beheerd te contacteren."
             );
           } finally {
             setLoading(false);
@@ -53,6 +54,8 @@ export default function CheckInPage(props: any) {
 
   return (
     <>
+      {error && <Alert severity="error">{error}</Alert>}
+
       {publicInfo && <TemplateView />}
       {loading && <Loader />}
     </>

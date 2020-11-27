@@ -19,7 +19,7 @@ import ScrollRestoration from "react-scroll-restoration";
 import {
   HOME,
   DASHBOARD,
-  CHECK_IN,
+  CHECKIN,
   LOGIN,
   REGISTER,
   CARDS,
@@ -35,9 +35,10 @@ import {
   POLICY,
   TOS,
   GDPR,
+  MENUCARD,
 } from "../constants/routes";
 import PageNotFound from "../pages/404Error";
-
+import MenuDetail from "../pages/menuDetail";
 const Router = () => {
   return (
     <>
@@ -50,8 +51,12 @@ const Router = () => {
             <Route exact path={LOGIN} render={() => <Login />} />
             <Route exact path={REGISTER} render={() => <Register />} />
             <Route
-              path={CHECK_IN}
+              path={CHECKIN}
               render={({ match }) => <CheckIn match={match} />}
+            />
+            <Route
+              path={MENUCARD}
+              render={({ match }) => <MenuDetail match={match} />}
             />
 
             <PrivateRoute path={SETTINGS} component={Settings} />

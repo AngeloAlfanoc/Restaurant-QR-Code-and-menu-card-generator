@@ -1,13 +1,9 @@
 import React from "react";
 import "./index.scss";
 import AnchorLink from "react-anchor-link-smooth-scroll";
-interface PropsLinkItem {
-  text: string;
-  offset: string;
-  href: string;
-}
+import { IPropsLinkItem } from "../../types";
 
-export default function LinkItem(props: PropsLinkItem) {
+export default function LinkItem(props: IPropsLinkItem) {
   return (
     <li>
       <AnchorLink offset={props.offset} href={props.href}>

@@ -8,11 +8,11 @@ import "./index.scss";
 const footers = [
   {
     title: "Over Ons",
-    description: ["Ons team", "Contact", "Meer informatie"],
+    description: ["Mogelijkheden", "Contact", "Meer informatie", "Prijzen"],
   },
   {
     title: "Meer",
-    description: ["Prijzen", "Promoties", "Registreer", "Login"],
+    description: ["Promoties", "Registreer", "Login"],
   },
   {
     title: "Volg",

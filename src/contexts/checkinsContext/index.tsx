@@ -1,24 +1,16 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../../services/firebase";
 import { UserContext } from "../userContext";
+import { ICheckinDataObject } from "../../types";
+import { IContextProps } from "../../types";
 
-interface CheckinDataObject {
-  createdAt: number;
-  editedAt: number | null;
-  id: string;
-  owner: string;
-  published: boolean;
-}
-type CheckinProverProps = { children: React.ReactNode };
-
-export const CheckinContext = createContext<CheckinDataObject | undefined>(
+export const CheckinContext = createContext<ICheckinDataObject | undefined>(
   undefined
 );
 
-function CheckinsProvider({ children }: CheckinProverProps) {
+function CheckinsProvider({ children }: IContextProps) {
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [checkinData, setCheckinData] = useState();
   useEffect(() => {
     setLoading(true);
@@ -33,7 +25,7 @@ function CheckinsProvider({ children }: CheckinProverProps) {
               tempLoad.push({ ...doc.data(), docid: doc.id });
             });
           } catch {
-            setError(
+            throw new Error(
               "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
             );
           } finally {
@@ -50,7 +42,7 @@ function CheckinsProvider({ children }: CheckinProverProps) {
   }, [user.id]);
   return (
     <CheckinContext.Provider value={checkinData}>
-      {children}
+      {!loading && children}
     </CheckinContext.Provider>
   );
 }

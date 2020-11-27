@@ -20,7 +20,7 @@ import { db } from "../../services/firebase";
 import QrDialog from "../qrDialog";
 import SetPublish from "../setPublish";
 import LinkIcon from "@material-ui/icons/Link";
-
+import { IUser } from "../../types";
 export default function ClientStatus(props: IUser) {
   const { user } = useContext(UserContext);
   const [qrCode, setQrCode] = React.useState(false);
@@ -132,10 +132,4 @@ export default function ClientStatus(props: IUser) {
       )}
     </>
   );
-}
-
-interface IUser {
-  id: string;
-  plan: string;
-  company: string;
 }
