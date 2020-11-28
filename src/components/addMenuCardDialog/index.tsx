@@ -16,6 +16,7 @@ import {
   useDialogState,
   useDialogDispatch,
 } from "../../contexts/addDialogContext";
+
 import { Alert } from "@material-ui/lab";
 import { uid } from "uid";
 import { addMenuCardToStore } from "../../services/crud";
@@ -23,7 +24,7 @@ import { UserContext } from "../../contexts/userContext";
 import QrDialog from "../qrDialog/index";
 import { IMenuObject } from "../../types";
 
-export default function AddDialog() {
+export default function AddMenuCard() {
   const { user } = useContext(UserContext);
   const dialog = useDialogState();
   const dispatch = useDialogDispatch();
@@ -31,17 +32,17 @@ export default function AddDialog() {
   const [menuId, setMenuId] = useState<string>(uid());
 
   const [counter, setCounter] = useState<number>(0);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [supplyOwnLinkCheck, setSupplyOwnLinkCheck] = useState<boolean>(false);
   const [checkGenQR, setCheckGenQR] = useState<boolean>(false);
   const [input, setInput] = useState<IMenuObject | null>(null);
-  const [alert, setAlert] = useState<string>();
+  const [alert, setAlert] = useState<string>(null);
   const [location] = useState(window.location.hostname);
 
   const formHandler = () => {
     setCounter((prevCount) => prevCount + 1);
-    setAlert("");
+    setAlert(null);
     console.log(input);
   };
 
@@ -54,21 +55,21 @@ export default function AddDialog() {
 
   const handleBack = () => {
     setCounter((prevCounter) => prevCounter - 1);
-    setError("");
+    setError(null);
     setInput(null);
   };
 
   const handleCancel = () => {
-    dispatch({ type: "add" });
+    dispatch({ type: "ADD_MENU_CARD" });
     setCounter(0);
-    setError("");
+    setError(null);
     setInput(null);
   };
 
   async function handleSave() {
     setLoading(true);
     try {
-      setError("");
+      setError(null);
       await addMenuCardToStore(
         menuId,
         input.menuName,
@@ -80,20 +81,12 @@ export default function AddDialog() {
     } catch (e) {
       setError(e.message);
     } finally {
-      dispatch({ type: "add" });
+      dispatch({ type: "ADD_MENU_CARD" });
       setLoading(false);
       setCounter(0);
       setInput(null);
       setMenuId(uid());
     }
-    console.log(
-      menuId,
-      input.menuName,
-      user.uid,
-      input.menuLink,
-      supplyOwnLinkCheck,
-      checkGenQR
-    );
   }
 
   const ActionButtons = () => {
@@ -181,8 +174,8 @@ export default function AddDialog() {
   return (
     <>
       <Dialog
-        open={dialog.add}
-        onClose={() => dispatch({ type: "add" })}
+        open={dialog.addMenuCard}
+        onClose={() => dispatch({ type: "ADD_MENU_CARD" })}
         aria-labelledby="form-dialog-title"
       >
         {alert && (

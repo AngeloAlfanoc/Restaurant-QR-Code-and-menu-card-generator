@@ -48,7 +48,6 @@ export default function VerifyUser(props: ClientRegistrationProps) {
   const states = csc.getStatesOfCountry("21");
   const classes = useStyles();
   const [input, setInput] = useState<any>({});
-  const [chosenCity, setChosenCity] = useState(null);
   const [cities, setCities] = useState([]);
   const inputRef = useRef<HTMLInputElement>();
   const handleInputChange = (e) => {
@@ -148,7 +147,6 @@ export default function VerifyUser(props: ClientRegistrationProps) {
               <Autocomplete
                 options={cities}
                 onChange={(event, option) => {
-                  setChosenCity(option.name);
                   setInput({
                     ...input,
                     location: option.name,

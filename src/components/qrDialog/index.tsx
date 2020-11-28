@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   DialogContent,
   DialogContentText,
@@ -8,9 +8,8 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import PrintIcon from "@material-ui/icons/Print";
 import QRCode from "qrcode.react";
-import { saveSvgAsPng, svgAsPngUri } from "save-svg-as-png";
+import { saveSvgAsPng } from "save-svg-as-png";
 import LanguageIcon from "@material-ui/icons/Language";
 import { FileCopyOutlined } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
@@ -21,27 +20,12 @@ import { QRProps } from "../../types";
 export default function QrDialog(props: QRProps) {
   const history = useHistory();
   const [alert, setAlert] = useState<string>();
-  // const [base64String, setBase64String] = useState();
 
   const handleDownload = () => {
     saveSvgAsPng(document.getElementById("qrcode"), `qrcode-${props.id}`, {
       scale: 25,
     });
   };
-
-  /// TODO ADD PRINT FUNCTIONALITY
-  // const handleConvertToBase64 = () => {
-  //   svgAsPngUri(document.getElementById("qrcode"), {
-  //     scale: 25,
-  //   }).then((res) => {
-  //     setBase64String(res);
-  //   });
-  //   base64String &&
-  //     React.createElement("image", {
-  //       src: base64String,
-  //       ref: printRef,
-  //     });
-  // };
 
   const handlePush = () => {
     history.push(props.href);
@@ -83,10 +67,6 @@ export default function QrDialog(props: QRProps) {
               <CloudDownloadIcon />
             </IconButton>
           </Tooltip>
-
-          {/* <IconButton color="primary" onClick={handleConvertToBase64}>
-            <PrintIcon />
-          </IconButton> */}
           <Tooltip title="Naar webpagina surfen">
             <IconButton color="primary" onClick={handlePush}>
               <LanguageIcon />

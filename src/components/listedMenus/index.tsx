@@ -8,11 +8,21 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import EditIcon from "@material-ui/icons/Edit";
-import { Box, Dialog, IconButton } from "@material-ui/core";
+import CheckIcon from "@material-ui/icons/Check";
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  DialogContentText,
+  TextField,
+  MenuItem,
+} from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { UserContext } from "../../contexts/userContext";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Alert } from "@material-ui/lab";
+import { Alert, Autocomplete } from "@material-ui/lab";
 import { CameraAlt } from "@material-ui/icons";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { useDialogDispatch } from "../../contexts/addDialogContext/index";
@@ -27,6 +37,9 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import SetPublish from "../setPublish";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import ListIcon from "@material-ui/icons/List";
+import { objects, nestedObjects } from "./selectProps";
+import { addMenuItemData } from "../../services/crud";
+import { IAddMenuItem } from "../../types";
 const useStyles = makeStyles({
   table: {
     minWidth: 100 + "%",
@@ -49,7 +62,15 @@ export default function ListedMenus(props: any) {
   const [error, setError] = useState<string>(null);
   const [rows, setRows] = useState<any>(null);
   const [location] = useState(window.location.hostname);
-
+  const [itemDialog, setItemDialog] = useState<boolean>(false);
+  const [menuCardItems, setMenuCardItems] = useState<IAddMenuItem | null>(null);
+  const [menuCardItemSelect, setMenuCardItem] = useState<string>(null);
+  const [cardId, setCardId] = useState<string>(null);
+  const [menuCardItemOtherBlock, setMenuCardItemOtherBlock] = useState<string>(
+    null
+  );
+  const [addCardItem, setAddCardItem] = useState<boolean>(false);
+  const [input, setInput] = useState<IAddMenuItem | null>(null);
   const toggleQrDialog = (qrId: string) => {
     setQrCode(!qrCode);
     setQrCodeId(qrId);
@@ -85,7 +106,10 @@ export default function ListedMenus(props: any) {
     };
   }, [setRows, user.uid]);
 
-  const editMenuItems = () => {};
+  const editMenuItems = (id: string) => {
+    setCardId(id);
+    setItemDialog(true);
+  };
 
   const handleEdit = (menuCardId: string) => {
     console.log("TODO Edit: " + menuCardId);
@@ -99,6 +123,34 @@ export default function ListedMenus(props: any) {
     }
   };
 
+  const handleChangeTypeSelect = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setMenuCardItem(event.target.value);
+  };
+  const handleNestedTypeSelect = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setMenuCardItemOtherBlock(event.target.value);
+  };
+
+  const handleInputChange = (e) => {
+    setInput({
+      ...input,
+      [e.currentTarget.name]: e.currentTarget.value,
+    });
+  };
+
+  // async function handleStoreMenuItemData(type: string) {
+  //   await addMenuItemData(
+  //     cardId,
+  //     type,
+  //     input.title,
+  //     input.itemTitle,
+  //     input.itemPrice,
+  //     null
+  //   );
+  // }
   return (
     <>
       <TableContainer component={Paper}>
@@ -106,7 +158,7 @@ export default function ListedMenus(props: any) {
           <Box className="w-100 d-flex align-items-center justify-content-between">
             <Tooltip title="Toevoegen">
               <IconButton
-                onClick={() => dispatch({ type: "add" })}
+                onClick={() => dispatch({ type: "ADD_MENU_CARD" })}
                 className="m-2"
                 color="primary"
               >
@@ -166,7 +218,7 @@ export default function ListedMenus(props: any) {
                         </TableCell>
                         <TableCell align="center">
                           <Tooltip title="Menu Kaart aanpassen">
-                            <IconButton onClick={editMenuItems}>
+                            <IconButton onClick={() => editMenuItems(row.id)}>
                               <ListIcon />
                             </IconButton>
                           </Tooltip>
@@ -234,6 +286,120 @@ export default function ListedMenus(props: any) {
           </DialogActions>
         </Dialog>
       )}
+      <Dialog
+        maxWidth={"md"}
+        fullWidth
+        open={itemDialog}
+        onClose={() => setItemDialog(false)}
+      >
+        <DialogContent>
+          <DialogTitle className="text-left">
+            Klik op toevoegen om te beginnen
+          </DialogTitle>
+          <Box className="w-100 d-flex align-items-center justify-content-between">
+            <Tooltip className="ml-3" title="Toevoegen">
+              <Button onClick={() => setAddCardItem(true)}>Toevoegen</Button>
+            </Tooltip>
+            <Tooltip
+              className="mr-3"
+              title={"Klik op toevoegen om een nieuwe item toe te voegen."}
+            >
+              <HelpOutlineIcon className="m-2" color="disabled" />
+            </Tooltip>
+          </Box>
+          <DialogContent>
+            {addCardItem && (
+              <Box className="d-flex justify-content-start">
+                <TextField
+                  id="standard-select-type"
+                  select
+                  label="Type van item"
+                  value={menuCardItemSelect}
+                  onChange={handleChangeTypeSelect}
+                  helperText="Kies je type van object hier"
+                >
+                  {objects.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                {menuCardItemSelect === "titel" && (
+                  <>
+                    <TextField
+                      onChange={handleInputChange}
+                      name="title"
+                      className="mx-2"
+                      label="Titel Naam"
+                    ></TextField>
+                    <Box className="my-auto">
+                      <IconButton
+                      // onClick={() =>handleStoreMenuItemData(menuCardItemSelect)}
+                      >
+                        <CheckIcon />
+                      </IconButton>
+                    </Box>
+                  </>
+                )}
+                {menuCardItemSelect === "item" && (
+                  <>
+                    <TextField
+                      name="itemTitle"
+                      className="mx-2"
+                      label="Benaming"
+                      onChange={handleInputChange}
+                    ></TextField>
+                    <TextField
+                      name="itemPrice"
+                      className="mx-2"
+                      label="Prijs"
+                      onChange={handleInputChange}
+                    ></TextField>
+                    <Box className="my-auto">
+                      <IconButton
+                      // onClick={() => handleStoreMenuItemData(menuCardItemSelect)}
+                      >
+                        <CheckIcon />
+                      </IconButton>
+                    </Box>
+                  </>
+                )}
+                {menuCardItemSelect === "other" && (
+                  <>
+                    <TextField
+                      className="mx-2"
+                      id="standard-select-type"
+                      select
+                      label="Type van item"
+                      value={menuCardItemOtherBlock}
+                      onChange={handleNestedTypeSelect}
+                      helperText="Kies je type van object hier"
+                    >
+                      {nestedObjects.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <Box className="my-auto">
+                      <IconButton
+                      // onClick={() => handleStoreMenuItemData(menuCardItemSelect)}
+                      >
+                        <CheckIcon />
+                      </IconButton>
+                    </Box>
+                  </>
+                )}
+              </Box>
+            )}
+          </DialogContent>
+          <Box className="d-flex justify-content-end">
+            <Button onClick={() => setItemDialog(false)} color="primary">
+              Sluiten
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -90,7 +90,7 @@ export default function ListedConsumers(props: any) {
           }
           if (snapshot.size === 0) {
             tempLoad.push({
-              firstname: "Er hebben nog geen consumenten ingecheckt...",
+              firstname: "Er hebben nog geen consumenten ingecheckt vandaag...",
             });
           }
           setRows(tempLoad);

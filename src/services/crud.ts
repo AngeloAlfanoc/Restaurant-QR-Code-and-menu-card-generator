@@ -1,11 +1,17 @@
 import { db } from "./firebase";
-
+import {
+  IAddMenuItem,
+  IAddMenuCard,
+  IAddAccountInfo,
+  AccountInfoStore,
+  IncludedTos,
+} from "../types";
 /*
 @Adds new menu object to store.
 @uid is param
 */
 
-export async function addAccountInfoToStore(uid: string, email: string) {
+export async function addAccountInfoToStore({ uid, email }: IAddAccountInfo) {
   return db.collection("users").add({
     id: uid,
     plan: "Gratis",
@@ -23,14 +29,14 @@ export async function addAccountInfoToStore(uid: string, email: string) {
 The purpose of this function is to add additional client information extended docid.
 */
 
-export async function verifyAccountInfoInStore(
-  company: string,
-  vat: string,
-  phone: string,
-  location: string,
-  tos: string,
-  docid: string
-) {
+export async function verifyAccountInfoInStore({
+  company,
+  vat,
+  phone,
+  location,
+  tos,
+  docid,
+}: IncludedTos) {
   const object = {
     company: company,
     vat: vat,
@@ -52,13 +58,13 @@ export async function verifyAccountInfoInStore(
 @uid is param
 */
 
-export async function updateAccountInfoInStore(
-  company: string,
-  vat: string,
-  phone: string,
-  location: string,
-  docid: string
-) {
+export async function updateAccountInfoInStore({
+  company,
+  vat,
+  phone,
+  location,
+  docid,
+}: AccountInfoStore) {
   const object = {
     company: company,
     vat: vat,
@@ -78,14 +84,14 @@ export async function updateAccountInfoInStore(
 @uid is param
 */
 
-export async function addMenuCardToStore(
-  uid: string,
-  name: string,
-  userid: string,
-  selfRefLink: string | undefined,
-  selfRef: boolean,
-  qrcode: boolean
-) {
+export async function addMenuCardToStore({
+  uid,
+  name,
+  userid,
+  selfRefLink,
+  selfRef,
+  qrcode,
+}: IAddMenuCard) {
   if (selfRef) {
     return db.collection("menus").add({
       menuOwner: userid,
@@ -192,4 +198,38 @@ export async function addCheckinData(
     phone: phone,
     created: datetime,
   });
+}
+
+/*
+@Adds Menu items to menu cards
+@id is documentid , rest of object is data provided by selection
+*/
+
+export async function addMenuItemData({
+  id,
+  type,
+  title,
+  itemTitle,
+  itemPrice,
+  other,
+}: IAddMenuItem) {
+  if (type === "title") {
+    return db.collection("menus").doc(id).collection("items").add({
+      title: title,
+      type: type,
+    });
+  }
+  if (type === "item") {
+    return db.collection("menus").doc(id).collection("items").add({
+      item: itemTitle,
+      price: itemPrice,
+      type: type,
+    });
+  }
+  if (type === "other") {
+    return db.collection("menus").doc(id).collection("items").add({
+      other: other,
+      type: type,
+    });
+  }
 }

@@ -3,7 +3,7 @@ import "./index.scss";
 import ListedCodes from "../../components/listedMenus";
 import { Typography } from "@material-ui/core";
 
-import AddDialog from "../../components/addDialog";
+import AddDialog from "../../components/addMenuCardDialog";
 import React, { useContext, useEffect, useState } from "react";
 import ClientRegistrationDialog from "../../components/clientRegistration";
 import { UserInfoContext } from "../../contexts/userContext";

@@ -1,9 +1,9 @@
 import React, { createContext, useReducer, useContext } from "react";
 import { UserContext } from "../userContext";
 
-type Action = { type: "add" };
+type Action = { type: "ADD_MENU_CARD" };
 type Dispatch = (action: Action) => void;
-type State = { add: boolean };
+type State = { addMenuCard: boolean };
 type DialogProviderProps = { children: React.ReactNode };
 
 const DialogStateContext = createContext<State | undefined>(undefined);
@@ -11,8 +11,8 @@ const DialogDispatchContext = createContext<Dispatch | undefined>(undefined);
 
 function dialogReducer(state: State, action: Action) {
   switch (action.type) {
-    case "add": {
-      return { add: !state.add };
+    case "ADD_MENU_CARD": {
+      return { addMenuCard: !state.addMenuCard };
     }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
@@ -21,7 +21,7 @@ function dialogReducer(state: State, action: Action) {
 }
 
 function DialogProvider({ children }: DialogProviderProps) {
-  const [state, dispatch] = useReducer(dialogReducer, { add: false });
+  const [state, dispatch] = useReducer(dialogReducer, { addMenuCard: false });
   return (
     <DialogStateContext.Provider value={state}>
       <DialogDispatchContext.Provider value={dispatch}>
