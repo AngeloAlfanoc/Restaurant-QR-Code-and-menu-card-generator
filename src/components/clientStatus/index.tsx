@@ -21,16 +21,21 @@ import QrDialog from "../qrDialog";
 import SetPublish from "../setPublish";
 import LinkIcon from "@material-ui/icons/Link";
 import { IUser } from "../../types";
+import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
+import { setQrDialogId, toggleQrDialog } from "../../redux/actions";
 export default function ClientStatus(props: IUser) {
   const { user } = useContext(UserContext);
-  const [qrCode, setQrCode] = React.useState(false);
+  const dispatch = useDispatch();
   const [error, setError] = React.useState<string>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [publicInfo, setPublicInfo] = React.useState<any>(null);
   const location = window.location.hostname;
-  const toggleQrDialog = () => {
-    setQrCode(!qrCode);
+
+  const handleToggleQrDialog = () => {
+    dispatch(toggleQrDialog(true));
+    dispatch(setQrDialogId(props.id));
   };
+
   useEffect(() => {
     setLoading(true);
     const unsubscribe = db
@@ -98,7 +103,7 @@ export default function ClientStatus(props: IUser) {
               </TableCell>
               <TableCell align="center">
                 <Tooltip title="QR code bekijken">
-                  <IconButton onClick={() => toggleQrDialog()}>
+                  <IconButton onClick={handleToggleQrDialog}>
                     <CameraAlt />
                   </IconButton>
                 </Tooltip>
@@ -117,19 +122,7 @@ export default function ClientStatus(props: IUser) {
           </TableBody>
         </Table>
       </TableContainer>
-      {props.id && (
-        <Dialog open={qrCode} onClose={() => toggleQrDialog()}>
-          <QrDialog
-            href={`http://${location}:3000/checkin/${props.id}`}
-            id={props.id}
-          />
-          <DialogActions>
-            <Button onClick={() => toggleQrDialog()} color="primary">
-              Sluiten
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+      <QrDialog />
     </>
   );
 }

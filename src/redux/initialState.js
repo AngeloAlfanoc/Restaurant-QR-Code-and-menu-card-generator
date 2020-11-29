@@ -3,4 +3,6 @@ module.exports = {
     menuCardItems: [],
     toggleAddMenuDialog: false,
     toggleAddMenuItem: false,
+    toggleQrDialog: false,
+    QrDialogId: "",
 }

@@ -15,14 +15,13 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  DialogContentText,
   TextField,
   MenuItem,
 } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { UserContext } from "../../contexts/userContext";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Alert, Autocomplete } from "@material-ui/lab";
+import { Alert } from "@material-ui/lab";
 import { CameraAlt } from "@material-ui/icons";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { rmDataStore } from "../../services/crud";
@@ -32,15 +31,18 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
 import Skeleton from "@material-ui/lab/Skeleton";
 import QrDialog from "../qrDialog";
-import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import SetPublish from "../setPublish";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import ListIcon from "@material-ui/icons/List";
-import { objects, nestedObjects } from "./selectProps";
-import { addMenuItemData, getMenuItemData } from "../../services/crud";
+import { objects } from "./selectProps";
+import { addMenuItemData } from "../../services/crud";
 import { IAddMenuItem } from "../../types";
 import CardMenuItems from "./cardMenuItems";
-import { addMenuCard } from "../../redux/actions";
+import {
+  addMenuCard,
+  setQrDialogId,
+  toggleQrDialog,
+} from "../../redux/actions";
 import { useDispatch } from "react-redux";
 const useStyles = makeStyles({
   table: {
@@ -56,25 +58,16 @@ const useStyles = makeStyles({
 
 export default function ListedMenus(props: any) {
   const classes = useStyles();
-  // const dispatch = useDialogDispatch();
   const { user } = useContext(UserContext);
-  const [qrCode, setQrCode] = useState(false);
-  const [qrCodeId, setQrCodeId] = useState<string>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>(null);
   const [rows, setRows] = useState<any>(null);
-  const [location] = useState(window.location.hostname);
   const [itemDialog, setItemDialog] = useState<boolean>(false);
   const [menuCardItemSelect, setMenuCardItem] = useState<string>(null);
   const [cardId, setCardId] = useState<string>(null);
   const dispatch = useDispatch();
   const [addCardItem, setAddCardItem] = useState<boolean>(false);
   const [input, setInput] = useState<IAddMenuItem | null>(null);
-
-  const toggleQrDialog = (qrId: string) => {
-    setQrCode(!qrCode);
-    setQrCodeId(qrId);
-  };
 
   useEffect(() => {
     setLoading(true);
@@ -147,6 +140,10 @@ export default function ListedMenus(props: any) {
       0
     );
   };
+  const handleClickQRDialog = (id: string) => {
+    dispatch(setQrDialogId(id));
+    dispatch(toggleQrDialog(true));
+  };
 
   return (
     <>
@@ -203,9 +200,7 @@ export default function ListedMenus(props: any) {
                         <TableCell align="center" key={row.id}>
                           <Tooltip title="QR code bekijken">
                             <IconButton
-                              onClick={() =>
-                                row.qrcode && toggleQrDialog(row.menuCardId)
-                              }
+                              onClick={() => handleClickQRDialog(row.id)}
                             >
                               <CameraAlt
                                 color={row.qrcode ? "action" : "disabled"}
@@ -270,19 +265,7 @@ export default function ListedMenus(props: any) {
           <CircularProgress color="primary" />
         </div>
       )}
-      {qrCodeId && (
-        <Dialog open={qrCode} onClose={() => toggleQrDialog(qrCodeId)}>
-          <QrDialog
-            href={`http://${location}:3000/menu/${qrCodeId}`}
-            id={qrCodeId}
-          />
-          <DialogActions>
-            <Button onClick={() => toggleQrDialog(qrCodeId)} color="primary">
-              Sluiten
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+
       <Dialog
         maxWidth={"md"}
         fullWidth
@@ -376,6 +359,7 @@ export default function ListedMenus(props: any) {
           </Box>
         </DialogContent>
       </Dialog>
+      <QrDialog />
     </>
   );
 }

@@ -1,7 +1,8 @@
 import {
     ADD_MENU_CARD,
     ADD_MENU_ITEM,
-    OPEN_ADD_MENU_CARD_DIALOG
+    TOGGLE_QR_DIALOG,
+    SET_QR_DIALOG_ID
 } from "./constants";
 
 import { loadState } from "./localStorage";
@@ -15,6 +16,13 @@ const mainReducer = (state = loadState(), action) => {
         }
         case ADD_MENU_ITEM: {
             return { ...state, toggleAddMenuItem: !state.toggleAddMenuItem }
+        }
+        case TOGGLE_QR_DIALOG: {
+            return { ...state, toggleQrDialog: !state.toggleQrDialog }
+        }
+        case SET_QR_DIALOG_ID: {
+            const { value } = action;
+            return { ...state, QrDialogId: value }
         }
         default:
             return { ...state };

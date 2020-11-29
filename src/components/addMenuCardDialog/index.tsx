@@ -228,9 +228,7 @@ export default function AddMenuCard() {
           </>
         )}
 
-        {counter === 1 && checkGenQR && (
-          <QrDialog id={menuId} href={location + "/menu/" + menuId} />
-        )}
+        {counter === 1 && checkGenQR && <QrDialog />}
 
         <DialogActions>
           <Button onClick={handleCancel} color="primary">
