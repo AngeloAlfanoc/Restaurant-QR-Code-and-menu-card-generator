@@ -7,10 +7,10 @@ export const objects = [
     value: "item",
     label: "Consumptie (gerecht of drank)",
   },
-  {
-    value: "other",
-    label: "Informatieve blok",
-  },
+  // {
+  //   value: "other",
+  //   label: "Informatieve blok",
+  // },
 ];
 
 export const nestedObjects = [

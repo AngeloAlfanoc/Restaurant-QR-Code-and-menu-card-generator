@@ -12,22 +12,20 @@ import {
   Switch,
 } from "@material-ui/core";
 
-import {
-  useDialogState,
-  useDialogDispatch,
-} from "../../contexts/addDialogContext";
-
 import { Alert } from "@material-ui/lab";
 import { uid } from "uid";
 import { addMenuCardToStore } from "../../services/crud";
 import { UserContext } from "../../contexts/userContext";
 import QrDialog from "../qrDialog/index";
 import { IMenuObject } from "../../types";
-
+import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
+import { addMenuCard } from "../../redux/actions";
 export default function AddMenuCard() {
+  const dispatch = useDispatch();
+  const toggleDialog = useSelector(
+    (state: RootStateOrAny) => state.toggleAddMenuDialog
+  );
   const { user } = useContext(UserContext);
-  const dialog = useDialogState();
-  const dispatch = useDialogDispatch();
 
   const [menuId, setMenuId] = useState<string>(uid());
 
@@ -60,7 +58,7 @@ export default function AddMenuCard() {
   };
 
   const handleCancel = () => {
-    dispatch({ type: "ADD_MENU_CARD" });
+    dispatch(addMenuCard(false));
     setCounter(0);
     setError(null);
     setInput(null);
@@ -81,7 +79,7 @@ export default function AddMenuCard() {
     } catch (e) {
       setError(e.message);
     } finally {
-      dispatch({ type: "ADD_MENU_CARD" });
+      dispatch(addMenuCard(false));
       setLoading(false);
       setCounter(0);
       setInput(null);
@@ -174,8 +172,8 @@ export default function AddMenuCard() {
   return (
     <>
       <Dialog
-        open={dialog.addMenuCard}
-        onClose={() => dispatch({ type: "ADD_MENU_CARD" })}
+        open={toggleDialog}
+        onClose={() => dispatch(addMenuCard(false))}
         aria-labelledby="form-dialog-title"
       >
         {alert && (

@@ -1,17 +1,11 @@
 import { db } from "./firebase";
-import {
-  IAddMenuItem,
-  IAddMenuCard,
-  IAddAccountInfo,
-  AccountInfoStore,
-  IncludedTos,
-} from "../types";
+
 /*
 @Adds new menu object to store.
 @uid is param
 */
 
-export async function addAccountInfoToStore({ uid, email }: IAddAccountInfo) {
+export const addAccountInfoToStore = async (uid: string, email: string) => {
   return db.collection("users").add({
     id: uid,
     plan: "Gratis",
@@ -21,7 +15,7 @@ export async function addAccountInfoToStore({ uid, email }: IAddAccountInfo) {
     createdAt: Date.now(),
     editedAt: Date.now(),
   });
-}
+};
 
 /*
 @Adds new users object to store
@@ -29,14 +23,14 @@ export async function addAccountInfoToStore({ uid, email }: IAddAccountInfo) {
 The purpose of this function is to add additional client information extended docid.
 */
 
-export async function verifyAccountInfoInStore({
-  company,
-  vat,
-  phone,
-  location,
-  tos,
-  docid,
-}: IncludedTos) {
+export const verifyAccountInfoInStore = async (
+  company: string,
+  vat: string,
+  phone: string,
+  location: string,
+  tos: string,
+  docid: string
+) => {
   const object = {
     company: company,
     vat: vat,
@@ -51,20 +45,20 @@ export async function verifyAccountInfoInStore({
     .collection("users")
     .doc(docid)
     .set(JSON.parse(JSON.stringify(object)), { merge: true });
-}
+};
 
 /*
 @UpdateClientSettings
 @uid is param
 */
 
-export async function updateAccountInfoInStore({
-  company,
-  vat,
-  phone,
-  location,
-  docid,
-}: AccountInfoStore) {
+export const updateAccountInfoInStore = async (
+  company: string,
+  vat: string,
+  phone: string,
+  location: string,
+  docid: string
+) => {
   const object = {
     company: company,
     vat: vat,
@@ -77,21 +71,21 @@ export async function updateAccountInfoInStore({
     .collection("users")
     .doc(docid)
     .set(JSON.parse(JSON.stringify(object)), { merge: true });
-}
+};
 
 /*
 @Adds new menu object to store.
 @uid is param
 */
 
-export async function addMenuCardToStore({
-  uid,
-  name,
-  userid,
-  selfRefLink,
-  selfRef,
-  qrcode,
-}: IAddMenuCard) {
+export const addMenuCardToStore = async (
+  uid: string,
+  name: string,
+  userid: string,
+  selfRefLink: string | undefined,
+  selfRef: boolean,
+  qrcode: boolean
+) => {
   if (selfRef) {
     return db.collection("menus").add({
       menuOwner: userid,
@@ -116,14 +110,14 @@ export async function addMenuCardToStore({
       published: false,
     });
   }
-}
+};
 
 /*
 @Get delete card with given card id
 @card uid is param
 */
 
-export async function rmDataStore(collection: string, document: string) {
+export const rmDataStore = async (collection: string, document: string) => {
   return await db
     .collection(collection)
     .doc(document)
@@ -131,19 +125,19 @@ export async function rmDataStore(collection: string, document: string) {
     .catch(function (error) {
       console.error("Error removing document: ", error);
     });
-}
+};
 
 /*
 @Get delete card with given card id
 @card uid is param
 */
 // todo change name
-export async function rmDataStoreSub(
+export const rmDataStoreSub = async (
   collection: string,
   document: string,
   subCollection: string,
   subDocument: string
-) {
+) => {
   return await db
     .collection(collection)
     .doc(document)
@@ -153,44 +147,47 @@ export async function rmDataStoreSub(
     .catch(function (error) {
       console.error("Error removing document: ", error);
     });
-}
+};
 
 /*
 @Edit Field name in firestore docs
 @Using params provided by components
 */
 
-export async function editFieldInStoreObject(id: string, collection: string) {
+export const editFieldInStoreObject = async (
+  id: string,
+  collection: string
+) => {
   return db.collection(collection).doc(id);
-}
+};
 
 /*
 @Adds new public users object to store
 @uid is param
 */
 
-export async function addPublicCompanyData(id: string, ownerId: string) {
+export const addPublicCompanyData = async (id: string, ownerId: string) => {
   return db.collection("checkins").add({
     id: id,
     owner: ownerId,
     published: false,
     createdAt: Date.now(),
   });
-}
+};
 
 /*
 @Adds checkin data to checkin object
 @id is document id, rest of object in userdata.
 */
 
-export async function addCheckinData(
+export const addCheckinData = async (
   id: string,
   firstname: string,
   lastname: string,
   email: string,
   phone: number,
   datetime: number
-) {
+) => {
   return db.collection("checkins").doc(id).collection("items").add({
     firstname: firstname,
     lastname: lastname,
@@ -198,25 +195,27 @@ export async function addCheckinData(
     phone: phone,
     created: datetime,
   });
-}
+};
 
 /*
 @Adds Menu items to menu cards
 @id is documentid , rest of object is data provided by selection
 */
 
-export async function addMenuItemData({
-  id,
-  type,
-  title,
-  itemTitle,
-  itemPrice,
-  other,
-}: IAddMenuItem) {
-  if (type === "title") {
+export const addMenuItemData = async (
+  id: string,
+  type: string,
+  title: string | null,
+  itemTitle: string | undefined,
+  itemPrice: number | undefined,
+  other: string | undefined,
+  position: number
+) => {
+  if (type === "titel") {
     return db.collection("menus").doc(id).collection("items").add({
       title: title,
       type: type,
+      position: position,
     });
   }
   if (type === "item") {
@@ -224,12 +223,32 @@ export async function addMenuItemData({
       item: itemTitle,
       price: itemPrice,
       type: type,
+      position: position,
     });
   }
   if (type === "other") {
     return db.collection("menus").doc(id).collection("items").add({
       other: other,
       type: type,
+      position: position,
     });
   }
-}
+};
+
+export const getMenuItemData = async (id: string) => {
+  return db
+    .collection("menus")
+    .doc(id)
+    .collection("items")
+    .onSnapshot((snap) => {
+      if (snap.size) {
+        try {
+          snap.forEach((doc) => {
+            console.log(doc.data());
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    });
+};

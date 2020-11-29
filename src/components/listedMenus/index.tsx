@@ -25,7 +25,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { Alert, Autocomplete } from "@material-ui/lab";
 import { CameraAlt } from "@material-ui/icons";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { useDialogDispatch } from "../../contexts/addDialogContext/index";
 import { rmDataStore } from "../../services/crud";
 import { db } from "../../services/firebase";
 
@@ -38,8 +37,11 @@ import SetPublish from "../setPublish";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import ListIcon from "@material-ui/icons/List";
 import { objects, nestedObjects } from "./selectProps";
-import { addMenuItemData } from "../../services/crud";
+import { addMenuItemData, getMenuItemData } from "../../services/crud";
 import { IAddMenuItem } from "../../types";
+import CardMenuItems from "./cardMenuItems";
+import { addMenuCard } from "../../redux/actions";
+import { useDispatch } from "react-redux";
 const useStyles = makeStyles({
   table: {
     minWidth: 100 + "%",
@@ -54,7 +56,7 @@ const useStyles = makeStyles({
 
 export default function ListedMenus(props: any) {
   const classes = useStyles();
-  const dispatch = useDialogDispatch();
+  // const dispatch = useDialogDispatch();
   const { user } = useContext(UserContext);
   const [qrCode, setQrCode] = useState(false);
   const [qrCodeId, setQrCodeId] = useState<string>(null);
@@ -63,14 +65,12 @@ export default function ListedMenus(props: any) {
   const [rows, setRows] = useState<any>(null);
   const [location] = useState(window.location.hostname);
   const [itemDialog, setItemDialog] = useState<boolean>(false);
-  const [menuCardItems, setMenuCardItems] = useState<IAddMenuItem | null>(null);
   const [menuCardItemSelect, setMenuCardItem] = useState<string>(null);
   const [cardId, setCardId] = useState<string>(null);
-  const [menuCardItemOtherBlock, setMenuCardItemOtherBlock] = useState<string>(
-    null
-  );
+  const dispatch = useDispatch();
   const [addCardItem, setAddCardItem] = useState<boolean>(false);
   const [input, setInput] = useState<IAddMenuItem | null>(null);
+
   const toggleQrDialog = (qrId: string) => {
     setQrCode(!qrCode);
     setQrCodeId(qrId);
@@ -106,7 +106,7 @@ export default function ListedMenus(props: any) {
     };
   }, [setRows, user.uid]);
 
-  const editMenuItems = (id: string) => {
+  const editMenuItems = async (id: string) => {
     setCardId(id);
     setItemDialog(true);
   };
@@ -128,11 +128,6 @@ export default function ListedMenus(props: any) {
   ) => {
     setMenuCardItem(event.target.value);
   };
-  const handleNestedTypeSelect = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setMenuCardItemOtherBlock(event.target.value);
-  };
 
   const handleInputChange = (e) => {
     setInput({
@@ -141,16 +136,18 @@ export default function ListedMenus(props: any) {
     });
   };
 
-  // async function handleStoreMenuItemData(type: string) {
-  //   await addMenuItemData(
-  //     cardId,
-  //     type,
-  //     input.title,
-  //     input.itemTitle,
-  //     input.itemPrice,
-  //     null
-  //   );
-  // }
+  const handleStoreMenuItemData = async (type: string) => {
+    await addMenuItemData(
+      cardId,
+      type,
+      input.title,
+      input.itemTitle,
+      input.itemPrice,
+      undefined,
+      0
+    );
+  };
+
   return (
     <>
       <TableContainer component={Paper}>
@@ -158,7 +155,7 @@ export default function ListedMenus(props: any) {
           <Box className="w-100 d-flex align-items-center justify-content-between">
             <Tooltip title="Toevoegen">
               <IconButton
-                onClick={() => dispatch({ type: "ADD_MENU_CARD" })}
+                onClick={() => dispatch(addMenuCard(false))}
                 className="m-2"
                 color="primary"
               >
@@ -334,7 +331,9 @@ export default function ListedMenus(props: any) {
                     ></TextField>
                     <Box className="my-auto">
                       <IconButton
-                      // onClick={() =>handleStoreMenuItemData(menuCardItemSelect)}
+                        onClick={() =>
+                          handleStoreMenuItemData(menuCardItemSelect)
+                        }
                       >
                         <CheckIcon />
                       </IconButton>
@@ -357,39 +356,16 @@ export default function ListedMenus(props: any) {
                     ></TextField>
                     <Box className="my-auto">
                       <IconButton
-                      // onClick={() => handleStoreMenuItemData(menuCardItemSelect)}
+                        onClick={() =>
+                          handleStoreMenuItemData(menuCardItemSelect)
+                        }
                       >
                         <CheckIcon />
                       </IconButton>
                     </Box>
                   </>
                 )}
-                {menuCardItemSelect === "other" && (
-                  <>
-                    <TextField
-                      className="mx-2"
-                      id="standard-select-type"
-                      select
-                      label="Type van item"
-                      value={menuCardItemOtherBlock}
-                      onChange={handleNestedTypeSelect}
-                      helperText="Kies je type van object hier"
-                    >
-                      {nestedObjects.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                    <Box className="my-auto">
-                      <IconButton
-                      // onClick={() => handleStoreMenuItemData(menuCardItemSelect)}
-                      >
-                        <CheckIcon />
-                      </IconButton>
-                    </Box>
-                  </>
-                )}
+                {cardId && <CardMenuItems id={cardId} />}
               </Box>
             )}
           </DialogContent>
