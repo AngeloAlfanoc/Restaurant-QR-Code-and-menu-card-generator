@@ -12,7 +12,6 @@ import {
   DialogActions,
   Button,
 } from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog/Dialog";
 import { CameraAlt } from "@material-ui/icons";
 import React, { useContext, useEffect } from "react";
 import { UserContext } from "../../contexts/userContext";
@@ -21,13 +20,16 @@ import QrDialog from "../qrDialog";
 import SetPublish from "../setPublish";
 import LinkIcon from "@material-ui/icons/Link";
 import { IUser } from "../../types";
-import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
-import { setQrDialogId, toggleQrDialog } from "../../redux/actions";
+import { useDispatch } from "react-redux";
+import {
+  setQrDialogId,
+  toggleQrDialog,
+  setLoading,
+  setError,
+} from "../../redux/actions";
 export default function ClientStatus(props: IUser) {
   const { user } = useContext(UserContext);
   const dispatch = useDispatch();
-  const [error, setError] = React.useState<string>(null);
-  const [loading, setLoading] = React.useState<boolean>(false);
   const [publicInfo, setPublicInfo] = React.useState<any>(null);
   const location = window.location.hostname;
 
@@ -37,7 +39,7 @@ export default function ClientStatus(props: IUser) {
   };
 
   useEffect(() => {
-    setLoading(true);
+    dispatch(setLoading(true));
     const unsubscribe = db
       .collection("checkins")
       .where("owner", "==", user.uid)
@@ -49,17 +51,15 @@ export default function ClientStatus(props: IUser) {
               tempLoad.push({ ...doc.data(), docid: doc.id });
             });
           } catch {
-            setError("Probleem bij het van client status");
-          } finally {
-            setLoading(false);
+            dispatch(setError("Probleem bij het van client status"));
           }
         }
         setPublicInfo(tempLoad[0]);
-        setLoading(false);
       });
 
     return () => {
       unsubscribe();
+      dispatch(setLoading(false));
     };
   }, []);
 
@@ -103,7 +103,7 @@ export default function ClientStatus(props: IUser) {
               </TableCell>
               <TableCell align="center">
                 <Tooltip title="QR code bekijken">
-                  <IconButton onClick={handleToggleQrDialog}>
+                  <IconButton onClick={() => handleToggleQrDialog}>
                     <CameraAlt />
                   </IconButton>
                 </Tooltip>

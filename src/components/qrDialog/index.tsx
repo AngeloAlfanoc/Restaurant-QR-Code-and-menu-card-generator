@@ -8,7 +8,6 @@ import {
   Tooltip,
   Dialog,
   DialogActions,
-  Button,
 } from "@material-ui/core";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import QRCode from "qrcode.react";
@@ -18,9 +17,11 @@ import { FileCopyOutlined } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 import "./index.scss";
 import { Alert } from "@material-ui/lab";
-import { QRProps } from "../../types";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 import { toggleQrDialog } from "../../redux/actions";
+import Cancel from "../dialogActions/cancel";
+import Back from "../dialogActions/back";
+
 export default function QrDialog() {
   const history = useHistory();
   const [alert, setAlert] = useState<string>();
@@ -28,7 +29,7 @@ export default function QrDialog() {
   const toggleDialog = useSelector(
     (state: RootStateOrAny) => state.toggleQrDialog
   );
-  const id = useSelector((state: RootStateOrAny) => state.QrDialogId);
+  const id = useSelector((state: RootStateOrAny) => state.qrDialogId);
   const handleDownload = () => {
     saveSvgAsPng(document.getElementById("qrcode"), `qrcode-${id}`, {
       scale: 25,
@@ -100,12 +101,8 @@ export default function QrDialog() {
           </Tooltip>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => dispatch(toggleQrDialog(false))}
-            color="primary"
-          >
-            Sluiten
-          </Button>
+          <Back />
+          <Cancel />
         </DialogActions>
       </Dialog>
     </>

@@ -12,7 +12,7 @@ import {
 import { loadState, saveState } from "./redux/localStorage";
 import mainReducer from "./redux/reducer";
 import { Provider } from "react-redux";
-const config = { blacklist: [""] };
+const config = { blacklist: [] };
 const middlewares = [createStateSyncMiddleware(config)];
 
 const persistedState = loadState();
@@ -22,6 +22,7 @@ export const composeEnhancers =
 
 const enhancer = composeEnhancers(
   applyMiddleware(...middlewares)
+
   // other store enhancers if any
 );
 const store = createStore(mainReducer, persistedState, enhancer);

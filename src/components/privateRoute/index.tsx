@@ -3,7 +3,10 @@ import { UserContext } from "../../contexts/userContext";
 import React, { useContext } from "react";
 import Drawer from "../drawer";
 import { Container } from "@material-ui/core";
-
+import Loading from "../loading";
+import AlertMessage from "../alertMessage";
+import ErrorMessage from "../errorMessage";
+import QrDialog from "../qrDialog";
 const PrivateRoute = ({ component: Component, ...otherProps }) => {
   const { user } = useContext(UserContext);
 
@@ -23,6 +26,9 @@ const PrivateRoute = ({ component: Component, ...otherProps }) => {
           )
         }
       />
+      <Loading />
+      <AlertMessage />
+      <ErrorMessage />
     </Container>
   );
 };

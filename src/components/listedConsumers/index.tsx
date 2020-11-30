@@ -24,13 +24,18 @@ import "moment-timezone";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { rmDataStoreSub } from "../../services/crud";
 import { IDateRange } from "../../types";
+import { setLoading } from "../../redux/actions";
+import { useDispatch } from "react-redux";
 
 export default function ListedConsumers(props: any) {
   const { user } = useContext(UserContext);
-  const [loading, setLoading] = useState<boolean>(false);
+
   const [error, setError] = useState<string>(null);
   const [rows, setRows] = useState<any>(null);
   const [today] = useState(moment(new Date()).format("YYYY-MM-DD"));
+
+  const dispatch = useDispatch();
+
   const [todayPlusOne] = useState(
     moment(new Date()).add(1, "day").format("YYYY-MM-DD")
   );
@@ -49,7 +54,7 @@ export default function ListedConsumers(props: any) {
 
   const handleDelete = (document: string, index: number) => {
     try {
-      setLoading(true);
+      dispatch(setLoading(true));
       rmDataStoreSub("checkins", props.docid, "items", document);
     } catch (e) {
       setError(e);
@@ -58,7 +63,7 @@ export default function ListedConsumers(props: any) {
   };
 
   useEffect(() => {
-    setLoading(true);
+    dispatch(setLoading(true));
 
     if (!boot) {
       setDateRange({
@@ -97,7 +102,7 @@ export default function ListedConsumers(props: any) {
         });
     }
 
-    setLoading(false);
+    dispatch(setLoading(false));
   }, [
     setRows,
     user.uid,
@@ -232,7 +237,6 @@ export default function ListedConsumers(props: any) {
           </TableBody>
         </Table>
       </TableContainer>
-      {loading && <Loader />}
     </>
   );
 }

@@ -2,18 +2,18 @@ import { Button, Tooltip } from "@material-ui/core";
 import React, { useState } from "react";
 
 import { editFieldInStoreObject } from "../../services/crud";
-import Loader from "../loader";
-
+import { useDispatch } from "react-redux";
+import { setLoading } from "../../redux/actions";
 export default function SetPublish(props) {
-  const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
   const handlePublish = async (id: string) => {
-    setLoading(true);
+    dispatch(setLoading(true));
     const doc = await editFieldInStoreObject(id, props.collection);
     doc.set(
       { published: !props.published, editedAt: Date.now(), items: {} },
       { merge: true }
     );
-    setLoading(false);
+    dispatch(setLoading(false));
   };
 
   return (
@@ -24,10 +24,8 @@ export default function SetPublish(props) {
           onClick={() => handlePublish(props.docid)}
         >
           {props.published ? "Onpubliceer" : "Publiceren"}{" "}
-          {loading && <Loader />}
         </Button>
       </Tooltip>
-      {props.parentLoad && <Loader />}
     </>
   );
 }

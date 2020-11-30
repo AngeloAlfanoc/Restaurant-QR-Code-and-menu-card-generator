@@ -42,8 +42,10 @@ import {
   addMenuCard,
   setQrDialogId,
   toggleQrDialog,
+  setLoading,
 } from "../../redux/actions";
 import { useDispatch } from "react-redux";
+
 const useStyles = makeStyles({
   table: {
     minWidth: 100 + "%",
@@ -58,19 +60,20 @@ const useStyles = makeStyles({
 
 export default function ListedMenus(props: any) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { user } = useContext(UserContext);
-  const [loading, setLoading] = useState<boolean>(false);
+
   const [error, setError] = useState<string>(null);
   const [rows, setRows] = useState<any>(null);
   const [itemDialog, setItemDialog] = useState<boolean>(false);
   const [menuCardItemSelect, setMenuCardItem] = useState<string>(null);
   const [cardId, setCardId] = useState<string>(null);
-  const dispatch = useDispatch();
+
   const [addCardItem, setAddCardItem] = useState<boolean>(false);
   const [input, setInput] = useState<IAddMenuItem | null>(null);
 
   useEffect(() => {
-    setLoading(true);
+    dispatch(setLoading(true));
     const unsubscribe = db
       .collection("menus")
       .where("menuOwner", "==", user.uid)
@@ -90,8 +93,8 @@ export default function ListedMenus(props: any) {
             menuCardName: "U heeft nog geen menu kaarten toegevoegd...",
           });
         }
+        dispatch(setLoading(false));
         setRows(tempLoad);
-        setLoading(false);
       });
 
     return () => {
@@ -108,7 +111,7 @@ export default function ListedMenus(props: any) {
     console.log("TODO Edit: " + menuCardId);
   };
 
-  const handleDelete = (document: string, index: number) => {
+  const handleDelete = (document: string) => {
     try {
       rmDataStore("menus", document);
     } catch (e) {
@@ -152,7 +155,7 @@ export default function ListedMenus(props: any) {
           <Box className="w-100 d-flex align-items-center justify-content-between">
             <Tooltip title="Toevoegen">
               <IconButton
-                onClick={() => dispatch(addMenuCard(false))}
+                onClick={() => dispatch(addMenuCard(true))}
                 className="m-2"
                 color="primary"
               >
@@ -185,7 +188,6 @@ export default function ListedMenus(props: any) {
               </Tooltip>
             </TableRow>
           </TableHead>
-          <TableBody className="my-0"></TableBody>
 
           <TableBody>
             {rows ? (
@@ -200,7 +202,9 @@ export default function ListedMenus(props: any) {
                         <TableCell align="center" key={row.id}>
                           <Tooltip title="QR code bekijken">
                             <IconButton
-                              onClick={() => handleClickQRDialog(row.id)}
+                              onClick={() =>
+                                row.qrcode && handleClickQRDialog(row.id)
+                              }
                             >
                               <CameraAlt
                                 color={row.qrcode ? "action" : "disabled"}
@@ -223,7 +227,7 @@ export default function ListedMenus(props: any) {
                           </Tooltip>
                           <Tooltip title="Verwijderen">
                             <IconButton
-                              onClick={() => handleDelete(row.id, i)}
+                              onClick={() => handleDelete(row.id)}
                               color="secondary"
                               size="medium"
                             >
@@ -231,7 +235,6 @@ export default function ListedMenus(props: any) {
                             </IconButton>
                           </Tooltip>
                           <SetPublish
-                            parentLoad={loading}
                             collection="menus"
                             published={row.published}
                             docid={row.id}
@@ -260,11 +263,6 @@ export default function ListedMenus(props: any) {
           </TableBody>
         </Table>
       </TableContainer>
-      {loading && (
-        <div className="d-flex justify-content-center mt-5">
-          <CircularProgress color="primary" />
-        </div>
-      )}
 
       <Dialog
         maxWidth={"md"}

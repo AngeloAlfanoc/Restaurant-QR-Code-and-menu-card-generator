@@ -16,56 +16,41 @@ import { Alert } from "@material-ui/lab";
 import { uid } from "uid";
 import { addMenuCardToStore } from "../../services/crud";
 import { UserContext } from "../../contexts/userContext";
-import QrDialog from "../qrDialog/index";
 import { IMenuObject } from "../../types";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
-import { addMenuCard } from "../../redux/actions";
+import {
+  addMenuCard,
+  setQrDialogId,
+  toggleQrDialog,
+  setLoading,
+  setError,
+  setAlert,
+} from "../../redux/actions";
+import Cancel from "../dialogActions/cancel";
+import Next from "../dialogActions/next";
+import InputGlobal from "../inputGlobal";
+import SwitchGlobal from "../switchGlobal";
 export default function AddMenuCard() {
   const dispatch = useDispatch();
+
   const toggleDialog = useSelector(
     (state: RootStateOrAny) => state.toggleAddMenuDialog
   );
+
   const { user } = useContext(UserContext);
-
-  const [menuId, setMenuId] = useState<string>(uid());
-
-  const [counter, setCounter] = useState<number>(0);
-  const [error, setError] = useState<string>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [menuId] = useState<string>(uid());
   const [supplyOwnLinkCheck, setSupplyOwnLinkCheck] = useState<boolean>(false);
   const [checkGenQR, setCheckGenQR] = useState<boolean>(false);
   const [input, setInput] = useState<IMenuObject | null>(null);
-  const [alert, setAlert] = useState<string>(null);
-  const [location] = useState(window.location.hostname);
 
   const formHandler = () => {
-    setCounter((prevCount) => prevCount + 1);
-    setAlert(null);
-    console.log(input);
-  };
-
-  const handleInputChange = (e) => {
-    setInput({
-      ...input,
-      [e.currentTarget.name]: e.currentTarget.value,
-    });
-  };
-
-  const handleBack = () => {
-    setCounter((prevCounter) => prevCounter - 1);
-    setError(null);
-    setInput(null);
-  };
-
-  const handleCancel = () => {
+    dispatch(toggleQrDialog(true));
     dispatch(addMenuCard(false));
-    setCounter(0);
-    setError(null);
-    setInput(null);
+    dispatch(setAlert(""));
   };
 
   async function handleSave() {
-    setLoading(true);
+    dispatch(setLoading(true));
     try {
       setError(null);
       await addMenuCardToStore(
@@ -79,72 +64,20 @@ export default function AddMenuCard() {
     } catch (e) {
       setError(e.message);
     } finally {
+      dispatch(setQrDialogId(menuId));
       dispatch(addMenuCard(false));
-      setLoading(false);
-      setCounter(0);
+      // setCounter(0);
       setInput(null);
-      setMenuId(uid());
     }
+    dispatch(setLoading(false));
   }
-
-  const ActionButtons = () => {
-    if (counter === 0) {
-      return (
-        <>
-          {!checkGenQR ? (
-            <Button
-              onClick={
-                input
-                  ? handleSave
-                  : () => setAlert("Gelieve alle velden juist in te vullen.")
-              }
-              color="primary"
-            >
-              {loading ? "Bezig met laden.." : "Opslaan"}
-            </Button>
-          ) : (
-            <Button
-              onClick={
-                input
-                  ? formHandler
-                  : () => setAlert("Gelieve alle velden juist in te vullen.")
-              }
-              color="primary"
-            >
-              Volgende
-            </Button>
-          )}
-        </>
-      );
-    }
-    if (counter > 0) {
-      return (
-        <>
-          <Button onClick={handleBack} color="primary">
-            Vorige
-          </Button>
-          <Button onClick={handleSave} color="primary">
-            Opslaan
-          </Button>
-        </>
-      );
-    }
-  };
 
   const SupplyOwnLink = () => {
     return (
       <>
-        <FormControlLabel
-          control={
-            <>
-              <Switch
-                checked={supplyOwnLinkCheck}
-                onChange={() => setSupplyOwnLinkCheck(!supplyOwnLinkCheck)}
-                name="check"
-                color="primary"
-              />
-            </>
-          }
+        <SwitchGlobal
+          name="ownLinkControl"
+          color="primary"
           label="Eigen menu link voorzien?"
         />
         <DialogContentText>
@@ -154,15 +87,13 @@ export default function AddMenuCard() {
           </small>
         </DialogContentText>
         {supplyOwnLinkCheck && (
-          <TextField
+          <InputGlobal
             className="mb-5"
             margin="dense"
             id="menulink"
             label="Link naar je menu kaart bv. www.mijnfriet.be/menukaart"
             type="name"
             name="menuLink"
-            fullWidth
-            onChange={handleInputChange}
           />
         )}
       </>
@@ -176,65 +107,36 @@ export default function AddMenuCard() {
         onClose={() => dispatch(addMenuCard(false))}
         aria-labelledby="form-dialog-title"
       >
-        {alert && (
-          <Alert severity="warning" variant="filled">
-            {alert}
-          </Alert>
-        )}
-        {error && (
-          <Alert severity="error" variant="filled">
-            {error}
-          </Alert>
-        )}
-        {counter === 0 && (
-          <>
-            <DialogTitle id="form-dialog-title">Van start gaan.. </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Gelieve een naam te kiezen voor je menu kaart.
-              </DialogContentText>
-              <FormGroup>
-                <TextField
-                  className="mb-5"
-                  autoFocus
-                  margin="dense"
-                  id="name"
-                  label="Naam van menu kaart"
-                  type="name"
-                  name="menuName"
-                  fullWidth
-                  required
-                  onChange={handleInputChange}
-                />
-                <SupplyOwnLink />
-                <FormControlLabel
-                  control={
-                    <>
-                      <Switch
-                        checked={checkGenQR}
-                        onChange={() => setCheckGenQR(!checkGenQR)}
-                        name="check"
-                        color="primary"
-                      />
-                    </>
-                  }
-                  label="QR code genereren?"
-                />
-                <DialogContentText>
-                  <small>Een QR code voor je menu aanmaken?</small>
-                </DialogContentText>
-              </FormGroup>
-            </DialogContent>
-          </>
-        )}
-
-        {counter === 1 && checkGenQR && <QrDialog />}
+        <DialogTitle id="form-dialog-title">Van start gaan.. </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Gelieve een naam te kiezen voor je menu kaart.
+          </DialogContentText>
+          <FormGroup>
+            <InputGlobal
+              className="mb-5"
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Naam van menu kaart"
+              type="name"
+              name="menuName"
+            />
+            <SupplyOwnLink />
+            <SwitchGlobal
+              name="qrCodeControl"
+              color="primary"
+              label="Een QR code genereren?"
+            />
+            <DialogContentText>
+              <small>Een QR code voor je menu aanmaken?</small>
+            </DialogContentText>
+          </FormGroup>
+        </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleCancel} color="primary">
-            Afbreken
-          </Button>
-          <ActionButtons />
+          <Cancel />
+          <Next />
         </DialogActions>
       </Dialog>
     </>
