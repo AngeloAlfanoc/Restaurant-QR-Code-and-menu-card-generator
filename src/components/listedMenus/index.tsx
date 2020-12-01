@@ -44,8 +44,9 @@ import {
   setLoading,
   setCurrentStep,
   setSelectedCardRef,
+  setMenuCards,
 } from "../../redux/actions";
-import { useDispatch } from "react-redux";
+import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 
 const useStyles = makeStyles({
   table: {
@@ -65,14 +66,13 @@ export default function ListedMenus(props: any) {
   const { user } = useContext(UserContext);
 
   const [error, setError] = useState<string>(null);
-  const [rows, setRows] = useState<any>(null);
   const [itemDialog, setItemDialog] = useState<boolean>(false);
   const [menuCardItemSelect, setMenuCardItem] = useState<string>(null);
   const [cardId, setCardId] = useState<string>(null);
 
   const [addCardItem, setAddCardItem] = useState<boolean>(false);
   const [input, setInput] = useState<IAddMenuItem | null>(null);
-
+  const rows = useSelector((state: RootStateOrAny) => state.menuCards);
   useEffect(() => {
     dispatch(setLoading(true));
     const unsubscribe = db
@@ -95,13 +95,13 @@ export default function ListedMenus(props: any) {
           });
         }
         dispatch(setLoading(false));
-        setRows(tempLoad);
+        dispatch(setMenuCards(tempLoad));
       });
 
     return () => {
       unsubscribe();
     };
-  }, [setRows, user.uid]);
+  }, [dispatch, user.uid]);
 
   const editMenuItems = async (id: string) => {
     setCardId(id);

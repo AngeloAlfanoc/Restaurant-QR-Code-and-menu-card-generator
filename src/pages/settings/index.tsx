@@ -1,30 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import ClientRegistrationDialog from "../../components/clientRegistration";
-import { UserInfoContext } from "../../contexts/userContext";
 import ClientSettings from "../../components/clientSettings";
-import CircularProgress from "@material-ui/core/CircularProgress";
-
+import { useSelector, RootStateOrAny } from "react-redux";
 export default function Settings() {
-  const { userInfo } = useContext(UserInfoContext);
-  const [verifiedUser, setVerified] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    setLoading(true);
-    if (userInfo) {
-      try {
-        setVerified(userInfo.verified);
-      } catch {
-        throw new Error("Could Fetch UserInfo");
-      }
-      setLoading(false);
-    }
-  }, [userInfo]);
+  const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
 
   return (
     <main className="admin">
-      {loading && <CircularProgress />}
-      {verifiedUser ? (
+      {userInfo.verified ? (
         <ClientSettings data={userInfo} />
       ) : (
         userInfo && <ClientRegistrationDialog id={userInfo.docid} />

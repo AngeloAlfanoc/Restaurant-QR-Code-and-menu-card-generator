@@ -5,6 +5,7 @@ module.exports = {
     errorMessage: "",
     alertMessage: "",
     menuCards: [],
+    consumers: [],
     menuCardItems: [],
     toggleAddMenuDialog: false,
     toggleAddMenuItem: false,
@@ -13,6 +14,8 @@ module.exports = {
     menuName: "",
     menuLink: "",
     ownLinkControl: false,
-    qrCodeControl: false
-
+    qrCodeControl: false,
+    verifiedUser: false,
+    userInfo: [],
+    publicInfo: []
 }

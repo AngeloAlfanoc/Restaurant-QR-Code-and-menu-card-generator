@@ -1,5 +1,4 @@
-import { UserContext, UserInfoContext } from "../../contexts/userContext";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./index.scss";
 import { Button, Typography } from "@material-ui/core";
 import ClientStatus from "../../components/clientStatus";
@@ -7,21 +6,19 @@ import ListedConsumers from "../../components/listedConsumers";
 import ListedCodes from "../../components/listedMenus";
 import ClientRegistrationDialog from "../../components/clientRegistration";
 import { db } from "../../services/firebase";
-import Loader from "../../components/loader";
-import { Alert } from "@material-ui/lab";
 import { useHistory } from "react-router-dom";
 import { CHECKINS } from "../../constants/routes";
+import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
+import { setLoading, setPublicUserInfo } from "../../redux/actions";
+
 const Dashboard = () => {
-  const { userInfo } = useContext(UserInfoContext);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [publicInfo, setPublicInfo] = React.useState<any>(null);
-  const [verifiedUser, setVerified] = useState<boolean>(false);
+  const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
+  const publicInfo = useSelector((state: RootStateOrAny) => state.publicInfo);
   const history = useHistory();
+  const dispatch = useDispatch();
   useEffect(() => {
-    setLoading(true);
+    dispatch(setLoading(true));
     if (userInfo) {
-      setVerified(userInfo.verified);
       db.collection("checkins")
         .where("owner", "==", userInfo.id)
         .onSnapshot((snapshot) => {
@@ -31,24 +28,19 @@ const Dashboard = () => {
               snapshot.forEach((doc) => {
                 tempLoad.push({ ...doc.data(), docid: doc.id });
               });
-            } catch {
-              setError(
-                "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
-              );
-            }
+            } catch {}
           }
-          setPublicInfo(tempLoad[0]);
-          setLoading(false);
+          dispatch(setPublicUserInfo(tempLoad[0]));
+          dispatch(setLoading(false));
         });
     }
-  }, [userInfo]);
+  }, [userInfo, dispatch]);
   return (
     <main className="admin">
-      {loading && <Loader />}
-      {error && <Alert severity={"warning"}>{error}</Alert>}
+      {publicInfo && console.log(publicInfo, userInfo)}
       {userInfo && (
         <>
-          {verifiedUser ? (
+          {userInfo.verified ? (
             <>
               <ClientStatus
                 id={userInfo.id}

@@ -1,21 +1,20 @@
 import { Typography } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ClientRegistrationDialog from "../../components/clientRegistration";
 import ListedConsumers from "../../components/listedConsumers";
-import { UserInfoContext } from "../../contexts/userContext";
 import ClientStatus from "../../components/clientStatus";
 import { db } from "../../services/firebase";
 import { Alert } from "@material-ui/lab";
 import Loader from "../../components/loader";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector, RootStateOrAny } from "react-redux";
 import { setCurrentStep } from "../../redux/actions";
 export default function CheckIns() {
   const dispatch = useDispatch();
-  const { userInfo } = useContext(UserInfoContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>(null);
   const [publicInfo, setPublicInfo] = React.useState<any>(null);
   const [verifiedUser, setVerified] = useState<boolean>(false);
+  const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
   dispatch(setCurrentStep("viewCheckin"));
   useEffect(() => {
     if (userInfo) {

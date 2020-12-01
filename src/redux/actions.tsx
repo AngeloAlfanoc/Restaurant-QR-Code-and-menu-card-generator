@@ -7,7 +7,11 @@ import {
   SET_INPUT,
   SET_SELECTED_CARD_ID,
   SET_CHECKIN_REF,
-  SET_CURRENT_STEP
+  SET_CURRENT_STEP,
+  SET_MENU_CARDS,
+  SET_CONSUMERS,
+  SET_USERINFO,
+  SET_PUBLIC_USER_INFO,
 } from "./constants";
 
 export const addMenuCard = (value: boolean) => ({ type: ADD_MENU_CARD, value });
@@ -42,5 +46,22 @@ export const setInput = (value: any) => ({
 });
 export const setCurrentStep = (value: any) => ({
   type: SET_CURRENT_STEP,
+  value,
+});
+export const setMenuCards = (value: any) => ({
+  type: SET_MENU_CARDS,
+  value,
+});
+export const setConsumers = (value: any) => ({
+  type: SET_CONSUMERS,
+  value,
+});
+
+export const setUserInfo = (value: any) => ({
+  type: SET_USERINFO,
+  value,
+});
+export const setPublicUserInfo = (value: any) => ({
+  type: SET_PUBLIC_USER_INFO,
   value,
 });

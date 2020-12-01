@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,11 +8,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
-import { UserContext } from "../../contexts/userContext";
-
 import { Alert, Skeleton } from "@material-ui/lab";
 
-import Loader from "../../components/loader";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import { IconButton, TextField } from "@material-ui/core";
@@ -24,18 +21,15 @@ import "moment-timezone";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { rmDataStoreSub } from "../../services/crud";
 import { IDateRange } from "../../types";
-import { setLoading } from "../../redux/actions";
-import { useDispatch } from "react-redux";
+import { setConsumers, setLoading } from "../../redux/actions";
+import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 
 export default function ListedConsumers(props: any) {
-  const { user } = useContext(UserContext);
-
   const [error, setError] = useState<string>(null);
-  const [rows, setRows] = useState<any>(null);
   const [today] = useState(moment(new Date()).format("YYYY-MM-DD"));
-
+  const rows = useSelector((state: RootStateOrAny) => state.consumers);
   const dispatch = useDispatch();
-
+  const publicInfo = useSelector((state: RootStateOrAny) => state.publicInfo);
   const [todayPlusOne] = useState(
     moment(new Date()).add(1, "day").format("YYYY-MM-DD")
   );
@@ -52,7 +46,7 @@ export default function ListedConsumers(props: any) {
     });
   };
 
-  const handleDelete = (document: string, index: number) => {
+  const handleDelete = (document: string) => {
     try {
       dispatch(setLoading(true));
       rmDataStoreSub("checkins", props.docid, "items", document);
@@ -64,7 +58,6 @@ export default function ListedConsumers(props: any) {
 
   useEffect(() => {
     dispatch(setLoading(true));
-
     if (!boot) {
       setDateRange({
         rangeStart: moment(today).valueOf(),
@@ -74,7 +67,7 @@ export default function ListedConsumers(props: any) {
     }
     if (boot) {
       db.collection("checkins")
-        .doc(props.docid)
+        .doc(publicInfo.docid)
         .collection("items")
         .orderBy("created", "desc")
         .limit(props.range)
@@ -98,14 +91,11 @@ export default function ListedConsumers(props: any) {
               firstname: "Er hebben nog geen consumenten ingecheckt vandaag...",
             });
           }
-          setRows(tempLoad);
+          dispatch(setConsumers(tempLoad));
         });
     }
-
     dispatch(setLoading(false));
   }, [
-    setRows,
-    user.uid,
     props.docid,
     props.range,
     today,
@@ -113,6 +103,7 @@ export default function ListedConsumers(props: any) {
     dateRange.rangeStart,
     dateRange.rangeEnd,
     boot,
+    dispatch,
   ]);
 
   return (
@@ -204,7 +195,7 @@ export default function ListedConsumers(props: any) {
                       <TableCell align="right">
                         <Tooltip title="Verwijderen">
                           <IconButton
-                            onClick={() => handleDelete(row.docid, i)}
+                            onClick={() => handleDelete(row.docid)}
                             color="secondary"
                             size="medium"
                           >
@@ -226,6 +217,9 @@ export default function ListedConsumers(props: any) {
                     <Skeleton animation="wave" />
                   </TableCell>
                   <TableCell align="left">
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell align="right">
                     <Skeleton animation="wave" />
                   </TableCell>
                   <TableCell align="right">

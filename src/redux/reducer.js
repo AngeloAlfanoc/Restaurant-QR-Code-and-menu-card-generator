@@ -8,7 +8,11 @@ import {
     SET_INPUT,
     SET_SELECTED_CARD_ID,
     SET_CHECKIN_REF,
-    SET_CURRENT_STEP
+    SET_CURRENT_STEP,
+    SET_MENU_CARDS,
+    SET_CONSUMERS,
+    SET_USERINFO,
+    SET_PUBLIC_USER_INFO
 } from "./constants";
 
 import { loadState } from "./localStorage";
@@ -55,6 +59,22 @@ const mainReducer = (state = loadState(), action) => {
         case SET_CURRENT_STEP: {
             const { value } = action;
             return { ...state, currentStep: value }
+        }
+        case SET_MENU_CARDS: {
+            const { value } = action;
+            return { ...state, menuCards: value }
+        }
+        case SET_CONSUMERS: {
+            const { value } = action;
+            return { ...state, consumers: value }
+        }
+        case SET_USERINFO: {
+            const { value } = action;
+            return { ...state, userInfo: value }
+        }
+        case SET_PUBLIC_USER_INFO: {
+            const { value } = action;
+            return { ...state, publicInfo: value }
         }
         default:
             return { ...state };
