@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DialogContent,
   DialogContentText,
@@ -22,6 +22,7 @@ import { toggleQrDialog } from "../../redux/actions";
 import Cancel from "../dialogActions/cancel";
 import Back from "../dialogActions/back";
 import Save from "../dialogActions/save";
+import { currentStep } from "../../redux/initialState";
 
 export default function QrDialog() {
   const history = useHistory();
@@ -30,9 +31,32 @@ export default function QrDialog() {
   const toggleDialog = useSelector(
     (state: RootStateOrAny) => state.toggleQrDialog
   );
-  const id = useSelector((state: RootStateOrAny) => state.qrDialogId);
-  
+  const checkin = useSelector((state: RootStateOrAny) => state.checkinRef);
+  const menuCard = useSelector(
+    (state: RootStateOrAny) => state.selectedCardMenuRef
+  );
+  const step = useSelector((state: RootStateOrAny) => state.currentStep);
   const [location] = useState(window.location.hostname);
+  const [id, setId] = useState<string>();
+  const [linkFactory, setLinkFactory] = useState<string>();
+  const [removeAltActions, setRemoveAltActions] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (step === "dialogMenuCard") {
+      setId(menuCard);
+      setLinkFactory("http://" + location + "/menu/" + id);
+    }
+    if (step === "viewMenuCard") {
+      setId(menuCard);
+      setLinkFactory("http://" + location + "/menu/" + id);
+      setRemoveAltActions(true);
+    }
+    if (step === "viewCheckin") {
+      setId(checkin);
+      setLinkFactory("http://" + location + "/checkin/" + id);
+      setRemoveAltActions(true);
+    }
+  }, [checkin, menuCard, step, location, id]);
 
   const handleDownload = () => {
     saveSvgAsPng(document.getElementById("qrcode"), `qrcode-${id}`, {
@@ -41,12 +65,12 @@ export default function QrDialog() {
   };
 
   const handlePush = () => {
-    history.push(id);
+    history.push(linkFactory);
   };
 
   const handleClickCopy = (e) => {
     if (id) {
-      navigator.clipboard.writeText(id);
+      navigator.clipboard.writeText(linkFactory);
       setAlert("Link gekopieerd!");
     }
   };
@@ -65,15 +89,16 @@ export default function QrDialog() {
             </Alert>
           )}
 
-          {id && <QRCode
-            value={id}
-            id="qrcode"
-            renderAs="svg"
-            fgColor="#000000"
-            bgColor="#ffffff"
-            size={350}
-          />
-}
+          {id && (
+            <QRCode
+              value={linkFactory}
+              id="qrcode"
+              renderAs="svg"
+              fgColor="#000000"
+              bgColor="#ffffff"
+              size={350}
+            />
+          )}
           <Box>
             <DialogContentText className="my-2">
               Via deze QR code verwijs je je consument door naar uw checkin
@@ -96,7 +121,7 @@ export default function QrDialog() {
               className="d-flex align-items-center"
             >
               <DialogContentText className="my-2">
-                <small>{id}</small>
+                <small>{linkFactory}</small>
               </DialogContentText>
               <IconButton className="ml-1">
                 <FileCopyOutlined />
@@ -105,9 +130,14 @@ export default function QrDialog() {
           </Tooltip>
         </DialogContent>
         <DialogActions>
-        <Cancel />
-          <Back />
-        <Save/>
+          <Cancel />
+
+          {step === "dialogMenuCard" && (
+            <>
+              <Back />
+              <Save />
+            </>
+          )}
         </DialogActions>
       </Dialog>
     </>

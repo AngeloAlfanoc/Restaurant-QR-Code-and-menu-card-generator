@@ -8,7 +8,6 @@ export default function InputGlobal(props) {
   const handleInputChange = (e) => {
     dispatch(
       setInput({
-        ...input,
         [e.currentTarget.name]: e.currentTarget.value,
       })
     );

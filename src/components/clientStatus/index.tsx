@@ -24,20 +24,19 @@ import {
   toggleQrDialog,
   setLoading,
   setError,
-  setCheckinRef
+  setCheckinRef,
+  setCurrentStep,
 } from "../../redux/actions";
 export default function ClientStatus(props: IUser) {
   const { user } = useContext(UserContext);
   const dispatch = useDispatch();
   const [publicInfo, setPublicInfo] = React.useState<any>(null);
   const [location] = useState(window.location.hostname);
-
-
   const handleToggleQrDialog = () => {
     dispatch(toggleQrDialog(true));
-    dispatch(setCheckinRef(location + "checkin" + publicInfo.owner))
+    dispatch(setCurrentStep("viewCheckin"));
+    dispatch(setCheckinRef(publicInfo.owner));
   };
-
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -56,12 +55,10 @@ export default function ClientStatus(props: IUser) {
           }
         }
         setPublicInfo(tempLoad[0]);
-        
       });
-  dispatch(setLoading(false));
+    dispatch(setLoading(false));
     return () => {
       unsubscribe();
-     
     };
   }, []);
 
@@ -124,7 +121,6 @@ export default function ClientStatus(props: IUser) {
           </TableBody>
         </Table>
       </TableContainer>
-     
     </>
   );
 }

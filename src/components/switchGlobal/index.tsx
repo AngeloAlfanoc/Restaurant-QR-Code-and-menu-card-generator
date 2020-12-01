@@ -7,12 +7,9 @@ import { setInput } from "../../redux/actions";
 export default function SwitchGlobal(props) {
   const dispatch = useDispatch();
   const [check, setCheck] = useState<boolean>(false);
-
-  const input = useSelector((state: RootStateOrAny) => state.globalInput);
   const handleInputChange = (e) => {
     dispatch(
       setInput({
-        ...input,
         [e.currentTarget.name]: e.currentTarget.checked,
       })
     );

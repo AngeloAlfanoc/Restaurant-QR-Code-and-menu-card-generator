@@ -8,32 +8,36 @@ import {
   setError,
   setInput,
   setLoading,
+  toggleQrDialog,
 } from "../../redux/actions";
 import { addMenuCardToStore } from "../../services/crud";
 
 export default function Save() {
   const dispatch = useDispatch();
-  const input = useSelector((state: RootStateOrAny) => state.input);
-  const [inputCardId] = useState<string>(uid());
+  const input = useSelector((state: RootStateOrAny) => state);
   const { user } = useContext(UserContext);
   async function handler() {
     dispatch(setLoading(true));
     try {
-      setError("");
-      // await addMenuCardToStore(
-      //   inputCardId,
-      //   input.menuName,
-      //   user.uid,
-      //   input.menuLink,
-      //   supplyOwnLinkCheck,
-      //   checkGenQR
-      // );
+      dispatch(setError(""));
+      await addMenuCardToStore(
+        input.selectedCardMenuRef,
+        input.menuName,
+        user.uid,
+        input.menuLink,
+        input.ownLinkControl,
+        input.qrCodeControl
+      );
     } catch (e) {
-      setError(e.message);
+      dispatch(setError(e.message));
     } finally {
       dispatch(addMenuCard(false));
       dispatch(setInput(null));
     }
+
+    dispatch(addMenuCard(false));
+    dispatch(toggleQrDialog(false));
+    dispatch(setError(""));
     dispatch(setLoading(false));
   }
   return (

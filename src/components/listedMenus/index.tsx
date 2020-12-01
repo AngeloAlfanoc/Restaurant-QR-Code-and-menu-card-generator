@@ -42,6 +42,8 @@ import {
   addMenuCard,
   toggleQrDialog,
   setLoading,
+  setCurrentStep,
+  setSelectedCardRef,
 } from "../../redux/actions";
 import { useDispatch } from "react-redux";
 
@@ -143,6 +145,8 @@ export default function ListedMenus(props: any) {
     );
   };
   const handleClickQRDialog = (id: string) => {
+    dispatch(setCurrentStep("viewMenuCard"));
+    dispatch(setSelectedCardRef(id));
     // dispatch(setQrDialogId(id));
     dispatch(toggleQrDialog(true));
   };

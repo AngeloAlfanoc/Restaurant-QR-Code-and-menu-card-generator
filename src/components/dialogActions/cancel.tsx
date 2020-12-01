@@ -19,7 +19,7 @@ export default function Cancel() {
   };
   return (
     <Button onClick={handler} color="primary">
-      Afbreken
+      Sluiten
     </Button>
   );
 }

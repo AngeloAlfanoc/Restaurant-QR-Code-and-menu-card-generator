@@ -1,5 +1,5 @@
 module.exports = {
-    checkinRef:"",
+    checkinRef: "",
     selectedCardMenuRef: "",
     currentStep: "",
     errorMessage: "",
@@ -10,4 +10,9 @@ module.exports = {
     toggleAddMenuItem: false,
     toggleQrDialog: false,
     isLoading: false,
+    menuName: "",
+    menuLink: "",
+    ownLinkControl: false,
+    qrCodeControl: false
+
 }

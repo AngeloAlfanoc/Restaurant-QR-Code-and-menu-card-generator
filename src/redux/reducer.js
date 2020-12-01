@@ -28,13 +28,13 @@ const mainReducer = (state = loadState(), action) => {
             const { value } = action;
             return { ...state, toggleQrDialog: value }
         }
-        case SET_CHECKIN_REF : {
-            const {value} = action;
-            return {...state, checkinRef:value}
+        case SET_CHECKIN_REF: {
+            const { value } = action;
+            return { ...state, checkinRef: value }
         }
-        case SET_SELECTED_CARD_ID : {
-            const {value} = action;
-            return {...state, selectedCardMenuRef:value}
+        case SET_SELECTED_CARD_ID: {
+            const { value } = action;
+            return { ...state, selectedCardMenuRef: value }
         }
         case SET_LOADING: {
             const { value } = action;
@@ -50,11 +50,11 @@ const mainReducer = (state = loadState(), action) => {
         }
         case SET_INPUT: {
             const { value } = action;
-            return { ...state, input: value }
+            return { ...state, ...value }
         }
-        case SET_CURRENT_STEP : {
-            const {value } = action;
-            return {...state, input : value}
+        case SET_CURRENT_STEP: {
+            const { value } = action;
+            return { ...state, currentStep: value }
         }
         default:
             return { ...state };

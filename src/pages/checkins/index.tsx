@@ -7,14 +7,16 @@ import ClientStatus from "../../components/clientStatus";
 import { db } from "../../services/firebase";
 import { Alert } from "@material-ui/lab";
 import Loader from "../../components/loader";
-
+import { useDispatch } from "react-redux";
+import { setCurrentStep } from "../../redux/actions";
 export default function CheckIns() {
+  const dispatch = useDispatch();
   const { userInfo } = useContext(UserInfoContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>(null);
   const [publicInfo, setPublicInfo] = React.useState<any>(null);
   const [verifiedUser, setVerified] = useState<boolean>(false);
-
+  dispatch(setCurrentStep("viewCheckin"));
   useEffect(() => {
     if (userInfo) {
       setVerified(userInfo.verified);
