@@ -1,5 +1,7 @@
 module.exports = {
-    qrDialogId: "",
+    checkinRef:"",
+    selectedCardMenuRef: "",
+    currentStep: "",
     errorMessage: "",
     alertMessage: "",
     menuCards: [],
@@ -8,10 +10,4 @@ module.exports = {
     toggleAddMenuItem: false,
     toggleQrDialog: false,
     isLoading: false,
-    globalInput: {
-
-        ownLinkControl: false,
-        qrCodeControl: false,
-
-    }
 }

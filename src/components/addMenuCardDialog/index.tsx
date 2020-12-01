@@ -20,11 +20,12 @@ import { IMenuObject } from "../../types";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 import {
   addMenuCard,
-  setQrDialogId,
+  // setQrDialogId,
   toggleQrDialog,
   setLoading,
   setError,
   setAlert,
+  setSelectedCardRef,
 } from "../../redux/actions";
 import Cancel from "../dialogActions/cancel";
 import Next from "../dialogActions/next";
@@ -43,34 +44,34 @@ export default function AddMenuCard() {
   const [checkGenQR, setCheckGenQR] = useState<boolean>(false);
   const [input, setInput] = useState<IMenuObject | null>(null);
 
-  const formHandler = () => {
-    dispatch(toggleQrDialog(true));
-    dispatch(addMenuCard(false));
-    dispatch(setAlert(""));
-  };
+  // const formHandler = () => {
+  //   dispatch(toggleQrDialog(true));
+  //   dispatch(addMenuCard(false));
+  //   dispatch(setAlert(""));
+  // };
 
-  async function handleSave() {
-    dispatch(setLoading(true));
-    try {
-      setError(null);
-      await addMenuCardToStore(
-        menuId,
-        input.menuName,
-        user.uid,
-        input.menuLink,
-        supplyOwnLinkCheck,
-        checkGenQR
-      );
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      dispatch(setQrDialogId(menuId));
-      dispatch(addMenuCard(false));
-      // setCounter(0);
-      setInput(null);
-    }
-    dispatch(setLoading(false));
-  }
+  // async function handleSave() {
+  //   dispatch(setLoading(true));
+  //   try {
+  //     setError(null);
+  //     await addMenuCardToStore(
+  //       menuId,
+  //       input.menuName,
+  //       user.uid,
+  //       input.menuLink,
+  //       supplyOwnLinkCheck,
+  //       checkGenQR
+  //     );
+  //   } catch (e) {
+  //     setError(e.message);
+  //   } finally {
+  //     dispatch(setSelectedCardRef(menuId));
+  //     dispatch(addMenuCard(false));
+  //     // setCounter(0);
+  //     setInput(null);
+  //   }
+  //   dispatch(setLoading(false));
+  // }
 
   const SupplyOwnLink = () => {
     return (

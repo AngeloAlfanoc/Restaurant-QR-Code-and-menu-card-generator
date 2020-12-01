@@ -40,7 +40,6 @@ import { IAddMenuItem } from "../../types";
 import CardMenuItems from "./cardMenuItems";
 import {
   addMenuCard,
-  setQrDialogId,
   toggleQrDialog,
   setLoading,
 } from "../../redux/actions";
@@ -144,7 +143,7 @@ export default function ListedMenus(props: any) {
     );
   };
   const handleClickQRDialog = (id: string) => {
-    dispatch(setQrDialogId(id));
+    // dispatch(setQrDialogId(id));
     dispatch(toggleQrDialog(true));
   };
 

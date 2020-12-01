@@ -2,11 +2,13 @@ import {
     ADD_MENU_CARD,
     ADD_MENU_ITEM,
     TOGGLE_QR_DIALOG,
-    SET_QR_DIALOG_ID,
     SET_LOADING,
     SET_ERROR,
     SET_ALERT,
-    SET_INPUT
+    SET_INPUT,
+    SET_SELECTED_CARD_ID,
+    SET_CHECKIN_REF,
+    SET_CURRENT_STEP
 } from "./constants";
 
 import { loadState } from "./localStorage";
@@ -26,9 +28,13 @@ const mainReducer = (state = loadState(), action) => {
             const { value } = action;
             return { ...state, toggleQrDialog: value }
         }
-        case SET_QR_DIALOG_ID: {
-            const { value } = action;
-            return { ...state, qrDialogId: value }
+        case SET_CHECKIN_REF : {
+            const {value} = action;
+            return {...state, checkinRef:value}
+        }
+        case SET_SELECTED_CARD_ID : {
+            const {value} = action;
+            return {...state, selectedCardMenuRef:value}
         }
         case SET_LOADING: {
             const { value } = action;
@@ -45,6 +51,10 @@ const mainReducer = (state = loadState(), action) => {
         case SET_INPUT: {
             const { value } = action;
             return { ...state, input: value }
+        }
+        case SET_CURRENT_STEP : {
+            const {value } = action;
+            return {...state, input : value}
         }
         default:
             return { ...state };

@@ -8,7 +8,6 @@ import {
   setError,
   setInput,
   setLoading,
-  setQrDialogId,
 } from "../../redux/actions";
 import { addMenuCardToStore } from "../../services/crud";
 

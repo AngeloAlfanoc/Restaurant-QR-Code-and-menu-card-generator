@@ -29,6 +29,7 @@ const PrivateRoute = ({ component: Component, ...otherProps }) => {
       <Loading />
       <AlertMessage />
       <ErrorMessage />
+      <QrDialog/>
     </Container>
   );
 };

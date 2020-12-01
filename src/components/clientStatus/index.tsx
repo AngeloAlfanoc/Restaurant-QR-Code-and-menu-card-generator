@@ -13,30 +13,31 @@ import {
   Button,
 } from "@material-ui/core";
 import { CameraAlt } from "@material-ui/icons";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/userContext";
 import { db } from "../../services/firebase";
-import QrDialog from "../qrDialog";
 import SetPublish from "../setPublish";
 import LinkIcon from "@material-ui/icons/Link";
 import { IUser } from "../../types";
 import { useDispatch } from "react-redux";
 import {
-  setQrDialogId,
   toggleQrDialog,
   setLoading,
   setError,
+  setCheckinRef
 } from "../../redux/actions";
 export default function ClientStatus(props: IUser) {
   const { user } = useContext(UserContext);
   const dispatch = useDispatch();
   const [publicInfo, setPublicInfo] = React.useState<any>(null);
-  const location = window.location.hostname;
+  const [location] = useState(window.location.hostname);
+
 
   const handleToggleQrDialog = () => {
     dispatch(toggleQrDialog(true));
-    dispatch(setQrDialogId(props.id));
+    dispatch(setCheckinRef(location + "checkin" + publicInfo.owner))
   };
+
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -55,11 +56,12 @@ export default function ClientStatus(props: IUser) {
           }
         }
         setPublicInfo(tempLoad[0]);
+        
       });
-
+  dispatch(setLoading(false));
     return () => {
       unsubscribe();
-      dispatch(setLoading(false));
+     
     };
   }, []);
 
@@ -103,7 +105,7 @@ export default function ClientStatus(props: IUser) {
               </TableCell>
               <TableCell align="center">
                 <Tooltip title="QR code bekijken">
-                  <IconButton onClick={() => handleToggleQrDialog}>
+                  <IconButton onClick={handleToggleQrDialog}>
                     <CameraAlt />
                   </IconButton>
                 </Tooltip>
@@ -122,7 +124,7 @@ export default function ClientStatus(props: IUser) {
           </TableBody>
         </Table>
       </TableContainer>
-      <QrDialog />
+     
     </>
   );
 }

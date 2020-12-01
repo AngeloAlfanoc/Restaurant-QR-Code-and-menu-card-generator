@@ -21,6 +21,7 @@ import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 import { toggleQrDialog } from "../../redux/actions";
 import Cancel from "../dialogActions/cancel";
 import Back from "../dialogActions/back";
+import Save from "../dialogActions/save";
 
 export default function QrDialog() {
   const history = useHistory();
@@ -30,6 +31,9 @@ export default function QrDialog() {
     (state: RootStateOrAny) => state.toggleQrDialog
   );
   const id = useSelector((state: RootStateOrAny) => state.qrDialogId);
+  
+  const [location] = useState(window.location.hostname);
+
   const handleDownload = () => {
     saveSvgAsPng(document.getElementById("qrcode"), `qrcode-${id}`, {
       scale: 25,
@@ -61,7 +65,7 @@ export default function QrDialog() {
             </Alert>
           )}
 
-          <QRCode
+          {id && <QRCode
             value={id}
             id="qrcode"
             renderAs="svg"
@@ -69,7 +73,7 @@ export default function QrDialog() {
             bgColor="#ffffff"
             size={350}
           />
-
+}
           <Box>
             <DialogContentText className="my-2">
               Via deze QR code verwijs je je consument door naar uw checkin
@@ -101,8 +105,9 @@ export default function QrDialog() {
           </Tooltip>
         </DialogContent>
         <DialogActions>
+        <Cancel />
           <Back />
-          <Cancel />
+        <Save/>
         </DialogActions>
       </Dialog>
     </>
