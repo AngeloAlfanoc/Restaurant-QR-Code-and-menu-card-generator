@@ -1,10 +1,10 @@
 import TextField from "@material-ui/core/TextField/TextField";
 import React from "react";
-import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setInput } from "../../redux/actions";
 export default function InputGlobal(props) {
   const dispatch = useDispatch();
-  const input = useSelector((state: RootStateOrAny) => state.globalInput);
+
   const handleInputChange = (e) => {
     dispatch(
       setInput({
@@ -15,6 +15,7 @@ export default function InputGlobal(props) {
 
   return (
     <TextField
+      value={props.value}
       className={props.className}
       margin={props.margin}
       id={props.id}

@@ -37,7 +37,6 @@ const Dashboard = () => {
   }, [userInfo, dispatch]);
   return (
     <main className="admin">
-      {publicInfo && console.log(publicInfo, userInfo)}
       {userInfo && (
         <>
           {userInfo.verified ? (

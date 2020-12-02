@@ -12,7 +12,11 @@ import {
     SET_MENU_CARDS,
     SET_CONSUMERS,
     SET_USERINFO,
-    SET_PUBLIC_USER_INFO
+    SET_PUBLIC_USER_INFO,
+    TOGGLE_SWITCH_LINK,
+    TOGGLE_SWITCH_QR_CODE,
+    SET_MENU_NAME,
+    SET_MENU_LINK
 } from "./constants";
 
 import { loadState } from "./localStorage";
@@ -75,6 +79,22 @@ const mainReducer = (state = loadState(), action) => {
         case SET_PUBLIC_USER_INFO: {
             const { value } = action;
             return { ...state, publicInfo: value }
+        }
+        case TOGGLE_SWITCH_LINK: {
+            const { value } = action;
+            return { ...state, ownLinkControl: value }
+        }
+        case TOGGLE_SWITCH_QR_CODE: {
+            const { value } = action;
+            return { ...state, qrCodeControl: value }
+        }
+        case SET_MENU_NAME: {
+            const { value } = action;
+            return { ...state, menuName: value }
+        }
+        case SET_MENU_LINK: {
+            const { value } = action;
+            return { ...state, menuLink: value }
         }
         default:
             return { ...state };

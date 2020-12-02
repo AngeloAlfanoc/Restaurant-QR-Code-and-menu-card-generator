@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -19,8 +19,6 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { UserContext } from "../../contexts/userContext";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { Alert } from "@material-ui/lab";
 import { CameraAlt } from "@material-ui/icons";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -45,6 +43,11 @@ import {
   setCurrentStep,
   setSelectedCardRef,
   setMenuCards,
+  toggleSwitchQrCode,
+  toggleSwitchLink,
+  setError,
+  setMenuName,
+  setMenuLink,
 } from "../../redux/actions";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 
@@ -63,21 +66,19 @@ const useStyles = makeStyles({
 export default function ListedMenus(props: any) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { user } = useContext(UserContext);
-
-  const [error, setError] = useState<string>(null);
+  const publicInfo = useSelector((state: RootStateOrAny) => state.publicInfo);
   const [itemDialog, setItemDialog] = useState<boolean>(false);
   const [menuCardItemSelect, setMenuCardItem] = useState<string>(null);
   const [cardId, setCardId] = useState<string>(null);
-
   const [addCardItem, setAddCardItem] = useState<boolean>(false);
   const [input, setInput] = useState<IAddMenuItem | null>(null);
   const rows = useSelector((state: RootStateOrAny) => state.menuCards);
+
   useEffect(() => {
     dispatch(setLoading(true));
     const unsubscribe = db
       .collection("menus")
-      .where("menuOwner", "==", user.uid)
+      .where("menuOwner", "==", publicInfo.owner)
       .onSnapshot((snapshot) => {
         const tempLoad = [];
         if (snapshot.size) {
@@ -101,7 +102,7 @@ export default function ListedMenus(props: any) {
     return () => {
       unsubscribe();
     };
-  }, [dispatch, user.uid]);
+  }, [dispatch, publicInfo.owner]);
 
   const editMenuItems = async (id: string) => {
     setCardId(id);
@@ -145,10 +146,24 @@ export default function ListedMenus(props: any) {
     );
   };
   const handleClickQRDialog = (id: string) => {
+    dispatch(setLoading(true));
     dispatch(setCurrentStep("viewMenuCard"));
     dispatch(setSelectedCardRef(id));
-    // dispatch(setQrDialogId(id));
     dispatch(toggleQrDialog(true));
+    dispatch(setLoading(false));
+  };
+
+  const handleMenuCard = () => {
+    dispatch(setLoading(true));
+    dispatch(setError(null));
+    dispatch(toggleQrDialog(false));
+    dispatch(toggleSwitchLink(false));
+    dispatch(toggleSwitchQrCode(false));
+    dispatch(setMenuName(null));
+    dispatch(setMenuLink(null));
+    dispatch(toggleSwitchQrCode(false));
+    dispatch(addMenuCard(true));
+    dispatch(setLoading(false));
   };
 
   return (
@@ -158,7 +173,7 @@ export default function ListedMenus(props: any) {
           <Box className="w-100 d-flex align-items-center justify-content-between">
             <Tooltip title="Toevoegen">
               <IconButton
-                onClick={() => dispatch(addMenuCard(true))}
+                onClick={handleMenuCard}
                 className="m-2"
                 color="primary"
               >
@@ -173,7 +188,6 @@ export default function ListedMenus(props: any) {
             </Tooltip>
           </Box>
         )}
-        {error && <Alert severity="warning">{error}</Alert>}
         <Table className={classes.table} aria-label="simple table">
           <TableHead className="my-0">
             <TableRow className="my-0">
@@ -217,8 +231,12 @@ export default function ListedMenus(props: any) {
                         </TableCell>
                         <TableCell align="center">
                           <Tooltip title="Menu Kaart aanpassen">
-                            <IconButton onClick={() => editMenuItems(row.id)}>
-                              <ListIcon />
+                            <IconButton
+                              onClick={() => row.ref && editMenuItems(row.id)}
+                            >
+                              <ListIcon
+                                color={row.ref ? "action" : "disabled"}
+                              />
                             </IconButton>
                           </Tooltip>
                         </TableCell>

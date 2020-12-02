@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -16,28 +16,47 @@ import InputGlobal from "../inputGlobal";
 import SupplyOwnLink from "../switches/supplyOwnLink";
 import GenQrCode from "../switches/genQrCode";
 import Save from "../dialogActions/save";
+import Warning from "../alerts/warning";
 export default function AddMenuCard() {
   const dispatch = useDispatch();
-  const toggleDialog = useSelector(
-    (state: RootStateOrAny) => state.toggleAddMenuDialog
-  );
-  const qrCodeControl = useSelector(
-    (state: RootStateOrAny) => state.qrCodeControl
-  );
+  const [name, setName] = useState<string | null>();
+  const [link, setlink] = useState<string | null>();
+  const {
+    toggleAddMenuDialog,
+    qrCodeControl,
+    menuName,
+    menuLink,
+    buttonTracker,
+  } = useSelector((state: RootStateOrAny) => state);
+
+  useLayoutEffect(() => {
+    if (buttonTracker === "back") {
+      setName(menuName);
+      setlink(menuLink);
+    } else {
+      setName(null);
+      setlink(null);
+    }
+  }, [buttonTracker, menuName, menuLink]);
+
   return (
     <>
       <Dialog
-        open={toggleDialog}
+        open={toggleAddMenuDialog}
         onClose={() => dispatch(addMenuCard(false))}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Van start gaan.. </DialogTitle>
+        <Warning />
+        <DialogTitle id="form-dialog-title">
+          Een nieuwe menu kaart toevoegen...
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             Gelieve een naam te kiezen voor je menu kaart.
           </DialogContentText>
           <FormGroup>
             <InputGlobal
+              value={name}
               className="mb-5"
               autoFocus
               margin="dense"
@@ -46,7 +65,7 @@ export default function AddMenuCard() {
               type="name"
               name="menuName"
             />
-            <SupplyOwnLink />
+            <SupplyOwnLink value={link} />
             <GenQrCode />
           </FormGroup>
         </DialogContent>

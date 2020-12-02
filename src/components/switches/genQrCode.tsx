@@ -10,7 +10,7 @@ export default function GenQrCode() {
   return (
     <>
       <SwitchGlobal
-        check={qrCodeControl}
+        checked={qrCodeControl}
         name="qrCodeControl"
         color="primary"
         label="Een QR code genereren?"

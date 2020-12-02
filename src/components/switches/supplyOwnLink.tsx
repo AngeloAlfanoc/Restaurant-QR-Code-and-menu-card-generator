@@ -4,7 +4,7 @@ import { RootStateOrAny, useSelector } from "react-redux";
 import { DialogContentText } from "@material-ui/core";
 import InputGlobal from "../inputGlobal";
 
-export default function SupplyOwnLink() {
+export default function SupplyOwnLink(props) {
   const ownLinkControl = useSelector(
     (state: RootStateOrAny) => state.ownLinkControl
   );
@@ -24,6 +24,7 @@ export default function SupplyOwnLink() {
       </DialogContentText>
       {ownLinkControl && (
         <InputGlobal
+          value={props.value}
           className="mb-5"
           margin="dense"
           id="menulink"

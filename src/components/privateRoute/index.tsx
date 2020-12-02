@@ -4,8 +4,7 @@ import React, { useContext } from "react";
 import Drawer from "../drawer";
 import { Container } from "@material-ui/core";
 import Loading from "../loading";
-import AlertMessage from "../alertMessage";
-import ErrorMessage from "../errorMessage";
+
 import QrDialog from "../qrDialog";
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "../../redux/actions";
@@ -31,8 +30,6 @@ const PrivateRoute = ({ component: Component, ...otherProps }) => {
         }
       />
       <Loading />
-      <AlertMessage />
-      <ErrorMessage />
       <QrDialog />
     </Container>
   );

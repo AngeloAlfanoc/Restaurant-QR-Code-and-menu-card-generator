@@ -12,6 +12,11 @@ import {
   SET_CONSUMERS,
   SET_USERINFO,
   SET_PUBLIC_USER_INFO,
+  SET_ALERT,
+  TOGGLE_SWITCH_LINK,
+  TOGGLE_SWITCH_QR_CODE,
+  SET_MENU_NAME,
+  SET_MENU_LINK,
 } from "./constants";
 
 export const addMenuCard = (value: boolean) => ({ type: ADD_MENU_CARD, value });
@@ -37,7 +42,7 @@ export const setError = (value: string) => ({
   value,
 });
 export const setAlert = (value: string) => ({
-  type: SET_ERROR,
+  type: SET_ALERT,
   value,
 });
 export const setInput = (value: any) => ({
@@ -56,12 +61,27 @@ export const setConsumers = (value: any) => ({
   type: SET_CONSUMERS,
   value,
 });
-
 export const setUserInfo = (value: any) => ({
   type: SET_USERINFO,
   value,
 });
 export const setPublicUserInfo = (value: any) => ({
   type: SET_PUBLIC_USER_INFO,
+  value,
+});
+export const toggleSwitchLink = (value: any) => ({
+  type: TOGGLE_SWITCH_LINK,
+  value,
+});
+export const toggleSwitchQrCode = (value: any) => ({
+  type: TOGGLE_SWITCH_QR_CODE,
+  value,
+});
+export const setMenuName = (value: any) => ({
+  type: SET_MENU_NAME,
+  value,
+});
+export const setMenuLink = (value: any) => ({
+  type: SET_MENU_LINK,
   value,
 });

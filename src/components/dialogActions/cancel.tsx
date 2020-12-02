@@ -6,19 +6,25 @@ import {
   setError,
   toggleQrDialog,
   setLoading,
+  setInput,
 } from "../../redux/actions";
 
 export default function Cancel() {
   const dispatch = useDispatch();
-  const handler = () => {
+  const handler = (e) => {
     dispatch(setLoading(true));
     dispatch(addMenuCard(false));
     dispatch(toggleQrDialog(false));
     dispatch(setError(""));
     dispatch(setLoading(false));
+    dispatch(
+      setInput({
+        buttonTracker: "cancel",
+      })
+    );
   };
   return (
-    <Button onClick={handler} color="primary">
+    <Button name="cancel" onClick={handler} color="primary">
       Sluiten
     </Button>
   );

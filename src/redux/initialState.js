@@ -2,6 +2,7 @@ module.exports = {
     checkinRef: "",
     selectedCardMenuRef: "",
     currentStep: "",
+    buttonTracker: "",
     errorMessage: "",
     alertMessage: "",
     menuCards: [],

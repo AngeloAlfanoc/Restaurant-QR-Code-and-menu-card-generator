@@ -10,7 +10,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
-import AddressForm from "../../components/adressForm";
+import AddressForm from "../../adressForm";
 import PaymentForm from "../../components/paymentForm";
 import Review from "../../components/review";
 
