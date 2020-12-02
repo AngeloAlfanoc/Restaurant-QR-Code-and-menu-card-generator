@@ -23,12 +23,15 @@ export default function Save() {
 
   useLayoutEffect(() => {
     const regex = new RegExp(urlMatchExpression);
+
     if (input.ownLinkControl && input.menuName && input.menuLink) {
       if (input.menuLink.match(regex)) {
         setDisabled(false);
       } else {
         setDisabled(true);
       }
+    } else {
+      setDisabled(false);
     }
   }, [input, urlMatchExpression]);
 
