@@ -32,7 +32,7 @@ import QrDialog from "../../dialogs/qrDialog";
 import SetPublish from "../../buttons/publish";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import ListIcon from "@material-ui/icons/List";
-import { objects } from "./selectProps";
+import { objects } from "../../dialogs/addMenuItem/selectProps";
 import { addMenuItemData } from "../../../services/crud";
 import { IAddMenuItem } from "../../../types";
 import CardMenuItems from "./cardMenuItems";
@@ -238,10 +238,10 @@ export default function ListedMenus(props: any) {
                         <TableCell align="center">
                           <Tooltip title="Menu Kaart aanpassen">
                             <IconButton
-                              onClick={() => row.ref && editMenuItems(row.id)}
+                              onClick={() => !row.ref && editMenuItems(row.id)}
                             >
                               <ListIcon
-                                color={row.ref ? "action" : "disabled"}
+                                color={!row.ref ? "action" : "disabled"}
                               />
                             </IconButton>
                           </Tooltip>
@@ -291,99 +291,6 @@ export default function ListedMenus(props: any) {
         </Table>
       </TableContainer>
 
-      <Dialog
-        maxWidth={"md"}
-        fullWidth
-        open={itemDialog}
-        onClose={() => setItemDialog(false)}
-      >
-        <DialogContent>
-          <DialogTitle className="text-left">
-            Klik op toevoegen om te beginnen
-          </DialogTitle>
-          <Box className="w-100 d-flex align-items-center justify-content-between">
-            <Tooltip className="ml-3" title="Toevoegen">
-              <Button onClick={() => setAddCardItem(true)}>Toevoegen</Button>
-            </Tooltip>
-            <Tooltip
-              className="mr-3"
-              title={"Klik op toevoegen om een nieuwe item toe te voegen."}
-            >
-              <HelpOutlineIcon className="m-2" color="disabled" />
-            </Tooltip>
-          </Box>
-          <DialogContent>
-            {addCardItem && (
-              <Box className="d-flex justify-content-start">
-                <TextField
-                  id="standard-select-type"
-                  select
-                  label="Type van item"
-                  value={menuCardItemSelect}
-                  onChange={handleChangeTypeSelect}
-                  helperText="Kies je type van object hier"
-                >
-                  {objects.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                {menuCardItemSelect === "titel" && (
-                  <>
-                    <TextField
-                      onChange={handleInputChange}
-                      name="title"
-                      className="mx-2"
-                      label="Titel Naam"
-                    ></TextField>
-                    <Box className="my-auto">
-                      <IconButton
-                        onClick={() =>
-                          handleStoreMenuItemData(menuCardItemSelect)
-                        }
-                      >
-                        <CheckIcon />
-                      </IconButton>
-                    </Box>
-                  </>
-                )}
-                {menuCardItemSelect === "item" && (
-                  <>
-                    <TextField
-                      name="itemTitle"
-                      className="mx-2"
-                      label="Benaming"
-                      onChange={handleInputChange}
-                    ></TextField>
-                    <TextField
-                      name="itemPrice"
-                      className="mx-2"
-                      label="Prijs"
-                      onChange={handleInputChange}
-                    ></TextField>
-                    <Box className="my-auto">
-                      <IconButton
-                        onClick={() =>
-                          handleStoreMenuItemData(menuCardItemSelect)
-                        }
-                      >
-                        <CheckIcon />
-                      </IconButton>
-                    </Box>
-                  </>
-                )}
-                {cardId && <CardMenuItems id={cardId} />}
-              </Box>
-            )}
-          </DialogContent>
-          <Box className="d-flex justify-content-end">
-            <Button onClick={() => setItemDialog(false)} color="primary">
-              Sluiten
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog>
       <QrDialog />
     </>
   );

@@ -20,7 +20,7 @@ import {
 } from "./constants";
 
 export const addMenuCard = (value: boolean) => ({ type: ADD_MENU_CARD, value });
-export const addMenuitem = (value: boolean) => ({ type: ADD_MENU_ITEM, value });
+export const addMenuItem = (value: boolean) => ({ type: ADD_MENU_ITEM, value });
 export const toggleQrDialog = (value: boolean) => ({
   type: TOGGLE_QR_DIALOG,
   value,
