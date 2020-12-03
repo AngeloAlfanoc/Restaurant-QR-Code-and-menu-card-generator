@@ -1,13 +1,14 @@
 import React from "react";
-import Prices from "../../components/pricing";
+import Prices from "../../components/views/pricing";
 import Slider from "../../components/heroSlider";
-import PhoneMockup from "../../components/phoneMockup";
+
+import Footer from "../../components/footer";
 export default function Home() {
   return (
     <>
-      <PhoneMockup />
       <Slider />
       <Prices />
+      <Footer />
     </>
   );
 }

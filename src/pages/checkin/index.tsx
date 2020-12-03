@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import { db } from "../../services/firebase";
-import ConsumerCheckIn from "../../components/consumerCheckin";
-import ConsumerCheckinDisabled from "../../components/consumerCheckinDisabled";
-import Loader from "../../components/loader";
+import ConsumerCheckIn from "../../components/forms/consumerCheckin";
+import ConsumerCheckinDisabled from "../../components/forms/consumerCheckinDisabled";
 import { Alert } from "@material-ui/lab";
 export default function CheckInPage(props: any) {
   const [loading, setLoading] = useState(false);
@@ -55,9 +54,7 @@ export default function CheckInPage(props: any) {
   return (
     <>
       {error && <Alert severity="error">{error}</Alert>}
-
       {publicInfo && <TemplateView />}
-      {loading && <Loader />}
     </>
   );
 }

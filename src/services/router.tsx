@@ -70,9 +70,6 @@ const Router = () => {
           </Switch>
         </Suspense>
       </BrowserRouter>
-      <Container>
-        <Footer />
-      </Container>
     </>
   );
 };

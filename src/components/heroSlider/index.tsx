@@ -5,10 +5,10 @@ import Slider from "react-slick";
 import "./index.scss";
 import item_1 from "../../assets/slick/item_1.jpg";
 import item_2 from "../../assets/slick/item_2.jpg";
-import Nav from "../../components/menuNav";
+import Nav from "../menus/menuNav";
 import { useHistory } from "react-router-dom";
 import Slide from "./slide";
-import Burger from "../menuBurger/index";
+import Burger from "../menus/menuBurger/index";
 export default function HeroSlider() {
   const history = useHistory();
   const handleLink = (link) => {

@@ -1,11 +1,10 @@
 import { Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import ClientRegistrationDialog from "../../components/clientRegistration";
-import ListedConsumers from "../../components/listedConsumers";
+import ClientRegistrationDialog from "../../components/forms/clientRegistration";
+import ListedConsumers from "../../components/lists/listedConsumers";
 import ClientStatus from "../../components/clientStatus";
 import { db } from "../../services/firebase";
 import { Alert } from "@material-ui/lab";
-import Loader from "../../components/loader";
 import { useDispatch, useSelector, RootStateOrAny } from "react-redux";
 import { setCurrentStep } from "../../redux/actions";
 export default function CheckIns() {
@@ -60,7 +59,6 @@ export default function CheckIns() {
       ) : (
         userInfo && <ClientRegistrationDialog id={userInfo.docid} />
       )}
-      {loading && <Loader />}
     </main>
   );
 }

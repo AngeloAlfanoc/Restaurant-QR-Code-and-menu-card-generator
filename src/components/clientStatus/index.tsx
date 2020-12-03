@@ -9,14 +9,12 @@ import {
   Paper,
   TableBody,
   IconButton,
-  DialogActions,
-  Button,
 } from "@material-ui/core";
 import { CameraAlt } from "@material-ui/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/userContext";
 import { db } from "../../services/firebase";
-import SetPublish from "../setPublish";
+import SetPublish from "../buttons/publish";
 import LinkIcon from "@material-ui/icons/Link";
 import { IUser } from "../../types";
 import { useDispatch } from "react-redux";

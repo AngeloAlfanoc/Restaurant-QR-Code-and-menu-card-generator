@@ -1,11 +1,11 @@
 import { Redirect, Route } from "react-router-dom";
 import { UserContext, UserInfoContext } from "../../contexts/userContext";
 import React, { useContext } from "react";
-import Drawer from "../drawer";
+import Drawer from "../menus/drawer";
 import { Container } from "@material-ui/core";
 import Loading from "../loading";
 
-import QrDialog from "../qrDialog";
+import QrDialog from "../dialogs/qrDialog";
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "../../redux/actions";
 const PrivateRoute = ({ component: Component, ...otherProps }) => {

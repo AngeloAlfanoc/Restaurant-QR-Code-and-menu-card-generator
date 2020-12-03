@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 import { Redirect } from "react-router-dom";
-import RegistrationForm from "../../components/registrationForm";
+import RegistrationForm from "../../components/forms/registration";
 import { DASHBOARD } from "../../constants/routes";
 const Register = () => {
   const { user } = useContext(UserContext);
