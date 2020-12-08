@@ -58,11 +58,8 @@ const Router = () => {
               path={MENUCARD}
               render={({ match }) => <MenuDetail match={match} />}
             />
-
             <PrivateRoute path={SETTINGS} component={Settings} />
-
             <PrivateRoute path={CHECKINS} component={CheckIns} />
-
             <PrivateRoute path={DASHBOARD} component={Dashboard} />
             <PrivateRoute path={CARDS} component={Codes} />
             <PrivateRoute path={SUBSCRIPTION} component={Subscription} />

@@ -2,6 +2,7 @@ import TextField from "@material-ui/core/TextField/TextField";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { setInput } from "../../../redux/actions";
+import InputAdornment from "@material-ui/core/InputAdornment";
 export default function InputGlobal(props) {
   const dispatch = useDispatch();
 
@@ -23,8 +24,15 @@ export default function InputGlobal(props) {
       type={props.type}
       name={props.name}
       fullWidth
-      {...props.required}
+      {...props}
       onChange={handleInputChange}
+      InputProps={
+        props.adornement && {
+          startAdornment: (
+            <InputAdornment position="start">{props.adornement}</InputAdornment>
+          ),
+        }
+      }
     />
   );
 }

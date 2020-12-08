@@ -29,6 +29,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "firebase": "^8.0.0",
     "hero-slider": "^2.0.3",
+    "image-to-base64": "^2.1.1",
     "lodash": "^4.17.20",
     "material-table": "^1.69.1",
     "moment": "^2.29.1",

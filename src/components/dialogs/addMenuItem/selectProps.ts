@@ -1,6 +1,6 @@
 export const objects = [
   {
-    value: "titel",
+    value: "title",
     label: "Titel of Subtitel",
   },
   {

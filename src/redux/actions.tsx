@@ -17,6 +17,13 @@ import {
   TOGGLE_SWITCH_QR_CODE,
   SET_MENU_NAME,
   SET_MENU_LINK,
+  SET_MENU_CARD_ITEMS,
+  SET_MENU_CARD_ITEMS_COUNTER,
+  SET_MENU_ITEM_IMAGE,
+  SET_MENU_ITEM_IMAGE_FILE,
+  TOGGLE_ITEM_IMAGE_DIALOG,
+  SET_ITEM_IMAGE_REF,
+  TOGGLE_ITEM_IMAGE_DIALOG_CONSUMER,
 } from "./constants";
 
 export const addMenuCard = (value: boolean) => ({ type: ADD_MENU_CARD, value });
@@ -57,6 +64,14 @@ export const setMenuCards = (value: any) => ({
   type: SET_MENU_CARDS,
   value,
 });
+export const setMenuCardItems = (value: any) => ({
+  type: SET_MENU_CARD_ITEMS,
+  value,
+});
+export const setMenuCardItemsCounter = (value: number) => ({
+  type: SET_MENU_CARD_ITEMS_COUNTER,
+  value,
+});
 export const setConsumers = (value: any) => ({
   type: SET_CONSUMERS,
   value,
@@ -83,5 +98,29 @@ export const setMenuName = (value: any) => ({
 });
 export const setMenuLink = (value: any) => ({
   type: SET_MENU_LINK,
+  value,
+});
+export const setMenuCardItemNewImage = (value: any) => ({
+  type: SET_MENU_ITEM_IMAGE,
+  value,
+});
+export const setMenuCardItemNewImageFile = (value: any) => ({
+  type: SET_MENU_ITEM_IMAGE_FILE,
+  value,
+});
+export const toggleItemImageDialog = (value: any) => ({
+  type: TOGGLE_ITEM_IMAGE_DIALOG,
+  value,
+});
+export const setItemImageRef = (value: string) => ({
+  type: SET_ITEM_IMAGE_REF,
+  value,
+});
+export const toggleItemImageDialogConsumer = (value: any) => ({
+  type: TOGGLE_ITEM_IMAGE_DIALOG_CONSUMER,
+  value,
+});
+export const setItemImageRefConsumer = (value: string) => ({
+  type: SET_ITEM_IMAGE_REF,
   value,
 });

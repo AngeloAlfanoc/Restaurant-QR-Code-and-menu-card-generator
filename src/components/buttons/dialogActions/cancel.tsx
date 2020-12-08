@@ -2,6 +2,7 @@ import Button from "@material-ui/core/Button";
 import React from "react";
 import { useDispatch } from "react-redux";
 import {
+  addMenuItem,
   addMenuCard,
   setError,
   toggleQrDialog,
@@ -13,6 +14,7 @@ export default function Cancel() {
   const dispatch = useDispatch();
   const handler = (e) => {
     dispatch(setLoading(true));
+    dispatch(addMenuItem(false));
     dispatch(addMenuCard(false));
     dispatch(toggleQrDialog(false));
     dispatch(setError(""));

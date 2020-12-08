@@ -16,7 +16,15 @@ import {
     TOGGLE_SWITCH_LINK,
     TOGGLE_SWITCH_QR_CODE,
     SET_MENU_NAME,
-    SET_MENU_LINK
+    SET_MENU_LINK,
+    SET_MENU_CARD_ITEMS,
+    SET_MENU_CARD_ITEMS_COUNTER,
+    SET_MENU_ITEM_IMAGE,
+    SET_MENU_ITEM_IMAGE_FILE,
+    TOGGLE_ITEM_IMAGE_DIALOG,
+    SET_ITEM_IMAGE_REF,
+    TOGGLE_ITEM_IMAGE_DIALOG_CONSUMER,
+    SET_ITEM_IMAGE_REF_CONSUMER
 } from "./constants";
 
 import { loadState } from "./localStorage";
@@ -68,6 +76,10 @@ const mainReducer = (state = loadState(), action) => {
             const { value } = action;
             return { ...state, menuCards: value }
         }
+        case SET_MENU_CARD_ITEMS: {
+            const { value } = action;
+            return { ...state, menuCardItems: value }
+        }
         case SET_CONSUMERS: {
             const { value } = action;
             return { ...state, consumers: value }
@@ -95,6 +107,34 @@ const mainReducer = (state = loadState(), action) => {
         case SET_MENU_LINK: {
             const { value } = action;
             return { ...state, menuLink: value }
+        }
+        case SET_MENU_ITEM_IMAGE: {
+            const { value } = action;
+            return { ...state, itemImage: value }
+        }
+        case SET_MENU_ITEM_IMAGE_FILE: {
+            const { value } = action;
+            return { ...state, itemImageFile: value }
+        }
+        case SET_MENU_CARD_ITEMS_COUNTER: {
+            const { value } = action;
+            return { ...state, menuCardItemCounter: value }
+        }
+        case TOGGLE_ITEM_IMAGE_DIALOG: {
+            const { value } = action;
+            return { ...state, toggleItemImageDialog: value }
+        }
+        case TOGGLE_ITEM_IMAGE_DIALOG_CONSUMER: {
+            const { value } = action;
+            return { ...state, toggleItemImageDialogConsumer: value }
+        }
+        case SET_ITEM_IMAGE_REF: {
+            const { value } = action;
+            return { ...state, itemImageRef: value }
+        }
+        case SET_ITEM_IMAGE_REF_CONSUMER: {
+            const { value } = action;
+            return { ...state, itemImageRef: value }
         }
         default:
             return { ...state };

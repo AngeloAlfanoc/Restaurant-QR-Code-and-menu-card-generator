@@ -1,0 +1,7 @@
+.item__table{
+    td{
+        &:hover{
+            cursor:move;
+        }
+    }
+}

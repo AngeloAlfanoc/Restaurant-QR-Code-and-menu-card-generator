@@ -23,10 +23,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(8, 0, 6),
   },
   cardHeader: {
-    backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[200]
-        : theme.palette.grey[700],
+    backgroundColor: theme.palette.type === "light" ? theme.palette.grey[200] : theme.palette.grey[700],
   },
   cardPricing: {
     display: "flex",
@@ -43,28 +40,27 @@ const tiers = [
     price: "0",
     description: [
       "Beschikbaar op tablet of smartphone",
-      "Volledige interactive menu",
       "Veelzijdige administration tool",
-      "Foto's van gerechten / andere nuttigingen",
-      "Overzicht van consumenten die ingecheckt hebben",
+      "QR-Codes maken voor je eigen webpagina",
+      "Foto's van gerechten en dranken",
+      "Overzicht checkins",
     ],
     buttonText: "Maak een account",
     buttonDemo: "Bekijk Demo",
     buttonVariant: "outlined",
   },
   {
-    title: "Pro",
-    subheader: "Populair",
-    price: "29,99",
+    title: "Premium",
+    subheader: "Meest gekozen",
+    price: "13,99",
     description: [
       "Beschikbaar op tablet of smartphone",
-      "Volledige interactive menu",
       "Veelzijdige administration tool",
-      "Foto's van gerechten / andere nuttigingen",
-      "Overzicht van consumenten die ingecheckt hebben",
+      "QR-Codes maken voor je eigen webpagina",
+      "Overzicht checkins",
       "Foto's in 3D weergave voor een realistische weergave!",
     ],
-    buttonText: "Nu starten",
+    buttonText: "Binnenkort beschikbaar",
     buttonDemo: "Bekijk Demo",
     buttonVariant: "contained",
   },
@@ -76,29 +72,12 @@ export default function Pricing() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container
-        maxWidth="sm"
-        component="main"
-        className={classes.heroContent}
-        id="solutions"
-      >
-        <Typography
-          component="h1"
-          variant="h2"
-          align="center"
-          color="textPrimary"
-          gutterBottom
-        >
+      <Container maxWidth="sm" component="main" className={classes.heroContent} id="solutions">
+        <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
           Oplossingen
         </Typography>
-        <Typography
-          variant="h5"
-          align="center"
-          color="textSecondary"
-          component="p"
-        >
-          Een oplossing op maat, een complete overzicht van uw consumenten, uw
-          menu digitaal!
+        <Typography variant="h5" align="center" color="textSecondary" component="p">
+          Een oplossing op maat, een complete overzicht van uw consumenten, uw menu digitaal!
         </Typography>
       </Container>
       <Container maxWidth="md" component="main">
@@ -125,12 +104,7 @@ export default function Pricing() {
                   </div>
                   <ul>
                     {tier.description.map((line) => (
-                      <Typography
-                        component="li"
-                        variant="subtitle1"
-                        align="center"
-                        key={line}
-                      >
+                      <Typography component="li" variant="subtitle1" align="center" key={line}>
                         {line}
                       </Typography>
                     ))}
@@ -138,7 +112,7 @@ export default function Pricing() {
                 </CardContent>
                 <CardActions>
                   <Button fullWidth color="primary">
-                    {tier.buttonText}
+                    {tier.title === "Premium" ? <></> : <span>{tier.buttonText}</span>}
                   </Button>
                   <Button fullWidth color="primary">
                     {tier.buttonDemo}

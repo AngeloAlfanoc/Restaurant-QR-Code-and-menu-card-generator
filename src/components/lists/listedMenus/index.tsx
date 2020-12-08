@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,34 +8,23 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import EditIcon from "@material-ui/icons/Edit";
-import CheckIcon from "@material-ui/icons/Check";
-import {
-  Box,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  TextField,
-  MenuItem,
-} from "@material-ui/core";
+
+import { Box, IconButton } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { Alert } from "@material-ui/lab";
+
 import { CameraAlt } from "@material-ui/icons";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { rmDataStore } from "../../../services/crud";
 import { db } from "../../../services/firebase";
 
 import Tooltip from "@material-ui/core/Tooltip";
-import Button from "@material-ui/core/Button";
+
 import Skeleton from "@material-ui/lab/Skeleton";
 import QrDialog from "../../dialogs/qrDialog";
 import SetPublish from "../../buttons/publish";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import ListIcon from "@material-ui/icons/List";
-import { objects } from "../../dialogs/addMenuItem/selectProps";
-import { addMenuItemData } from "../../../services/crud";
-import { IAddMenuItem } from "../../../types";
-import CardMenuItems from "./cardMenuItems";
+
 import {
   addMenuCard,
   toggleQrDialog,
@@ -48,9 +37,10 @@ import {
   setError,
   setMenuName,
   setMenuLink,
+  addMenuItem,
 } from "../../../redux/actions";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
-
+import AddMenuItem from "../../dialogs/addMenuItem";
 const useStyles = makeStyles({
   table: {
     minWidth: 100 + "%",
@@ -67,11 +57,6 @@ export default function ListedMenus(props: any) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const publicInfo = useSelector((state: RootStateOrAny) => state.publicInfo);
-  const [itemDialog, setItemDialog] = useState<boolean>(false);
-  const [menuCardItemSelect, setMenuCardItem] = useState<string>(null);
-  const [cardId, setCardId] = useState<string>(null);
-  const [addCardItem, setAddCardItem] = useState<boolean>(false);
-  const [input, setInput] = useState<IAddMenuItem | null>(null);
   const rows = useSelector((state: RootStateOrAny) => state.menuCards);
 
   useEffect(() => {
@@ -104,15 +89,16 @@ export default function ListedMenus(props: any) {
     };
   }, [dispatch, publicInfo.owner]);
 
-  const editMenuItems = async (id: string) => {
-    setCardId(id);
-    setItemDialog(true);
+  const editMenuItems = (id: string) => {
+    dispatch(setSelectedCardRef(id));
+    dispatch(addMenuItem(true));
   };
 
   const handleEdit = (menuCardId: string) => {
     console.log("TODO Edit: " + menuCardId);
   };
 
+  //Delete the given menucard
   const handleDelete = (document: string) => {
     try {
       rmDataStore("menus", document);
@@ -121,30 +107,7 @@ export default function ListedMenus(props: any) {
     }
   };
 
-  const handleChangeTypeSelect = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setMenuCardItem(event.target.value);
-  };
-
-  const handleInputChange = (e) => {
-    setInput({
-      ...input,
-      [e.currentTarget.name]: e.currentTarget.value,
-    });
-  };
-
-  const handleStoreMenuItemData = async (type: string) => {
-    await addMenuItemData(
-      cardId,
-      type,
-      input.title,
-      input.itemTitle,
-      input.itemPrice,
-      undefined,
-      0
-    );
-  };
+  //View the QR code IF a QR code was selected upon creation
   const handleClickQRDialog = (id: string) => {
     dispatch(setLoading(true));
     dispatch(setCurrentStep("viewMenuCard"));
@@ -172,18 +135,11 @@ export default function ListedMenus(props: any) {
         {props.tools && (
           <Box className="w-100 d-flex align-items-center justify-content-between">
             <Tooltip title="Toevoegen">
-              <IconButton
-                onClick={handleMenuCard}
-                className="m-2"
-                color="primary"
-              >
+              <IconButton onClick={handleMenuCard} className="m-2" color="primary">
                 <AddCircleIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip
-              title={`  Klik op het cirkel icoontje om te
-          beginnen`}
-            >
+            <Tooltip title={`Klik op het cirkel icoontje om te beginnen`}>
               <HelpOutlineIcon className="m-2" color="disabled" />
             </Tooltip>
           </Box>
@@ -210,13 +166,9 @@ export default function ListedMenus(props: any) {
             {rows ? (
               rows.map((row: any, i: number) => {
                 return (
-                  <TableRow style={{ margin: 0 }} key={row.id}>
+                  <TableRow style={{ margin: 0 }} key={i}>
                     <TableCell component="th" scope="row">
-                      <a
-                        href={`www.localhost:3000/menu/${row.menuCardId}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
+                      <a href={`www.localhost:3000/menu/${row.menuCardId}`} target="_blank" rel="noreferrer">
                         {row.menuCardName}
                       </a>
                     </TableCell>
@@ -224,48 +176,30 @@ export default function ListedMenus(props: any) {
                       <>
                         <TableCell align="center" key={row.id}>
                           <Tooltip title="QR code bekijken">
-                            <IconButton
-                              onClick={() =>
-                                row.qrcode && handleClickQRDialog(row.id)
-                              }
-                            >
-                              <CameraAlt
-                                color={row.qrcode ? "action" : "disabled"}
-                              />
+                            <IconButton onClick={() => row.qrcode && handleClickQRDialog(row.id)}>
+                              <CameraAlt color={row.qrcode ? "action" : "disabled"} />
                             </IconButton>
                           </Tooltip>
                         </TableCell>
                         <TableCell align="center">
                           <Tooltip title="Menu Kaart aanpassen">
-                            <IconButton
-                              onClick={() => !row.ref && editMenuItems(row.id)}
-                            >
-                              <ListIcon
-                                color={!row.ref ? "action" : "disabled"}
-                              />
+                            <IconButton onClick={() => !row.ref && editMenuItems(row.id)}>
+                              <ListIcon color={!row.ref ? "action" : "disabled"} />
                             </IconButton>
                           </Tooltip>
                         </TableCell>
                         <TableCell align="right">
-                          <Tooltip title="Bewerken">
+                          {/* <Tooltip title="Bewerken">
                             <IconButton onClick={() => handleEdit(row.id)}>
                               <EditIcon />
                             </IconButton>
-                          </Tooltip>
+                          </Tooltip> */}
                           <Tooltip title="Verwijderen">
-                            <IconButton
-                              onClick={() => handleDelete(row.id)}
-                              color="secondary"
-                              size="medium"
-                            >
+                            <IconButton onClick={() => handleDelete(row.id)} color="secondary" size="medium">
                               <DeleteForeverIcon />
                             </IconButton>
                           </Tooltip>
-                          <SetPublish
-                            collection="menus"
-                            published={row.published}
-                            docid={row.id}
-                          />
+                          <SetPublish collection="menus" published={row.published} docid={row.id} />
                         </TableCell>
                       </>
                     )}
@@ -290,7 +224,7 @@ export default function ListedMenus(props: any) {
           </TableBody>
         </Table>
       </TableContainer>
-
+      <AddMenuItem />
       <QrDialog />
     </>
   );

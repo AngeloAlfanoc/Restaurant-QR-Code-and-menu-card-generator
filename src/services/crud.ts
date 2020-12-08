@@ -154,10 +154,7 @@ export const rmDataStoreSub = async (
 @Using params provided by components
 */
 
-export const editFieldInStoreObject = async (
-  id: string,
-  collection: string
-) => {
+export const editFieldInStoreObject = async (id: string, collection: string) => {
   return db.collection(collection).doc(id);
 };
 
@@ -203,32 +200,30 @@ export const addCheckinData = async (
 */
 
 export const addMenuItemData = async (
-  id: string,
+  docid: string,
   type: string,
-  title: string | null,
-  itemTitle: string | undefined,
-  itemPrice: number | undefined,
-  other: string | undefined,
+  itemTitle: string,
+  itemDescr: string,
+  itemPrice: number | null,
+  itemImage: string | null,
   position: number
 ) => {
-  if (type === "titel") {
-    return db.collection("menus").doc(id).collection("items").add({
-      title: title,
+  if (type === "title") {
+    return db.collection("menus").doc(docid).collection("items").add({
+      title: itemTitle,
+      price: null,
+      description: null,
+      image: null,
       type: type,
       position: position,
     });
   }
   if (type === "item") {
-    return db.collection("menus").doc(id).collection("items").add({
-      item: itemTitle,
+    return db.collection("menus").doc(docid).collection("items").add({
+      title: itemTitle,
       price: itemPrice,
-      type: type,
-      position: position,
-    });
-  }
-  if (type === "other") {
-    return db.collection("menus").doc(id).collection("items").add({
-      other: other,
+      description: itemDescr,
+      image: itemImage,
       type: type,
       position: position,
     });

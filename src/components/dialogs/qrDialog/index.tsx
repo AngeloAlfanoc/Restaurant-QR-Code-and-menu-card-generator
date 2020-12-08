@@ -22,19 +22,14 @@ import { toggleQrDialog } from "../../../redux/actions";
 import Cancel from "../../buttons/dialogActions/cancel";
 import Back from "../../buttons/dialogActions/back";
 import Save from "../../buttons/dialogActions/save";
-import { currentStep } from "../../../redux/initialState";
 
 export default function QrDialog() {
   const history = useHistory();
   const [alert, setAlert] = useState<string>();
   const dispatch = useDispatch();
-  const toggleDialog = useSelector(
-    (state: RootStateOrAny) => state.toggleQrDialog
-  );
+  const toggleDialog = useSelector((state: RootStateOrAny) => state.toggleQrDialog);
   const checkin = useSelector((state: RootStateOrAny) => state.checkinRef);
-  const menuCard = useSelector(
-    (state: RootStateOrAny) => state.selectedCardMenuRef
-  );
+  const menuCard = useSelector((state: RootStateOrAny) => state.selectedCardMenuRef);
   const step = useSelector((state: RootStateOrAny) => state.currentStep);
   const [location] = useState(window.location.hostname);
   const [id, setId] = useState<string>();
@@ -77,10 +72,7 @@ export default function QrDialog() {
 
   return (
     <>
-      <Dialog
-        open={toggleDialog}
-        onClose={() => dispatch(toggleQrDialog(false))}
-      >
+      <Dialog open={toggleDialog} onClose={() => dispatch(toggleQrDialog(false))}>
         <DialogTitle id="form-dialog-title">Uw QR Code</DialogTitle>
         <DialogContent>
           {alert && (
@@ -90,19 +82,11 @@ export default function QrDialog() {
           )}
 
           {id && (
-            <QRCode
-              value={linkFactory}
-              id="qrcode"
-              renderAs="svg"
-              fgColor="#000000"
-              bgColor="#ffffff"
-              size={350}
-            />
+            <QRCode value={linkFactory} id="qrcode" renderAs="svg" fgColor="#000000" bgColor="#ffffff" size={350} />
           )}
           <Box>
             <DialogContentText className="my-2">
-              Via deze QR code verwijs je je consument door naar uw checkin
-              pagina.
+              Via deze QR code verwijs je je consument door naar uw checkin pagina.
             </DialogContentText>
             <Tooltip title="QR code downloaden">
               <IconButton color="primary" onClick={handleDownload}>
@@ -116,10 +100,7 @@ export default function QrDialog() {
             </Tooltip>
           </Box>
           <Tooltip title="Kopieer link naar clipboard" className="hover_curse">
-            <Box
-              onClick={handleClickCopy}
-              className="d-flex align-items-center"
-            >
+            <Box onClick={handleClickCopy} className="d-flex align-items-center">
               <DialogContentText className="my-2">
                 <small>{linkFactory}</small>
               </DialogContentText>

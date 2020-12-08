@@ -1,7 +1,7 @@
 import React from "react";
 import { Typography } from "@material-ui/core";
 import Link from "@material-ui/core/Link";
-import { Container, Grid, Box } from "@material-ui/core";
+import { Grid, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import mollie from "../../assets/png/mollie.png";
 import "./index.scss";
@@ -56,21 +56,15 @@ export default function Footer() {
           {"Copyright © "}
           <Link color="inherit" href="https://www.methods.digital">
             methods
-          </Link>{" "}
+          </Link>
           {new Date().getFullYear()}
-          {"."}
         </Typography>
       </div>
     );
   }
   return (
     <div>
-      <Grid
-        className={classes.footer}
-        container
-        spacing={4}
-        justify="space-evenly"
-      >
+      <Grid className={classes.footer} container spacing={4} justify="space-evenly">
         {footers.map((footer) => (
           <Grid item xs={6} sm={3} key={footer.title}>
             <Typography variant="h6" color="textPrimary" gutterBottom>

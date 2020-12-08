@@ -21,15 +21,17 @@ import "moment-timezone";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { rmDataStoreSub } from "../../../services/crud";
 import { IDateRange } from "../../../types";
-import { setConsumers, setLoading } from "../../../redux/actions";
+import { setConsumers, setError, setLoading } from "../../../redux/actions";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 
 export default function ListedConsumers(props: any) {
-  const [error, setError] = useState<string>(null);
   const [today] = useState(moment(new Date()).format("YYYY-MM-DD"));
-  const rows = useSelector((state: RootStateOrAny) => state.consumers);
+  const { consumers, publicInfo } = useSelector(
+    (state: RootStateOrAny) => state
+  );
+
   const dispatch = useDispatch();
-  const publicInfo = useSelector((state: RootStateOrAny) => state.publicInfo);
+  // const publicInfo = useSelector((state: RootStateOrAny) => state.publicInfo);
   const [todayPlusOne] = useState(
     moment(new Date()).add(1, "day").format("YYYY-MM-DD")
   );
@@ -51,9 +53,9 @@ export default function ListedConsumers(props: any) {
       dispatch(setLoading(true));
       rmDataStoreSub("checkins", props.docid, "items", document);
     } catch (e) {
-      setError(e);
+      dispatch(setError(e));
     }
-    setLoading(false);
+    dispatch(setLoading(false));
   };
 
   useEffect(() => {
@@ -81,8 +83,10 @@ export default function ListedConsumers(props: any) {
                 tempLoad.push({ ...doc.data(), docid: doc.id });
               });
             } catch {
-              setError(
-                "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
+              dispatch(
+                setError(
+                  "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
+                )
               );
             }
           }
@@ -96,7 +100,7 @@ export default function ListedConsumers(props: any) {
     }
     dispatch(setLoading(false));
   }, [
-    props.docid,
+    publicInfo.docid,
     props.range,
     today,
     todayPlusOne,
@@ -142,8 +146,6 @@ export default function ListedConsumers(props: any) {
           </Box>
         )}
 
-        {error && <Alert severity="warning">{error}</Alert>}
-
         <Table aria-label="simple table">
           <TableHead className="my-0">
             <TableRow className="my-0">
@@ -166,8 +168,8 @@ export default function ListedConsumers(props: any) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows ? (
-              rows.map((row: any, i: number) => {
+            {consumers ? (
+              consumers.map((row: any, i: number) => {
                 const stamp = moment(row.created).unix();
                 return (
                   <TableRow key={i}>
