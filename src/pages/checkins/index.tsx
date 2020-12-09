@@ -2,7 +2,7 @@ import { Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import ClientRegistrationDialog from "../../components/forms/clientRegistration";
 import ListedConsumers from "../../components/lists/listedConsumers";
-import ClientStatus from "../../components/clientStatus";
+import ClientStatus from "../../components/misc/clientStatus";
 import { db } from "../../services/firebase";
 import { Alert } from "@material-ui/lab";
 import { useDispatch, useSelector, RootStateOrAny } from "react-redux";
@@ -28,9 +28,7 @@ export default function CheckIns() {
                 tempLoad.push({ ...doc.data(), docid: doc.id });
               });
             } catch {
-              setError(
-                "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
-              );
+              setError("Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren.");
             }
           }
           setPublicInfo(tempLoad[0]);
@@ -44,17 +42,11 @@ export default function CheckIns() {
       {error && <Alert severity="error">{error}</Alert>}
       {verifiedUser ? (
         <>
-          <ClientStatus
-            id={userInfo.id}
-            plan={userInfo.plan}
-            company={userInfo.company}
-          />
+          <ClientStatus id={userInfo.id} plan={userInfo.plan} company={userInfo.company} />
           <Typography className="my-3" variant="h5">
             Check-ins
           </Typography>
-          {publicInfo && (
-            <ListedConsumers tools={true} docid={publicInfo.docid} range={25} />
-          )}
+          {publicInfo && <ListedConsumers tools={true} docid={publicInfo.docid} range={25} />}
         </>
       ) : (
         userInfo && <ClientRegistrationDialog id={userInfo.docid} />

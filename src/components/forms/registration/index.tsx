@@ -1,15 +1,5 @@
 import React, { useRef, useState, useContext } from "react";
-import {
-  Button,
-  Container,
-  CssBaseline,
-  FormGroup,
-  Grid,
-  TextField,
-  Typography,
-  Box,
-  Link,
-} from "@material-ui/core";
+import { Button, Container, CssBaseline, FormGroup, Grid, TextField, Typography, Box, Link } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
@@ -17,7 +7,7 @@ import { signup } from "../../../services/auth";
 import { DASHBOARD } from "../../../constants/routes";
 import { LOGIN } from "../../../constants/routes";
 import { addAccountInfoToStore } from "../../../services/crud";
-import Logo from "../../logo";
+import Logo from "../../misc/logo";
 const RegistrationForm = () => {
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
@@ -36,10 +26,7 @@ const RegistrationForm = () => {
       setLoading(true);
 
       // Get user payload
-      const payload = await signup(
-        emailRef.current.value,
-        passwordRef.current.value
-      );
+      const payload = await signup(emailRef.current.value, passwordRef.current.value);
       await addAccountInfoToStore(payload.user.uid, payload.user.email);
       // Refer user to dashboard landing screen
       history.push(DASHBOARD);
@@ -145,13 +132,7 @@ const RegistrationForm = () => {
               />
             </FormGroup>
           </Grid>
-          <Button
-            variant="contained"
-            disabled={loading}
-            type="submit"
-            color="primary"
-            className={classes.submit}
-          >
+          <Button variant="contained" disabled={loading} type="submit" color="primary" className={classes.submit}>
             Sign Up
           </Button>
         </Grid>

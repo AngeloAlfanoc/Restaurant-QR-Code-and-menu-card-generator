@@ -3,12 +3,12 @@ import "slick-carousel/slick/slick-theme.css";
 import React from "react";
 import Slider from "react-slick";
 import "./index.scss";
-import item_1 from "../../assets/slick/item_1.jpg";
-import item_2 from "../../assets/slick/item_2.jpg";
-import Nav from "../menus/menuNav";
+import item_1 from "../../../assets/slick/item_1.jpg";
+import item_2 from "../../../assets/slick/item_2.jpg";
+import Nav from "../../menus/menuNav";
 import { useHistory } from "react-router-dom";
 import Slide from "./slide";
-import Burger from "../menus/menuBurger/index";
+import Burger from "../../menus/menuBurger/index";
 export default function HeroSlider() {
   const history = useHistory();
   const handleLink = (link) => {

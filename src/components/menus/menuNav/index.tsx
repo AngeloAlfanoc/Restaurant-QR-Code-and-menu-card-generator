@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../../buttons/button";
 import { useHistory } from "react-router-dom";
 import "./index.scss";
-import Logo from "../../logo";
+import Logo from "../../misc/logo";
 import LinkItem from "./linkItem";
 export default function Nav() {
   let history = useHistory();
@@ -25,18 +25,12 @@ export default function Nav() {
         <LinkItem text="Contact" offset="100" href="#contact" />
 
         <li className="ml-5">
-          <Button
-            className="btn primary__button"
-            onClick={() => handleClick("/login")}
-          >
+          <Button className="btn primary__button" onClick={() => handleClick("/login")}>
             Login
           </Button>
         </li>
         <li>
-          <Button
-            className="btn primary__button"
-            onClick={() => handleClick("/register")}
-          >
+          <Button className="btn primary__button" onClick={() => handleClick("/register")}>
             Registreer
           </Button>
         </li>

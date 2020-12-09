@@ -1,12 +1,12 @@
 import { Box, Container, Grid, Paper } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
-import { setItemImageRefConsumer, setMenuCardItems } from "../../redux/actions";
+import { setItemImageRefConsumer, setMenuCardItems } from "../../../redux/actions";
 // import { itemPrice } from "../../redux/initialState";
-import { db } from "../../services/firebase";
+import { db } from "../../../services/firebase";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import { toggleItemImageDialogConsumer } from "../../redux/actions";
-import ViewItemImageConsumer from "../dialogs/viewItemImageConsumer";
+import { toggleItemImageDialogConsumer } from "../../../redux/actions";
+import ViewItemImageConsumer from "../../dialogs/viewItemImageConsumer";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {

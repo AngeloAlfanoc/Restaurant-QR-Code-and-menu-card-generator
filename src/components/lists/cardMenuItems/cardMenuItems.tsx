@@ -1,5 +1,5 @@
 import { makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 import {
   setError,
@@ -17,10 +17,14 @@ import ImageIcon from "@material-ui/icons/Image";
 import BurstModeIcon from "@material-ui/icons/BurstMode";
 import ViewItemImage from "../../dialogs/viewItemImage";
 import "./index.scss";
-
+import { editFieldInSubStoreObject } from "../../../services/crud";
 export default function CardMenuItems() {
   const dispatch = useDispatch();
   const { selectedCardMenuRef, menuCardItems } = useSelector((state: RootStateOrAny) => state);
+  const [dragStart, setDragStart] = useState<number>(null);
+  const [dragStartId, setDragStartId] = useState<string>(null);
+  const [dragEnd, setDragEnd] = useState<number>(null);
+  const [dragEndtId, setDragEndId] = useState<string>(null);
   const handleDelete = (document: string) => {
     try {
       dispatch(setLoading(true));
@@ -62,6 +66,19 @@ export default function CardMenuItems() {
     dispatch(setItemImageRef(image));
     dispatch(toggleItemImageDialog(true));
   };
+  const handleDrag = (e, position: number, doc: string) => {
+    e.preventDefault();
+    setDragStart(position);
+    setDragStartId(doc);
+  };
+  const handleDragStart = (e, position: number, doc: string) => {
+    e.preventDefault();
+    setDragStart(position);
+    setDragStartId(doc);
+  };
+  // const handleDrop = () => {
+  //   editFieldInSubStoreObject();
+  // };
   return (
     <>
       <Table>
@@ -80,8 +97,15 @@ export default function CardMenuItems() {
           {menuCardItems &&
             menuCardItems.map((item, i) => {
               return (
-                <TableRow key={i}>
-                  <TableCell>{item.title}</TableCell>
+                <TableRow draggable={true} key={i}>
+                  <TableCell
+                    onDragOver={(e) => handleDrag(e, item.position, item.docid)}
+                    onDragLeave={(e) => handleDragStart(e, item.position, item.docid)}
+                    // onDrop={handleDrop}
+                    // onMouseDown={(e) => handleDrag(e, item.position, item.docid)}
+                  >
+                    {item.title}
+                  </TableCell>
                   {item.type === "title" ? (
                     <>
                       <TableCell>-</TableCell>

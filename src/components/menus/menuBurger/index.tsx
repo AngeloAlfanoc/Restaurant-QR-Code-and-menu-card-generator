@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./index.scss";
 import LinkItem from "../menuNav/linkItem";
-import Logo from "../../logo";
+import Logo from "../../misc/logo";
 export default function Burger() {
   const [checked, setChecked] = useState(false);
   const handleChecked = () => {
@@ -21,10 +21,7 @@ export default function Burger() {
           display: "none",
         }}
       />
-      <label
-        className={checked ? "toggle-btn btn-toggle-btn" : "toggle-btn"}
-        htmlFor="toggle"
-      >
+      <label className={checked ? "toggle-btn btn-toggle-btn" : "toggle-btn"} htmlFor="toggle">
         <div className="bar"></div>
         <div className="bar"></div>
         <div className="bar"></div>

@@ -159,6 +159,15 @@ export const editFieldInStoreObject = async (id: string, collection: string) => 
 };
 
 /*
+@Edit Field name in firestore docs sub collection
+@Using params provided by components
+*/
+
+export const editFieldInSubStoreObject = async (id: string, collection: string, sub: string, subid: string) => {
+  return db.collection(collection).doc(id).collection(sub).doc(subid);
+};
+
+/*
 @Adds new public users object to store
 @uid is param
 */

@@ -1,13 +1,4 @@
-import {
-  Button,
-  Container,
-  CssBaseline,
-  FormGroup,
-  Grid,
-  TextField,
-  Typography,
-  Link,
-} from "@material-ui/core";
+import { Button, Container, CssBaseline, FormGroup, Grid, TextField, Typography, Link } from "@material-ui/core";
 import React, { useRef, useState } from "react";
 
 import { Alert } from "@material-ui/lab";
@@ -17,7 +8,7 @@ import { login } from "../../../services/auth";
 import { DASHBOARD } from "../../../constants/routes";
 import { Box } from "@material-ui/core";
 import { REGISTER } from "../../../constants/routes";
-import Logo from "../../logo";
+import Logo from "../../misc/logo";
 export default function LoginForm() {
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
@@ -90,11 +81,7 @@ export default function LoginForm() {
             {error}
           </Alert>
         )}
-        <form
-          onSubmit={handleSubmit}
-          className={classes.form}
-          autoComplete="on"
-        >
+        <form onSubmit={handleSubmit} className={classes.form} autoComplete="on">
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
               <FormGroup id="email">
@@ -127,13 +114,7 @@ export default function LoginForm() {
                 />
               </FormGroup>
             </Grid>
-            <Button
-              variant="contained"
-              disabled={loading}
-              type="submit"
-              color="primary"
-              className={classes.submit}
-            >
+            <Button variant="contained" disabled={loading} type="submit" color="primary" className={classes.submit}>
               Login
             </Button>
           </Grid>

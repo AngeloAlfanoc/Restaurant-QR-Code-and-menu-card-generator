@@ -1,4 +1,4 @@
-import ConsumerMenuCard from "../../components/consumerMenuCard";
+import ConsumerMenuCard from "../../components/misc/consumerMenuCard";
 import React, { useEffect, useState } from "react";
 import { db } from "../../services/firebase";
 export default function MenuDetail(props: any) {

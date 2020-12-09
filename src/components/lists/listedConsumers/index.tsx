@@ -26,15 +26,10 @@ import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 
 export default function ListedConsumers(props: any) {
   const [today] = useState(moment(new Date()).format("YYYY-MM-DD"));
-  const { consumers, publicInfo } = useSelector(
-    (state: RootStateOrAny) => state
-  );
+  const { consumers, publicInfo } = useSelector((state: RootStateOrAny) => state);
 
   const dispatch = useDispatch();
-  // const publicInfo = useSelector((state: RootStateOrAny) => state.publicInfo);
-  const [todayPlusOne] = useState(
-    moment(new Date()).add(1, "day").format("YYYY-MM-DD")
-  );
+  const [todayPlusOne] = useState(moment(new Date()).add(1, "day").format("YYYY-MM-DD"));
   const [dateRange, setDateRange] = useState<IDateRange>({
     rangeStart: moment(today).valueOf(),
     rangeEnd: moment(todayPlusOne).valueOf(),
@@ -84,9 +79,7 @@ export default function ListedConsumers(props: any) {
               });
             } catch {
               dispatch(
-                setError(
-                  "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
-                )
+                setError("Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren.")
               );
             }
           }
@@ -99,16 +92,7 @@ export default function ListedConsumers(props: any) {
         });
     }
     dispatch(setLoading(false));
-  }, [
-    publicInfo.docid,
-    props.range,
-    today,
-    todayPlusOne,
-    dateRange.rangeStart,
-    dateRange.rangeEnd,
-    boot,
-    dispatch,
-  ]);
+  }, [publicInfo.docid, props.range, today, todayPlusOne, dateRange.rangeStart, dateRange.rangeEnd, boot, dispatch]);
 
   return (
     <>
@@ -175,12 +159,7 @@ export default function ListedConsumers(props: any) {
                   <TableRow key={i}>
                     {row.created && (
                       <TableCell>
-                        <Moment
-                          format="DD/MM - HH:mm"
-                          local
-                          unix
-                          tz="Europe/Brussels"
-                        >
+                        <Moment format="DD/MM - HH:mm" local unix tz="Europe/Brussels">
                           {stamp}
                         </Moment>
                       </TableCell>
@@ -190,17 +169,11 @@ export default function ListedConsumers(props: any) {
                     </TableCell>
 
                     <TableCell>{row.email}</TableCell>
-                    <TableCell align="right">
-                      {row.phone && "+32" + row.phone}
-                    </TableCell>
+                    <TableCell align="right">{row.phone && "+32" + row.phone}</TableCell>
                     {row.docid && (
                       <TableCell align="right">
                         <Tooltip title="Verwijderen">
-                          <IconButton
-                            onClick={() => handleDelete(row.docid)}
-                            color="secondary"
-                            size="medium"
-                          >
+                          <IconButton onClick={() => handleDelete(row.docid)} color="secondary" size="medium">
                             <DeleteForeverIcon />
                           </IconButton>
                         </Tooltip>

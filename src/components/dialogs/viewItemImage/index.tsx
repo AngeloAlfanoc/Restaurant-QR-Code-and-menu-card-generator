@@ -4,21 +4,22 @@ import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 import { setLoading, toggleItemImageDialog } from "../../../redux/actions";
 import { storage } from "../../../services/firebase";
 export default function ViewItemImage() {
-  const toggleDialog = useSelector((state: RootStateOrAny) => state.toggleItemImageDialog);
-  const itemImageRef = useSelector((state: RootStateOrAny) => state.itemImageRef);
-  const company = useSelector((state: RootStateOrAny) => state.userInfo.company);
+  const { toggleDialog, itemImageRef, userInfo } = useSelector((state: RootStateOrAny) => state);
+
   const dispatch = useDispatch();
   const [image, setImage] = useState<string>(null);
 
   useEffect(() => {
     dispatch(setLoading(true));
-    const companyRef = storage.ref().child(company);
-    const image = companyRef.child(itemImageRef);
-    image.getDownloadURL().then((image) => {
-      setImage(image);
-    });
-    dispatch(setLoading(false));
-  }, [company, toggleDialog, itemImageRef, dispatch]);
+    if (userInfo && itemImageRef) {
+      const companyRef = storage.ref().child(userInfo.company);
+      const image = companyRef.child(itemImageRef);
+      image.getDownloadURL().then((image) => {
+        setImage(image);
+      });
+      dispatch(setLoading(false));
+    }
+  }, [userInfo, userInfo.company, toggleDialog, itemImageRef, dispatch]);
 
   return (
     <Dialog open={toggleDialog} onClose={() => dispatch(toggleItemImageDialog(false))}>

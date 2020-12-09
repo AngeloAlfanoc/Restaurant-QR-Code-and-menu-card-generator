@@ -1,8 +1,8 @@
 import React from "react";
 import Prices from "../../components/views/pricing";
-import Slider from "../../components/heroSlider";
+import Slider from "../../components/misc/heroSlider";
 
-import Footer from "../../components/footer";
+import Footer from "../../components/misc/footer";
 export default function Home() {
   return (
     <>

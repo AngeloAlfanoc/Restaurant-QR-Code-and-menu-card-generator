@@ -12,19 +12,13 @@ import {
 } from "@material-ui/core";
 import { CameraAlt } from "@material-ui/icons";
 import React, { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../contexts/userContext";
-import { db } from "../../services/firebase";
-import SetPublish from "../buttons/publish";
+import { UserContext } from "../../../contexts/userContext";
+import { db } from "../../../services/firebase";
+import SetPublish from "../../buttons/publish";
 import LinkIcon from "@material-ui/icons/Link";
-import { IUser } from "../../types";
+import { IUser } from "../../../types";
 import { useDispatch } from "react-redux";
-import {
-  toggleQrDialog,
-  setLoading,
-  setError,
-  setCheckinRef,
-  setCurrentStep,
-} from "../../redux/actions";
+import { toggleQrDialog, setLoading, setError, setCheckinRef, setCurrentStep } from "../../../redux/actions";
 export default function ClientStatus(props: IUser) {
   const { user } = useContext(UserContext);
   const dispatch = useDispatch();
@@ -93,9 +87,7 @@ export default function ClientStatus(props: IUser) {
                   className="d-flex align-items-center border-0"
                 >
                   <LinkIcon />
-                  <strong className="ml-1">
-                    {props.company}'s Checkin pagina
-                  </strong>
+                  <strong className="ml-1">{props.company}'s Checkin pagina</strong>
                 </a>
               </TableCell>
               <TableCell align="center">
@@ -108,11 +100,7 @@ export default function ClientStatus(props: IUser) {
               <TableCell align="right">{props.plan}</TableCell>
               <TableCell align="right">
                 {publicInfo && (
-                  <SetPublish
-                    published={publicInfo.published}
-                    docid={publicInfo.docid}
-                    collection="checkins"
-                  />
+                  <SetPublish published={publicInfo.published} docid={publicInfo.docid} collection="checkins" />
                 )}
               </TableCell>
             </TableRow>

@@ -4,10 +4,14 @@ import { db } from "../../services/firebase";
 import ConsumerCheckIn from "../../components/forms/consumerCheckin";
 import ConsumerCheckinDisabled from "../../components/forms/consumerCheckinDisabled";
 import { Alert } from "@material-ui/lab";
+import { setLoading } from "../../redux/actions";
+import { useDispatch } from "react-redux";
 export default function CheckInPage(props: any) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string>();
   const [publicInfo, setPublicInfo] = React.useState<any>(null);
+  const [loaded, setLoaded] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
   useEffect(() => {
     setLoading(true);
     const unsubscribe = db
@@ -21,9 +25,7 @@ export default function CheckInPage(props: any) {
               tempLoad.push({ ...doc.data(), docid: doc.id });
             });
           } catch {
-            setError(
-              "Probleem bij het ophalen van restaurant gegevens gelieve je systeem beheerd te contacteren."
-            );
+            setError("Probleem bij het ophalen van restaurant gegevens gelieve je systeem beheerd te contacteren.");
           } finally {
             setLoading(false);
           }
@@ -32,17 +34,22 @@ export default function CheckInPage(props: any) {
         setLoading(false);
       });
 
+    if (publicInfo && !loaded) {
+      setLoaded(true);
+    }
+    if (loaded) {
+      unsubscribe();
+      setLoading(false);
+    }
     return () => {
       unsubscribe();
     };
-  }, [props.match.params.id]);
+  }, [props.match.params.id, dispatch, loaded, publicInfo]);
 
   const TemplateView = () => {
     switch (publicInfo.published) {
       case true:
-        return (
-          <ConsumerCheckIn collection="checkins" docid={publicInfo.docid} />
-        );
+        return <ConsumerCheckIn collection="checkins" docid={publicInfo.docid} />;
 
       case false:
         return <ConsumerCheckinDisabled />;
@@ -54,7 +61,7 @@ export default function CheckInPage(props: any) {
   return (
     <>
       {error && <Alert severity="error">{error}</Alert>}
-      {publicInfo && <TemplateView />}
+      {!loading && <>{publicInfo && <TemplateView />}</>}
     </>
   );
 }

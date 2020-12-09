@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -58,7 +58,7 @@ export default function ListedMenus(props: any) {
   const dispatch = useDispatch();
   const publicInfo = useSelector((state: RootStateOrAny) => state.publicInfo);
   const rows = useSelector((state: RootStateOrAny) => state.menuCards);
-
+  
   useEffect(() => {
     dispatch(setLoading(true));
     const unsubscribe = db
@@ -80,13 +80,37 @@ export default function ListedMenus(props: any) {
             menuCardName: "U heeft nog geen menu kaarten toegevoegd...",
           });
         }
+        dispatch(setMenuCards(tempLoad));
+        dispatch(setLoading(false));
+      });
+    return () => {
+      unsubscribe();
+    
+    };
+  }, [dispatch, publicInfo.owner, publicInfo]);
+
+  const ListPublicInfo = useCallback(() => {
+    db.collection("menus")
+      .where("menuOwner", "==", publicInfo.owner)
+      .onSnapshot((snapshot) => {
+        const tempLoad = [];
+        if (snapshot.size) {
+          try {
+            snapshot.forEach((doc) => {
+              tempLoad.push({ ...doc.data(), id: doc.id });
+            });
+          } catch {
+            setError("Probleem bij het opvragen van menu kaarten");
+          }
+        }
+        if (snapshot.size === 0) {
+          tempLoad.push({
+            menuCardName: "U heeft nog geen menu kaarten toegevoegd...",
+          });
+        }
         dispatch(setLoading(false));
         dispatch(setMenuCards(tempLoad));
       });
-
-    return () => {
-      unsubscribe();
-    };
   }, [dispatch, publicInfo.owner]);
 
   const editMenuItems = (id: string) => {

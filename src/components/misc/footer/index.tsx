@@ -3,7 +3,7 @@ import { Typography } from "@material-ui/core";
 import Link from "@material-ui/core/Link";
 import { Grid, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import mollie from "../../assets/png/mollie.png";
+import mollie from "../../../assets/png/mollie.png";
 import "./index.scss";
 const footers = [
   {

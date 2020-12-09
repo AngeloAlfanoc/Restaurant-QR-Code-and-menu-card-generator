@@ -5,13 +5,13 @@ import Scanner from "../pages/scanner";
 import Home from "../pages/home";
 import Login from "../pages/login";
 import Register from "../pages/register";
-import PrivateRoute from "../components/privateRoute";
+import PrivateRoute from "../components/misc/privateRoute";
 import Dashboard from "../pages/dashboard";
 import Subscription from "../pages/subscriptions";
 import Codes from "../pages/menuCards";
 import Checkout from "../pages/checkout";
 import CheckIn from "../pages/checkin";
-import Footer from "../components/footer";
+import Footer from "../components/misc/footer";
 import { Container } from "@material-ui/core";
 import CheckIns from "../pages/checkins";
 import Settings from "../pages/settings";
@@ -50,14 +50,8 @@ const Router = () => {
             <Route exact path={SCANNER} render={() => <Scanner />} />
             <Route exact path={LOGIN} render={() => <Login />} />
             <Route exact path={REGISTER} render={() => <Register />} />
-            <Route
-              path={CHECKIN}
-              render={({ match }) => <CheckIn match={match} />}
-            />
-            <Route
-              path={MENUCARD}
-              render={({ match }) => <MenuDetail match={match} />}
-            />
+            <Route path={CHECKIN} render={({ match }) => <CheckIn match={match} />} />
+            <Route path={MENUCARD} render={({ match }) => <MenuDetail match={match} />} />
             <PrivateRoute path={SETTINGS} component={Settings} />
             <PrivateRoute path={CHECKINS} component={CheckIns} />
             <PrivateRoute path={DASHBOARD} component={Dashboard} />
