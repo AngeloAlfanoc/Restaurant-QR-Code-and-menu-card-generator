@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { DialogContent, DialogContentText, Dialog } from "@material-ui/core";
+import { DialogContent, DialogContentText, Dialog, DialogActions, Box, Button } from "@material-ui/core";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
-import { setLoading, toggleItemImageDialog } from "../../../redux/actions";
+import { setLoading, setToggleItemImageDialog } from "../../../redux/actions";
 import { storage } from "../../../services/firebase";
+
 export default function ViewItemImage() {
-  const { toggleDialog, itemImageRef, userInfo } = useSelector((state: RootStateOrAny) => state);
+  const { toggleItemImageDialog, itemImageRef, userInfo } = useSelector((state: RootStateOrAny) => state);
 
   const dispatch = useDispatch();
   const [image, setImage] = useState<string>(null);
@@ -19,14 +20,21 @@ export default function ViewItemImage() {
       });
       dispatch(setLoading(false));
     }
-  }, [userInfo, userInfo.company, toggleDialog, itemImageRef, dispatch]);
+  }, [userInfo, userInfo.company, toggleItemImageDialog, itemImageRef, dispatch]);
 
   return (
-    <Dialog open={toggleDialog} onClose={() => dispatch(toggleItemImageDialog(false))}>
+    <Dialog open={toggleItemImageDialog} onClose={() => dispatch(setToggleItemImageDialog(false))}>
       <DialogContent>
         <DialogContentText>
           {image && <img alt="menu-card-item" style={{ maxWidth: "300px" }} src={image}></img>}
         </DialogContentText>
+        <DialogActions>
+          <Box className="d-flex justify-content-end">
+            <Button name="cancel" onClick={() => dispatch(setToggleItemImageDialog(false))} color="primary">
+              Sluiten
+            </Button>
+          </Box>
+        </DialogActions>
       </DialogContent>
     </Dialog>
   );

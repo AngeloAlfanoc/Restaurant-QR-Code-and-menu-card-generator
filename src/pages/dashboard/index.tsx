@@ -12,16 +12,16 @@ import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 import { setLoading, setPublicUserInfo } from "../../redux/actions";
 
 const Dashboard = () => {
-  const {userInfo, publicInfo} = useSelector((state: RootStateOrAny) => state);
+  const { userInfo, publicInfo } = useSelector((state: RootStateOrAny) => state);
   const history = useHistory();
   const dispatch = useDispatch();
 
-
-
   useEffect(() => {
     dispatch(setLoading(true));
-    const getUserInfo = async () => {
-      const unsubscribe = db.collection("checkins")
+    if (userInfo) {
+      if (userInfo.id) {
+        userInfo.id && db
+        .collection("checkins")
         .where("owner", "==", userInfo.id)
         .onSnapshot((snapshot) => {
           const tempLoad = [];
@@ -30,23 +30,16 @@ const Dashboard = () => {
               snapshot.forEach((doc) => {
                 tempLoad.push({ ...doc.data(), docid: doc.id });
               });
-            } catch { }
+            } catch {}
           }
           dispatch(setPublicUserInfo(tempLoad[0]));
           dispatch(setLoading(false));
         });
-        return unsubscribe;
+      }
     }
-    if (userInfo.id) {
-      getUserInfo()
-    }
-    return () => {
-      getUserInfo()
-    }
+
+
   }, [userInfo, dispatch]);
-
-
-
 
   return (
     <main className="admin">

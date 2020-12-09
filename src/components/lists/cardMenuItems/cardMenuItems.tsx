@@ -6,7 +6,7 @@ import {
   setMenuCardItems,
   setLoading,
   setMenuCardItemsCounter,
-  toggleItemImageDialog,
+  setToggleItemImageDialog,
   setItemImageRef,
 } from "../../../redux/actions";
 import { rmDataStoreSub } from "../../../services/crud";
@@ -64,7 +64,7 @@ export default function CardMenuItems() {
 
   const handleClick = (image: string) => {
     dispatch(setItemImageRef(image));
-    dispatch(toggleItemImageDialog(true));
+    dispatch(setToggleItemImageDialog(true));
   };
   const handleDrag = (e, position: number, doc: string) => {
     e.preventDefault();

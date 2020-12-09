@@ -63,33 +63,39 @@ export default function ListedConsumers(props: any) {
       setBoot(true);
     }
     if (boot) {
-      db.collection("checkins")
-        .doc(publicInfo.docid)
-        .collection("items")
-        .orderBy("created", "desc")
-        .limit(props.range)
-        .where("created", ">=", dateRange.rangeStart)
-        .where("created", "<=", dateRange.rangeEnd)
-        .onSnapshot((snapshot) => {
-          const tempLoad = [];
-          if (snapshot.size) {
-            try {
-              snapshot.forEach((doc) => {
-                tempLoad.push({ ...doc.data(), docid: doc.id });
-              });
-            } catch {
-              dispatch(
-                setError("Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren.")
-              );
-            }
-          }
-          if (snapshot.size === 0) {
-            tempLoad.push({
-              firstname: "Er hebben nog geen consumenten ingecheckt vandaag...",
+      if (publicInfo) {
+        if (publicInfo.docid) {
+          db.collection("checkins")
+            .doc(publicInfo.docid)
+            .collection("items")
+            .orderBy("created", "desc")
+            .limit(props.range)
+            .where("created", ">=", dateRange.rangeStart)
+            .where("created", "<=", dateRange.rangeEnd)
+            .onSnapshot((snapshot) => {
+              const tempLoad = [];
+              if (snapshot.size) {
+                try {
+                  snapshot.forEach((doc) => {
+                    tempLoad.push({ ...doc.data(), docid: doc.id });
+                  });
+                } catch {
+                  dispatch(
+                    setError(
+                      "Probleem bij het ophalen van client gegevens gelieve uw systeem beheerder de contacteren."
+                    )
+                  );
+                }
+              }
+              if (snapshot.size === 0) {
+                tempLoad.push({
+                  firstname: "Er hebben nog geen consumenten ingecheckt vandaag...",
+                });
+              }
+              dispatch(setConsumers(tempLoad));
             });
-          }
-          dispatch(setConsumers(tempLoad));
-        });
+        }
+      }
     }
     dispatch(setLoading(false));
   }, [publicInfo.docid, props.range, today, todayPlusOne, dateRange.rangeStart, dateRange.rangeEnd, boot, dispatch]);

@@ -108,7 +108,7 @@ export const setMenuCardItemNewImageFile = (value: any) => ({
   type: SET_MENU_ITEM_IMAGE_FILE,
   value,
 });
-export const toggleItemImageDialog = (value: any) => ({
+export const setToggleItemImageDialog = (value: any) => ({
   type: TOGGLE_ITEM_IMAGE_DIALOG,
   value,
 });
