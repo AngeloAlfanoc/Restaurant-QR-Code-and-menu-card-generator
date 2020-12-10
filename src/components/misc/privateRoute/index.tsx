@@ -12,6 +12,7 @@ const PrivateRoute = ({ component: Component, ...otherProps }) => {
   const { user } = useContext(UserContext);
   const { userInfo } = useContext(UserInfoContext);
   const dispatch = useDispatch();
+  console.log(userInfo)
   dispatch(setUserInfo(userInfo));
   return (
     <Container>

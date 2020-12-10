@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
-import { Alert, Skeleton } from "@material-ui/lab";
+import { Skeleton } from "@material-ui/lab";
 
 import Tooltip from "@material-ui/core/Tooltip";
 
@@ -98,7 +98,7 @@ export default function ListedConsumers(props: any) {
       }
     }
     dispatch(setLoading(false));
-  }, [publicInfo.docid, props.range, today, todayPlusOne, dateRange.rangeStart, dateRange.rangeEnd, boot, dispatch]);
+  }, [publicInfo.docid, publicInfo, props.range, today, todayPlusOne, dateRange.rangeStart, dateRange.rangeEnd, boot, dispatch]);
 
   return (
     <>

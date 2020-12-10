@@ -49,21 +49,21 @@ const tiers = [
     buttonDemo: "Bekijk Demo",
     buttonVariant: "outlined",
   },
-  {
-    title: "Premium",
-    subheader: "Meest gekozen",
-    price: "13,99",
-    description: [
-      "Beschikbaar op tablet of smartphone",
-      "Veelzijdige administration tool",
-      "QR-Codes maken voor je eigen webpagina",
-      "Overzicht checkins",
-      "Foto's in 3D weergave voor een realistische weergave!",
-    ],
-    buttonText: "Binnenkort beschikbaar",
-    buttonDemo: "Bekijk Demo",
-    buttonVariant: "contained",
-  },
+  // {
+  //   title: "Premium",
+  //   subheader: "Meest gekozen",
+  //   price: "13,99",
+  //   description: [
+  //     "Beschikbaar op tablet of smartphone",
+  //     "Veelzijdige administration tool",
+  //     "QR-Codes maken voor je eigen webpagina",
+  //     "Overzicht checkins",
+  //     "Foto's in 3D weergave voor een realistische weergave!",
+  //   ],
+  //   buttonText: "Binnenkort beschikbaar",
+  //   buttonDemo: "Bekijk Demo",
+  //   buttonVariant: "contained",
+  // },
 ];
 
 export default function Pricing() {
@@ -83,7 +83,7 @@ export default function Pricing() {
       <Container maxWidth="md" component="main">
         <Grid container spacing={5} alignItems="flex-start">
           {tiers.map((tier) => (
-            <Grid item key={tier.title} xs={12} md={6}>
+            <Grid item key={tier.title} xs={12} md={12}>
               <Card>
                 <CardHeader
                   title={tier.title}

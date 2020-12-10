@@ -163,8 +163,18 @@ export const editFieldInStoreObject = async (id: string, collection: string) => 
 @Using params provided by components
 */
 
-export const editFieldInSubStoreObject = async (id: string, collection: string, sub: string, subid: string) => {
-  return db.collection(collection).doc(id).collection(sub).doc(subid);
+export const editFieldInSubStoreObject = async (
+  collection: string,
+  docId:string,
+  sub: string,
+  docSubId: string,
+  position: number
+) => {
+  const object = {
+    position: position,
+    edited: Date.now(),
+  }
+  return db.collection(collection).doc(docId).collection(sub).doc(docSubId).set(JSON.parse(JSON.stringify(object)), { merge: true });
 };
 
 /*

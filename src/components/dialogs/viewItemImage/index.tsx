@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { DialogContent, DialogContentText, Dialog, DialogActions, Box, Button } from "@material-ui/core";
+import {
+  DialogContent,
+  DialogContentText,
+  Dialog,
+  DialogActions,
+  Box,
+  Button,
+  CircularProgress,
+} from "@material-ui/core";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
-import { setLoading, setToggleItemImageDialog } from "../../../redux/actions";
+import { setItemImageRef, setLoading, setToggleItemImageDialog } from "../../../redux/actions";
 import { storage } from "../../../services/firebase";
-
 export default function ViewItemImage() {
   const { toggleItemImageDialog, itemImageRef, userInfo } = useSelector((state: RootStateOrAny) => state);
 
   const dispatch = useDispatch();
   const [image, setImage] = useState<string>(null);
-
   useEffect(() => {
     dispatch(setLoading(true));
     if (userInfo && itemImageRef) {
@@ -18,19 +24,26 @@ export default function ViewItemImage() {
       image.getDownloadURL().then((image) => {
         setImage(image);
       });
-      dispatch(setLoading(false));
+     
     }
+    dispatch(setLoading(false));
   }, [userInfo, userInfo.company, toggleItemImageDialog, itemImageRef, dispatch]);
 
+  const handleProductImage = () => {
+    dispatch(setToggleItemImageDialog(false));
+    dispatch(setItemImageRef(null));
+    setImage(null);
+  };
+
   return (
-    <Dialog open={toggleItemImageDialog} onClose={() => dispatch(setToggleItemImageDialog(false))}>
+    <Dialog open={toggleItemImageDialog} onClose={handleProductImage}>
       <DialogContent>
         <DialogContentText>
-          {image && <img alt="menu-card-item" style={{ maxWidth: "300px" }} src={image}></img>}
+          {image ? <img alt="menu-card-item" style={{ maxWidth: "500px" }} src={image}></img> : <CircularProgress />}
         </DialogContentText>
         <DialogActions>
           <Box className="d-flex justify-content-end">
-            <Button name="cancel" onClick={() => dispatch(setToggleItemImageDialog(false))} color="primary">
+            <Button name="cancel" onClick={handleProductImage} color="primary">
               Sluiten
             </Button>
           </Box>

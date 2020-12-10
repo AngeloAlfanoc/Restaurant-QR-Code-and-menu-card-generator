@@ -17,6 +17,7 @@ import SupplyOwnLink from "../../switches/supplyOwnLink";
 import GenQrCode from "../../switches/genQrCode";
 import Save from "../../buttons/dialogActions/save";
 import Warning from "../../alerts/warning";
+import ErrorMessage from "../../alerts/error";
 export default function AddMenuCard() {
   const dispatch = useDispatch();
   const [name, setName] = useState<string | null>();
@@ -46,6 +47,7 @@ export default function AddMenuCard() {
         onClose={() => dispatch(addMenuCard(false))}
         aria-labelledby="form-dialog-title"
       >
+        <ErrorMessage/>
         <Warning />
         <DialogTitle id="form-dialog-title">
           Een nieuwe menu kaart toevoegen...

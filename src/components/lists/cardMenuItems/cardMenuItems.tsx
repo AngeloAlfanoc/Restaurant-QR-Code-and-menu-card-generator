@@ -1,4 +1,4 @@
-import { makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 import {
@@ -18,13 +18,14 @@ import BurstModeIcon from "@material-ui/icons/BurstMode";
 import ViewItemImage from "../../dialogs/viewItemImage";
 import "./index.scss";
 import { editFieldInSubStoreObject } from "../../../services/crud";
+
 export default function CardMenuItems() {
   const dispatch = useDispatch();
   const { selectedCardMenuRef, menuCardItems } = useSelector((state: RootStateOrAny) => state);
   const [dragStart, setDragStart] = useState<number>(null);
   const [dragStartId, setDragStartId] = useState<string>(null);
   const [dragEnd, setDragEnd] = useState<number>(null);
-  const [dragEndtId, setDragEndId] = useState<string>(null);
+  const [dragEndId, setDragEndId] = useState<string>(null);
   const handleDelete = (document: string) => {
     try {
       dispatch(setLoading(true));
@@ -66,19 +67,23 @@ export default function CardMenuItems() {
     dispatch(setItemImageRef(image));
     dispatch(setToggleItemImageDialog(true));
   };
-  const handleDrag = (e, position: number, doc: string) => {
+  const handleDrag = (e: React.DragEvent<HTMLDivElement> , position: number, doc: string) => {
+    e.preventDefault();
+    setDragEnd(position);
+    setDragEndId(doc);
+    console.log(e.currentTarget.style.backgroundColor = "#fcfdff")
+  };
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, position: number, doc: string) => {
     e.preventDefault();
     setDragStart(position);
     setDragStartId(doc);
+    console.log(e.currentTarget.style.backgroundColor = "#fff")
   };
-  const handleDragStart = (e, position: number, doc: string) => {
-    e.preventDefault();
-    setDragStart(position);
-    setDragStartId(doc);
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    console.log(e.currentTarget.style.backgroundColor = "#fff")
+    editFieldInSubStoreObject("menus", selectedCardMenuRef, "items", dragStartId, dragEnd);
+    editFieldInSubStoreObject("menus", selectedCardMenuRef, "items", dragEndId, dragStart);
   };
-  // const handleDrop = () => {
-  //   editFieldInSubStoreObject();
-  // };
   return (
     <>
       <Table>
@@ -97,12 +102,11 @@ export default function CardMenuItems() {
           {menuCardItems &&
             menuCardItems.map((item, i) => {
               return (
-                <TableRow draggable={true} key={i}>
+                <TableRow draggable={true} key={i}  onDragOver={(e) => handleDrag(e, item.position, item.docid)}
+                onDragLeave={(e) => handleDragStart(e, item.position, item.docid)}
+                onDrop={handleDrop}>
                   <TableCell
-                    onDragOver={(e) => handleDrag(e, item.position, item.docid)}
-                    onDragLeave={(e) => handleDragStart(e, item.position, item.docid)}
-                    // onDrop={handleDrop}
-                    // onMouseDown={(e) => handleDrag(e, item.position, item.docid)}
+                  
                   >
                     {item.title}
                   </TableCell>
