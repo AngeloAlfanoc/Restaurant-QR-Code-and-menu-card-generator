@@ -11,6 +11,8 @@ export default function ViewItemImage(props: { user: string }) {
   const [company, setCompany] = useState<string>(null);
   const [error, setError] = useState<string>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  
   useEffect(() => {
     setLoading(true);
     let mounted = true;

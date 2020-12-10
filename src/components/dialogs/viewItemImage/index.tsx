@@ -13,7 +13,6 @@ import { setItemImageRef, setLoading, setToggleItemImageDialog } from "../../../
 import { storage } from "../../../services/firebase";
 export default function ViewItemImage() {
   const { toggleItemImageDialog, itemImageRef, userInfo } = useSelector((state: RootStateOrAny) => state);
-
   const dispatch = useDispatch();
   const [image, setImage] = useState<string>(null);
   useEffect(() => {

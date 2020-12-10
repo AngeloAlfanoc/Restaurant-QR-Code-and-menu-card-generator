@@ -1,5 +1,5 @@
 import { Button, Tooltip } from "@material-ui/core";
-import React, { useState } from "react";
+import React from "react";
 
 import { editFieldInStoreObject } from "../../../services/crud";
 import { useDispatch } from "react-redux";
@@ -7,20 +7,15 @@ import { setLoading } from "../../../redux/actions";
 export default function SetPublish(props) {
 
   const dispatch = useDispatch();
-  const [published, setPublished] = useState(props.published);
 
   const handlePublish = async () => {
-    const {docid, collection} = props
-    setPublished(!published)
+    const {docid, collection, published} = props
     dispatch(setLoading(true));
     const doc = await editFieldInStoreObject(docid, collection);
-    console.log(docid, collection)
     doc.set(JSON.parse(JSON.stringify(
-      { published: published, editedAt: Date.now() })),
+      { published: !published, editedAt: Date.now() })),
       { merge: true }
     );
-
-
     dispatch(setLoading(false));
   };
 
@@ -31,7 +26,7 @@ export default function SetPublish(props) {
           color={props.published ? "secondary" : "primary"}
           onClick={handlePublish}
         >
-          {props.published ? "Onpubliceer" : "Publiceren"}{" "}
+          {props.published ? "Onpubliceer" : "Publiceren"}
         </Button>
       </Tooltip>
     </>

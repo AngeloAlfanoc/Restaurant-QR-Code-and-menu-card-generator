@@ -63,7 +63,7 @@ export default function QrDialog() {
     history.push(linkFactory);
   };
 
-  const handleClickCopy = (e) => {
+  const handleClickCopy = () => {
     if (id) {
       navigator.clipboard.writeText(linkFactory);
       setAlert("Link gekopieerd!");
