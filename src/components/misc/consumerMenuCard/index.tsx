@@ -12,16 +12,12 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
       justifyContent: "center",
+      marginTop:"20px"
     },
     paper: {
       width: 100 + "%",
       padding: theme.spacing(4),
       textAlign: "center",
-    },
-    item: {
-      display: "flex",
-      justifyContent: "space-between",
-      margin: "15px 0",
     },
   })
 );
@@ -62,6 +58,7 @@ export default function ConsumerMenuCard(props: { menu: string; user: string | n
       <Grid container spacing={3}>
         <Paper className={classes.paper}>
           {menuCardItems &&
+            // eslint-disable-next-line array-callback-return
             menuCardItems.map((item) => {
               switch (item.type) {
                 case "title":
@@ -75,7 +72,7 @@ export default function ConsumerMenuCard(props: { menu: string; user: string | n
                 case "item":
                   return (
                     <Box>
-                      <Grid onClick={() => handleClick(item.image)} className={classes.item} item xs={12} sm={12}>
+                      <Grid onClick={() => handleClick(item.image)} className="d-flex justify-content-between my-3 hover" item xs={12} sm={12}>
                         <Box className="d-flex flex-column justify-content-start align-items-start">
                           <span>{item.title}</span>
                           <small style={{ paddingRight: "10px" }} className="text-left">

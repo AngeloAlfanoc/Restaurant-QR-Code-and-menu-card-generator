@@ -2,11 +2,18 @@ import React, { useState } from "react";
 import "./index.scss";
 import LinkItem from "../menuNav/linkItem";
 import Logo from "../../misc/logo";
+import { Button } from "@material-ui/core";
+import { Link, useHistory } from "react-router-dom";
 export default function Burger() {
+  let history = useHistory();
   const [checked, setChecked] = useState(false);
   const handleChecked = () => {
     setChecked(!checked);
   };
+  function handleClick(link: string) {
+    history.push(link);
+  }
+
   return (
     <div className="menu-wrap">
       <div className="logo_burger">
@@ -34,6 +41,12 @@ export default function Burger() {
           <LinkItem text="Oplossingen" offset="100" href="#solutions" />
           <LinkItem text="Deelnemers" offset="100" href="#participants" />
           <LinkItem text="Contact" offset="100" href="#contact" />
+          <li>
+            <Link to={"/login"}>Login</Link>
+          </li>
+          <li>
+            <Link to={"/register"}>Register</Link>
+          </li>
         </ul>
       </nav>
     </div>

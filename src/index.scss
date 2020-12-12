@@ -53,3 +53,8 @@ small{
   font-family: "Nunito", sans-serif;
   color:#555;
 }
+.hover{
+  &:hover{
+    cursor: pointer;
+  }
+}
