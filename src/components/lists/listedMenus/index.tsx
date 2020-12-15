@@ -86,7 +86,7 @@ export default function ListedMenus(props: any) {
           });
       }
     }
-  }, [dispatch, publicInfo.owner, publicInfo]);
+  }, [dispatch, publicInfo]);
 
   const editMenuItems = (id: string) => {
     dispatch(setSelectedCardRef(id));

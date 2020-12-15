@@ -23,6 +23,7 @@ import { rmDataStoreSub } from "../../../services/crud";
 import { IDateRange } from "../../../types";
 import { setConsumers, setError, setLoading } from "../../../redux/actions";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 export default function ListedConsumers(props: any) {
   const [today] = useState(moment(new Date()).format("YYYY-MM-DD"));
@@ -104,7 +105,8 @@ export default function ListedConsumers(props: any) {
     <>
       <TableContainer component={Paper}>
         {props.tools && (
-          <Box className="w-100 d-flex align-items-between justify-items-between my-3">
+          <Box className="w-100 d-flex align-items-between justify-content-between justify-items-between my-3">
+            <Box>
             <Tooltip title="Selectie start">
               <TextField
                 className="mx-3"
@@ -132,7 +134,10 @@ export default function ListedConsumers(props: any) {
                 }}
                 onChange={handleOnChange}
               />
-            </Tooltip>
+            </Tooltip></Box>
+            <IconButton className="mr-1">
+              <GetAppIcon/>
+            </IconButton>
           </Box>
         )}
 

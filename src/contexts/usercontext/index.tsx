@@ -33,7 +33,6 @@ const UserProvider = ({ children }: UserProviderProps) => {
               setLoading(false);
             }
           }
-  
           setLoading(false);
         });
     };

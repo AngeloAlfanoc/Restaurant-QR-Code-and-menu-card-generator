@@ -5,20 +5,22 @@ import { Alert } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import { login } from "../../../services/auth";
-import { DASHBOARD } from "../../../constants/routes";
+import { DASHBOARD, REGISTER  } from "../../../constants/routes";
 import { Box } from "@material-ui/core";
-import { REGISTER } from "../../../constants/routes";
 import Logo from "../../misc/logo";
+import { useDispatch } from "react-redux";
+import { setMenuCards } from "../../../redux/actions";
 export default function LoginForm() {
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const history = useHistory();
-
+  const dispatch = useDispatch();
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
+      localStorage.clear()
       setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);

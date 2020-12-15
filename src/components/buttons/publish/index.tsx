@@ -5,14 +5,22 @@ import { editFieldInStoreObject } from "../../../services/crud";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../../redux/actions";
 export default function SetPublish(props) {
+
   const dispatch = useDispatch();
-  const handlePublish = async (id: string) => {
+  const [published, setPublished] = useState(props.published);
+
+  const handlePublish = async () => {
+    const {docid, collection} = props
+    setPublished(!published)
     dispatch(setLoading(true));
-    const doc = await editFieldInStoreObject(id, props.collection);
-    doc.set(
-      { published: !props.published, editedAt: Date.now(), items: {} },
+    const doc = await editFieldInStoreObject(docid, collection);
+    console.log(docid, collection)
+    doc.set(JSON.parse(JSON.stringify(
+      { published: published, editedAt: Date.now() })),
       { merge: true }
     );
+
+
     dispatch(setLoading(false));
   };
 
@@ -21,7 +29,7 @@ export default function SetPublish(props) {
       <Tooltip title="Publiceren">
         <Button
           color={props.published ? "secondary" : "primary"}
-          onClick={() => handlePublish(props.docid)}
+          onClick={handlePublish}
         >
           {props.published ? "Onpubliceer" : "Publiceren"}{" "}
         </Button>

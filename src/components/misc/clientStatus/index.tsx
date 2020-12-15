@@ -52,7 +52,7 @@ export default function ClientStatus(props: IUser) {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [dispatch, user.uid]);
 
   return (
     <>

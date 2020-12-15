@@ -7,7 +7,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
 import InputGlobal from "../../inputs/global";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import { imageToBase64 } from "image-to-base64";
+
 import { objects } from "./selectProps";
 import { addMenuItem, setLoading } from "../../../redux/actions";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,8 @@ import ImageHandler from "./imageHandler";
 
 import { storage } from "../../../services/firebase";
 import { uid } from "uid";
+import ErrorMessage from "../../alerts/error"
+import Warning from "../../alerts/warning"
 export default function AddMenuItem() {
   const dispatch = useDispatch();
   const [addCardItem, setAddCardItem] = useState<boolean>(false);
@@ -27,8 +29,6 @@ export default function AddMenuItem() {
     itemTitle,
     itemPrice,
     selectedCardMenuRef,
-    publicInfo,
-    itemImage,
     itemImageFile,
     userInfo,
     itemDescr,
@@ -51,9 +51,6 @@ export default function AddMenuItem() {
       .then(function (snapshot) {
         console.log(snapshot);
       });
-    // ref.put(itemImageFile).then(function (snap) {
-    //   console.log(snap);
-    // });
     setAddCardItem(false);
 
     await addMenuItemData(
@@ -72,6 +69,8 @@ export default function AddMenuItem() {
 
   return (
     <Dialog maxWidth={"md"} fullWidth open={toggleAddMenuItem} onClose={() => dispatch(addMenuItem(false))}>
+      <ErrorMessage/>
+        <Warning />
       <DialogContent>
         <DialogTitle className="text-left">Klik op toevoegen om te beginnen</DialogTitle>
         <Box className="w-100 d-flex align-items-center justify-content-between">

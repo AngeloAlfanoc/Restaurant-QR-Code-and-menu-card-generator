@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import Button from "@material-ui/core/Button";
 
 import { setMenuCardItemNewImage, setMenuCardItemNewImageFile } from "../../../redux/actions";
+import ErrorMessage from "../../alerts/error";
+import Warning from "../../alerts/warning";
 export default function ImageHandler() {
   const dispatch = useDispatch();
   const handleChange = (e) => {
@@ -17,6 +19,8 @@ export default function ImageHandler() {
 
   return (
     <label htmlFor="upload-photo">
+      <ErrorMessage/>
+      <Warning />
       <input onChange={handleChange} style={{ display: "none" }} id="upload-photo" name="upload-photo" type="file" />
       <Button color="secondary" variant="contained" component="span">
         Upload foto

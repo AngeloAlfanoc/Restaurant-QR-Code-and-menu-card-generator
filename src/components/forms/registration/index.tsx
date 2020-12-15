@@ -22,6 +22,7 @@ const RegistrationForm = () => {
       return setError("Passwords do not match");
     }
     try {
+      localStorage.clear()
       setError("");
       setLoading(true);
 

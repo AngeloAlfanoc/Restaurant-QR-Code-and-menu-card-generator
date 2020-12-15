@@ -73,3 +73,13 @@ export interface IncludedTos extends AccountInfoStore {
 }
 
 export type IContextProps = { children: React.ReactNode };
+
+export interface IPublicInfo {
+  createdAt: number;
+  docid: string;
+  editedAt: number;
+  id: string;
+  items: {};
+  owner: string;
+  published: boolean;
+}

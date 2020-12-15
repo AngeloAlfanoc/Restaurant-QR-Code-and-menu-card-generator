@@ -25,7 +25,7 @@ import {
   SET_ITEM_IMAGE_REF,
   TOGGLE_ITEM_IMAGE_DIALOG_CONSUMER,
 } from "./constants";
-
+import {IPublicInfo} from "../types"
 export const addMenuCard = (value: boolean) => ({ type: ADD_MENU_CARD, value });
 export const addMenuItem = (value: boolean) => ({ type: ADD_MENU_ITEM, value });
 export const toggleQrDialog = (value: boolean) => ({
@@ -80,7 +80,7 @@ export const setUserInfo = (value: any) => ({
   type: SET_USERINFO,
   value,
 });
-export const setPublicUserInfo = (value: any) => ({
+export const setPublicUserInfo = (value: IPublicInfo) => ({
   type: SET_PUBLIC_USER_INFO,
   value,
 });
