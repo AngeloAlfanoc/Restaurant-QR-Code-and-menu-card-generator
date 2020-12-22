@@ -33,6 +33,10 @@ const UserProvider = ({ children }: UserProviderProps) => {
               setLoading(false);
             }
           }
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 436b982 (project = dead)
           setLoading(false);
         });
     };
