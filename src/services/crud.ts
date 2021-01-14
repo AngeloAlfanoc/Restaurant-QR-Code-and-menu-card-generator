@@ -3,7 +3,7 @@ import { db } from "./firebase";
 /*
 @Adds new menu object to store.
 @uid is param
-*/
+*/ 
 
 export const addAccountInfoToStore = async (uid: string, email: string) => {
   return db.collection("users").add({
